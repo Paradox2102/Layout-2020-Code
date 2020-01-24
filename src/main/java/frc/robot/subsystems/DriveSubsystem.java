@@ -114,7 +114,8 @@ public class DriveSubsystem extends SubsystemBase {
     m_rightDrive.setIdleMode(IdleMode.kBrake);
     m_rightFollower.setIdleMode(IdleMode.kBrake);
 
-    m_rightDrive.setInverted(true);
+    m_rightDrive.setInverted(false);
+    m_leftDrive.setInverted(true);
 
     //optional PID SmartDashboard Control
     SmartDashboard.setDefaultNumber("leftP", k_pLeft);

@@ -8,10 +8,10 @@ import frc.PiCamera.PiCamera.PiCameraRegions;
 public class Camera {
     public static PiCamera m_piCamera;
 
-    public void connect(){
+    public void connect(String ipAddress){
         m_piCamera = new PiCamera();
 
-        m_piCamera.Connect("10.21.2.112", 5800);
+        m_piCamera.Connect(ipAddress, 5800);
     }
 
     public class CameraData{
