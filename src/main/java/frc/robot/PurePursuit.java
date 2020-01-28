@@ -12,27 +12,25 @@ public class PurePursuit {
 	private boolean m_isReversed;
 	private boolean m_isExtended;
 
-	private final double k_lookAheadTime = 0.7;//0.3;//.4
+	private final double k_lookAheadTime = 1;//0.3;//.4
 
 	private final double k_lookAheadDist = 0.75;
 	private final int k_maxTimeLookAhead = 1;
 	
-	private final double k_maxVelFast = 9;//10.7
-	private final double k_maxAcc = 7;
+	private final double k_maxVelFast = 11.94;//10.7
+	private final double k_maxAcc = 6;
 	private final double k_maxDeccel = 5;
 	private final double k_maxJerk = 100;
 
-	private final double k_width = 1.21;
+	private final double k_width = 2.17;
 	private final int k_points = 1000;
 	private final double k_dt = 0.02;
 	
 	private final int k_minVel = 1;
 	private final int k_checkStall = 40;
-	
-	private final double k_ticksFoot;
-	
+		
 	private final int k_lookAheadPoints = (int) (k_maxTimeLookAhead / k_dt);
-	private final double k_extendedLookAhead = 0.75;
+	private final double k_extendedLookAhead = 1.5;
 
 	private int m_prevIdx = 0;
 	private boolean finished = false;
@@ -71,12 +69,10 @@ public class PurePursuit {
 	
 	private PositionContainer m_pos;
 	
-	public PurePursuit(double ticksFoot, SensorData sensor, Tracker tracker) {
+	public PurePursuit(SensorData sensor, Tracker tracker) {
 		m_sensor = sensor;
 		
 		m_tracker = tracker;
-		
-		k_ticksFoot = ticksFoot;
 	}
 	
 	public void loadPath(Path path, boolean isReversed, boolean isExtended) {
@@ -117,14 +113,14 @@ public class PurePursuit {
 	private VelocityContainer getEndingVel(){
 		double leftVel = m_path.m_leftPath[m_path.m_leftPath.length - 1].velocity;
 		double rightVel = m_path.m_rightPath[m_path.m_rightPath.length - 1].velocity;
-		System.out.println(String.format("Left Vel: %f Right Vel: %f", feetToTicks(leftVel), feetToTicks(rightVel)));
+		System.out.println(String.format("Left Vel: %f Right Vel: %f", leftVel, rightVel));
 
 		if(m_isReversed){
 			leftVel *= -1;
 			rightVel *= -1;
 		}
 
-		return new VelocityContainer(feetToTicks(leftVel*60), feetToTicks(rightVel*60));
+		return new VelocityContainer(leftVel, rightVel);
 	}
 	
 	public VelocityContainer followPath() {
@@ -159,8 +155,8 @@ public class PurePursuit {
 			}
 			
 			if(closestPathIdx > m_path.m_centerPath.length - k_checkStall && !m_isReversed) {//was 50
-				if(Math.abs(ticksToFeet(getRightEncoderVel())) <= 0.1 
-						&& Math.abs(ticksToFeet(getLeftEncoderVel())) <= 0.1) {
+				if(Math.abs(getRightEncoderVel()) <= 0.1 
+						&& Math.abs(getLeftEncoderVel()) <= 0.1) {
 					stopFollow();
 					DriverStation.reportError("Stalled", false);
 					return new VelocityContainer(0,0);
@@ -210,10 +206,10 @@ public class PurePursuit {
 			double leftVel = !m_isReversed ? velocity - velDif : velocity + velDif;
 			double rightVel = !m_isReversed ? velocity + velDif : velocity - velDif;
 						
-			writer.write(velocity, (leftVel), (rightVel), -1 * ticksToFeet(getLeftEncoderVel()/60.0), 
-					ticksToFeet(getRightEncoderVel()/60.0), m_pos.x, m_pos.y, closestPos.x, closestPos.y, nextPos.x, nextPos.y,
+			writer.write(velocity, (leftVel), (rightVel), -1 * getLeftEncoderVel(), 
+					getRightEncoderVel(), m_pos.x, m_pos.y, closestPos.x, closestPos.y, nextPos.x, nextPos.y,
 					distance, dX, theta, curvature, velDif, angle);
-			return new VelocityContainer(feetToTicks(leftVel*60), feetToTicks(rightVel*60));
+			return new VelocityContainer(leftVel, rightVel);
 		}
 	}
 	
@@ -300,14 +296,6 @@ public class PurePursuit {
 			this.leftVel = leftVel;
 			this.rightVel = rightVel;
 		}
-	}
-    
-    private double ticksToFeet(double ticks) {
-		return ticks / k_ticksFoot;
-	}
-	
-	private double feetToTicks(double feet) {
-		return feet * k_ticksFoot;
 	}
 
 	public PathConfig getConfig(PathConfigs config){

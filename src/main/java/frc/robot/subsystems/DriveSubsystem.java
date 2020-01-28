@@ -51,13 +51,15 @@ public class DriveSubsystem extends SubsystemBase {
   //Creating gyro
   PigeonIMU m_gyro = new PigeonIMU(0);
 
-  //setting PID terms
-  double k_fLeft = 0.000183;
-  double k_pLeft = 0.000095;
-  double k_iLeft = 0.000100;
-  double k_fRight = 0.00018; 
-  double k_pRight = 0.000095; 
-  double k_iRight = 0.000100;
+  //setting PID terms for 4500
+  double k_fLeft = 0.00017;
+  double k_pLeft = 0.001/10000;
+  double k_iLeft = 0.00001;
+  double k_dLeft = 0.0;
+  double k_fRight = 0.00017; 
+  double k_pRight = 0.001/10000;
+  double k_iRight = 0.00001;
+  double k_dRight = 0.0;
 
   double k_iRange = 100;
   double k_minOutput = -1;
@@ -83,7 +85,7 @@ public class DriveSubsystem extends SubsystemBase {
           SmartDashboard.putNumber("Ideal Left Vel", m_velContainer.leftVel);
           SmartDashboard.putNumber("Ideal Right Vel", m_velContainer.rightVel);
 
-          setSpeed(m_velContainer.leftVel, m_velContainer.rightVel);
+          setSpeedFeet(m_velContainer.leftVel, m_velContainer.rightVel);
 				}
 				try {
 					final long sleepTime = nextRun - System.currentTimeMillis();
@@ -102,7 +104,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   private final long k_mpPeriod = 20; //Milliseconds
 
-  private final double k_ticksFootSpark = 4.413;
+  private final double k_ticksFootSpark = 6.28;
   
   public DriveSubsystem() {
     //setting followers and idle modes
@@ -124,6 +126,8 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.setDefaultNumber("rightI", k_iRight);
     SmartDashboard.setDefaultNumber("leftF", k_fLeft);
     SmartDashboard.setDefaultNumber("rightF", k_fRight);
+    SmartDashboard.setDefaultNumber("leftD", k_dLeft);
+    SmartDashboard.setDefaultNumber("rightD", k_dRight);
     SmartDashboard.setDefaultNumber("Izone", k_iRange);
   
     //PID controller setup
@@ -139,24 +143,24 @@ public class DriveSubsystem extends SubsystemBase {
     m_rightPIDController.setIRange(k_iRange);
     
     //Tracking and Pure Pursuit Setup
-    m_sensors = new Sensor(m_leftSparkEncoder, m_rightSparkEncoder, m_gyro);
+    m_sensors = new Sensor(m_leftSparkEncoder, m_rightSparkEncoder, m_gyro, k_ticksFootSpark);
 
-    m_posTracker = new PositionTracker(0, 0, k_ticksFootSpark, false, m_sensors);
+    m_posTracker = new PositionTracker(0, 0, false, m_sensors);
     
-    m_pursuitFollower = new PurePursuit(k_ticksFootSpark, m_sensors, m_posTracker);
+    m_pursuitFollower = new PurePursuit(m_sensors, m_posTracker);
 
     followThread.start();
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
   }
 
   //used for tuning PID on Smartdashboard
   public void configPID(){
-    k_pLeft = SmartDashboard.getNumber("leftP", k_pLeft);
-    k_pRight = SmartDashboard.getNumber("rightP", k_pRight);
+    disablePID();
+    k_pLeft = SmartDashboard.getNumber("leftP", k_pLeft)/10000;
+    k_pRight = SmartDashboard.getNumber("rightP", k_pRight)/10000;
     k_iLeft = SmartDashboard.getNumber("leftI", k_iLeft);
     k_iRight =SmartDashboard.getNumber("rightI", k_iRight);
     k_fLeft = SmartDashboard.getNumber("leftF", k_fLeft);
@@ -172,6 +176,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_rightPIDController.setP(k_pRight);
     m_rightPIDController.setI(k_iRight);
     m_rightPIDController.setIRange(k_iRange);
+    enablePID();
   }
 
   //setting basic power(checks for disabling PID controller)
@@ -192,6 +197,16 @@ public class DriveSubsystem extends SubsystemBase {
 
     m_leftPIDController.setSetpoint(leftSpeed);
     m_rightPIDController.setSetpoint(rightSpeed);
+  }
+
+  //set speed in feet using PID controllers
+  public void setSpeedFeet(double leftSpeed, double rightSpeed){
+    if(!m_leftPIDController.isEnabled() || !m_rightPIDController.isEnabled()){
+      enablePID();
+    }
+
+    m_leftPIDController.setSetpoint(feetToTicks(leftSpeed*60.0));
+    m_rightPIDController.setSetpoint(feetToTicks(rightSpeed*60.0));
   }
 
   ///stop power output and speed control
@@ -263,10 +278,20 @@ public class DriveSubsystem extends SubsystemBase {
   public double getRightPos(){
     return m_rightSparkEncoder.getPosition();
   }
+	
+	private double feetToTicks(double feet) {
+		return feet * k_ticksFootSpark;
+	}
 
   public void resetAngle(double angle){
     m_gyro.setYaw(angle);
     m_posTracker.setAngle(angle);
+  }
+
+  public double getAngle(){
+    double[] ypr = new double[3];
+    m_gyro.getYawPitchRoll(ypr);
+    return ypr[0];
   }
 
   public PathConfig getPathConfig(PathConfigs config){
@@ -289,5 +314,19 @@ public class DriveSubsystem extends SubsystemBase {
 		}
 		writer.finish();
 		return true;
+  }
+
+  public void setCoastMode(){
+    m_leftDrive.setIdleMode(IdleMode.kCoast);
+    m_leftFollower.setIdleMode(IdleMode.kCoast);
+    m_rightDrive.setIdleMode(IdleMode.kCoast);
+    m_rightFollower.setIdleMode(IdleMode.kCoast);
+  }
+
+  public void setBrakeMode(){
+    m_leftDrive.setIdleMode(IdleMode.kBrake);
+    m_leftFollower.setIdleMode(IdleMode.kBrake);
+    m_rightDrive.setIdleMode(IdleMode.kBrake);
+    m_rightFollower.setIdleMode(IdleMode.kBrake);
   }
 }

@@ -6,9 +6,7 @@ package frc.robot;
 public class PositionTracker implements Tracker{
 	private double m_x;
 	private double m_y;
-	
-	private double k_ticksFoot;
-	
+		
 	private double m_prevLeft;
 	private double m_prevRight;
 	
@@ -34,11 +32,9 @@ public class PositionTracker implements Tracker{
 
 	// private CSVWriter posWriter = new CSVWriter("Position Data", k_fieldsPos);
 
-	public PositionTracker(double x, double y, double ticksFeet, boolean cameraCorrection, SensorData sensor) {
+	public PositionTracker(double x, double y, boolean cameraCorrection, SensorData sensor) {
 		m_sensors = sensor;
-		
-		k_ticksFoot = ticksFeet;
-		
+				
 		m_prevLeft = getLeftEncoderPos();
 		m_prevRight = getRightEncoderPos();
 		m_lastAngle = getAngle();
@@ -81,14 +77,14 @@ public class PositionTracker implements Tracker{
 	
 	public PositionContainer getPos() {
 		synchronized (lock) {
-			return new PositionContainer(ticksToFeet(m_x), ticksToFeet(m_y));
+			return new PositionContainer(m_x, m_y);
 		}
 	}
 	
 	public void setXY(double x, double y) {
 		synchronized (lock) {
-			m_x = feetToTicks(x);
-			m_y = feetToTicks(y);
+			m_x = x;
+			m_y = y;
 			// posWriter.write("Set", ticksToFeet(getLeftEncoderPos()),ticksToFeet(m_prevLeft), ticksToFeet(getRightEncoderPos()), ticksToFeet(m_prevRight), ticksToFeet(m_x), ticksToFeet(m_y));
 		}
 	}
@@ -116,14 +112,6 @@ public class PositionTracker implements Tracker{
 	
 	private double getAngle() {
 		return m_sensors.getAngle();
-	}
-	
-	private double ticksToFeet(double ticks) {
-		return ticks / k_ticksFoot;
-	}
-	
-	private double feetToTicks(double feet) {
-		return feet * k_ticksFoot;
 	}
 	
 	public static class PositionContainer{

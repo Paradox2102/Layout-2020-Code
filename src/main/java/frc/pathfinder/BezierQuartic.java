@@ -29,7 +29,7 @@ public class BezierQuartic
 		dx = m_p3.m_x - m_p4.m_x;
 		dy = m_p3.m_y - m_p4.m_y;
 		d = Math.sqrt(dx*dx + dy*dy);
-		double angle = Math.atan2(dy, dx) * scale;
+		// double angle = Math.atan2(dy, dx) * scale;
 		
 		m_p3.m_x = m_p4.m_x + d * Math.cos(angle2);
 		m_p3.m_y = m_p4.m_y + d * Math.sin(angle2);

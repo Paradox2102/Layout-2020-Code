@@ -625,6 +625,7 @@ public class Pathfinder
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	private static void fixupJoin(PathSpline path, int i, double dt, double maxAcceleration, double maxDV, double wheelBase)
 	{
 		while (i < path.m_center.length)
@@ -740,6 +741,7 @@ public class Pathfinder
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	private static void fixupPath(PathSpline path, double dt, double maxAcceleration, double wheelBase)
 	{
 		double maxDV = 1.1 * dt * maxAcceleration;	// Give is some margin
