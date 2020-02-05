@@ -7,29 +7,20 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANDigitalInput.LimitSwitch;
-import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class TurretSubsystem extends SubsystemBase {
-  CANSparkMax m_turret = new CANSparkMax(Constants.k_turret, MotorType.kBrushless);
+public class SnootSubsystem extends SubsystemBase {
+  CANSparkMax m_snoot = new CANSparkMax(Constants.k_snoot, MotorType.kBrushless);
 
-  CANEncoder m_encoder = new CANEncoder(m_turret);
-
-  CANDigitalInput m_softStop = new CANDigitalInput(m_turret, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyClosed);
-
-  public TurretSubsystem() {
-    m_turret.setInverted(true);
-
-    m_encoder = m_turret.getEncoder();
-
-    m_softStop.enableLimitSwitch(false);
+  CANEncoder m_encoder = new CANEncoder(m_snoot);
+  
+  public SnootSubsystem() {
+    m_encoder = m_snoot.getEncoder();
   }
 
   @Override
@@ -38,15 +29,11 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public void setPower(double power){
-    m_turret.set(power);
+    m_snoot.set(power);
   }
 
   public void stop(){
-    m_turret.set(0);
-  }
-
-  public boolean getLimit(){
-    return m_softStop.get();
+    m_snoot.set(0);
   }
 
   public double getPos(){

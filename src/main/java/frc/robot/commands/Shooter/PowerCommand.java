@@ -5,26 +5,22 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.Drive;
+package frc.robot.commands.Shooter;
 
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
-public class ArcadeDriveCommand extends CommandBase {
+public class PowerCommand extends CommandBase {
   /**
-   * Creates a new ArcadeDriveCommand.
+   * Creates a new PowerCommand.
    */
-  DriveSubsystem m_subsystem;
-  DoubleSupplier m_getX;
-  DoubleSupplier m_getY;
+  ShooterSubsystem m_subsystem;
   DoubleSupplier m_getThrottle;
-  public ArcadeDriveCommand(DriveSubsystem subsystem, DoubleSupplier getX, DoubleSupplier getY, DoubleSupplier getThrottle) {
+  public PowerCommand(ShooterSubsystem subsystem, DoubleSupplier getThrottle) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_subsystem = subsystem;
-    m_getX = getX;
-    m_getY = getY;
     m_getThrottle = getThrottle;
 
     addRequirements(m_subsystem);
@@ -38,17 +34,8 @@ public class ArcadeDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double x = m_getX.getAsDouble();
-    double y = m_getY.getAsDouble();
+    m_subsystem.setPower(m_getThrottle.getAsDouble());
 
-    x = x * x * x;
-    y = y * y * y;
-
-    if(m_getThrottle.getAsDouble() > 0){
-      y *= -1;
-    }
-
-    m_subsystem.setPower(y+x, y-x);
   }
 
   // Called once the command ends or is interrupted.

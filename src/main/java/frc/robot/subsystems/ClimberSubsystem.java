@@ -14,42 +14,56 @@ import com.revrobotics.CANDigitalInput.LimitSwitch;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class TurretSubsystem extends SubsystemBase {
-  CANSparkMax m_turret = new CANSparkMax(Constants.k_turret, MotorType.kBrushless);
+public class ClimberSubsystem extends SubsystemBase {
+  CANSparkMax m_climber = new CANSparkMax(Constants.k_climb, MotorType.kBrushless);
+  CANSparkMax m_follower = new CANSparkMax(Constants.k_climbFollower, MotorType.kBrushless);
 
-  CANEncoder m_encoder = new CANEncoder(m_turret);
+  CANEncoder m_encoder = new CANEncoder(m_climber);
+  CANDigitalInput m_revLimit = new CANDigitalInput(m_climber, LimitSwitch.kReverse, LimitSwitchPolarity.kNormallyOpen);
 
-  CANDigitalInput m_softStop = new CANDigitalInput(m_turret, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyClosed);
+  Solenoid m_brake = new Solenoid(Constants.k_brake);
 
-  public TurretSubsystem() {
-    m_turret.setInverted(true);
+  public ClimberSubsystem() {
+    m_follower.follow(m_climber, true);
 
-    m_encoder = m_turret.getEncoder();
-
-    m_softStop.enableLimitSwitch(false);
+    m_encoder = m_climber.getEncoder();
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    checkReset();
   }
 
   public void setPower(double power){
-    m_turret.set(power);
+    setBrake(false);
+    m_climber.set(power);
   }
 
+  public void setBrake(boolean set){
+    m_brake.set(set);
+  }
+  
   public void stop(){
-    m_turret.set(0);
-  }
-
-  public boolean getLimit(){
-    return m_softStop.get();
+    setBrake(true);
+    m_climber.set(0);
   }
 
   public double getPos(){
     return m_encoder.getPosition();
   }
+
+  public void resetPos(){
+    m_encoder.setPosition(0);
+  }
+
+  public void checkReset(){
+    if(m_revLimit.get()){
+      resetPos();
+    }
+  }
+
 }

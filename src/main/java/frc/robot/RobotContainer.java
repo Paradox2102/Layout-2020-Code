@@ -53,9 +53,11 @@ public class RobotContainer {
     // Configure the button bindings
     m_camera.connect("10.21.2.12");
 
+    m_driveSubsystem.getCurrentCommand().end(true);
+
     configureButtonBindings();
 
-    m_driveSubsystem.setDefaultCommand(new ArcadeDriveCommand(m_driveSubsystem, () -> m_stick.getX(),() ->  -m_stick.getY()));
+    m_driveSubsystem.setDefaultCommand(new ArcadeDriveCommand(m_driveSubsystem, () -> m_stick.getX(),() ->  -m_stick.getY(), () -> m_stick.getThrottle()));
 
     m_chooser.setDefaultOption("Do Nothing", new Command(){
     

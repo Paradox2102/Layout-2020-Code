@@ -5,29 +5,22 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.Drive;
+package frc.robot.commands.Climber;
 
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
 
-public class ArcadeDriveCommand extends CommandBase {
-  /**
-   * Creates a new ArcadeDriveCommand.
-   */
-  DriveSubsystem m_subsystem;
-  DoubleSupplier m_getX;
+public class MoveClimberCommand extends CommandBase {
+  ClimberSubsystem m_subsystem;
   DoubleSupplier m_getY;
-  DoubleSupplier m_getThrottle;
-  public ArcadeDriveCommand(DriveSubsystem subsystem, DoubleSupplier getX, DoubleSupplier getY, DoubleSupplier getThrottle) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    m_subsystem = subsystem;
-    m_getX = getX;
-    m_getY = getY;
-    m_getThrottle = getThrottle;
 
-    addRequirements(m_subsystem);
+  double k_top = 10;
+
+  public MoveClimberCommand(ClimberSubsystem subsystem, DoubleSupplier getY) {
+    m_subsystem = subsystem;
+    m_getY = getY;
   }
 
   // Called when the command is initially scheduled.
@@ -38,17 +31,9 @@ public class ArcadeDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double x = m_getX.getAsDouble();
     double y = m_getY.getAsDouble();
 
-    x = x * x * x;
-    y = y * y * y;
-
-    if(m_getThrottle.getAsDouble() > 0){
-      y *= -1;
-    }
-
-    m_subsystem.setPower(y+x, y-x);
+    m_subsystem.setPower(y);
   }
 
   // Called once the command ends or is interrupted.
@@ -60,6 +45,6 @@ public class ArcadeDriveCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return m_subsystem.getPos() > k_top;
   }
 }

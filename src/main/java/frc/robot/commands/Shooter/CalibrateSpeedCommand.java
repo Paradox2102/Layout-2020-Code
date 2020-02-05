@@ -5,27 +5,25 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.Drive;
+package frc.robot.commands.Shooter;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
-public class ArcadeDriveCommand extends CommandBase {
+public class CalibrateSpeedCommand extends CommandBase {
   /**
-   * Creates a new ArcadeDriveCommand.
+   * Creates a new SpeedCommand.
    */
-  DriveSubsystem m_subsystem;
-  DoubleSupplier m_getX;
-  DoubleSupplier m_getY;
-  DoubleSupplier m_getThrottle;
-  public ArcadeDriveCommand(DriveSubsystem subsystem, DoubleSupplier getX, DoubleSupplier getY, DoubleSupplier getThrottle) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  ShooterSubsystem m_subsystem;
+  DoubleSupplier m_speed;
+
+  public CalibrateSpeedCommand(ShooterSubsystem subsystem, DoubleSupplier speed) {
     m_subsystem = subsystem;
-    m_getX = getX;
-    m_getY = getY;
-    m_getThrottle = getThrottle;
+
+    m_speed = speed;
 
     addRequirements(m_subsystem);
   }
@@ -33,22 +31,21 @@ public class ArcadeDriveCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_subsystem.configPID();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double x = m_getX.getAsDouble();
-    double y = m_getY.getAsDouble();
+    double speed = m_speed.getAsDouble() * 47000;
 
-    x = x * x * x;
-    y = y * y * y;
+    SmartDashboard.putNumber("Ideal Speed", speed);
 
-    if(m_getThrottle.getAsDouble() > 0){
-      y *= -1;
+    if(speed < m_subsystem.getSpeed()){
+      m_subsystem.stop();
+    }else{
+      m_subsystem.setSpeed(speed);
     }
-
-    m_subsystem.setPower(y+x, y-x);
   }
 
   // Called once the command ends or is interrupted.

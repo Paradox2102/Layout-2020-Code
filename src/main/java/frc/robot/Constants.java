@@ -30,4 +30,10 @@ public final class Constants {
     public static int k_snoot = 12;
     public static int k_climb = 13;
     public static int k_climbFollower = 14;
+
+    public static int k_brake = 0;
+    public static int k_intakeDeploy = 1;
+
+    public static final int k_dioTop = 0;
+    public static final int k_dioBottom = 1;
 }

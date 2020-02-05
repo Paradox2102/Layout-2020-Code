@@ -5,56 +5,48 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.Drive;
-
-import java.util.function.DoubleSupplier;
+package frc.robot.commands.Throat;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.lib.Logger;
+import frc.robot.subsystems.ThroatSubsystem;
 
-public class ArcadeDriveCommand extends CommandBase {
+public class ThroatAtSpeedCommand extends CommandBase {
   /**
-   * Creates a new ArcadeDriveCommand.
+   * Creates a new ThroatAtSpeedCommand.
    */
-  DriveSubsystem m_subsystem;
-  DoubleSupplier m_getX;
-  DoubleSupplier m_getY;
-  DoubleSupplier m_getThrottle;
-  public ArcadeDriveCommand(DriveSubsystem subsystem, DoubleSupplier getX, DoubleSupplier getY, DoubleSupplier getThrottle) {
+   private ThroatSubsystem m_throatSubsystem;
+   private double m_power = 0;
+  public ThroatAtSpeedCommand(ThroatSubsystem throatSubsystem, double power) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_subsystem = subsystem;
-    m_getX = getX;
-    m_getY = getY;
-    m_getThrottle = getThrottle;
-
-    addRequirements(m_subsystem);
+    Logger.Log("ThroatAtSpeedCommand", 3, String.format("ThroatAtSpeedCommand: %f", power));
+    
+    m_power = power;
+    m_throatSubsystem = throatSubsystem;
+    addRequirements(m_throatSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    Logger.Log("ThroatAtSpeedCommand", 2, "initialize()");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double x = m_getX.getAsDouble();
-    double y = m_getY.getAsDouble();
-
-    x = x * x * x;
-    y = y * y * y;
-
-    if(m_getThrottle.getAsDouble() > 0){
-      y *= -1;
+    if (!m_throatSubsystem.GetTopBreak() && m_throatSubsystem.GetBottomBreak()){
+      m_throatSubsystem.setThroatPower(m_power);
+    } else {
+      m_throatSubsystem.stopThroatPower();
     }
-
-    m_subsystem.setPower(y+x, y-x);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.stop();
+    m_throatSubsystem.stopThroatPower();
+    Logger.Log("ThroatAtSpeedCommand", 3, "end");
   }
 
   // Returns true when the command should end.
