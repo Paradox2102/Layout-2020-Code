@@ -16,7 +16,7 @@ import frc.robot.Constants;
 public class SerializerSubsystem extends SubsystemBase {
   TalonSRX m_serializer = new TalonSRX(Constants.k_serializer);
   public SerializerSubsystem() {
-
+    m_serializer.setInverted(true);
   }
 
   @Override

@@ -20,6 +20,8 @@ public class CalibrateSpeedCommand extends CommandBase {
   public CalibrateSpeedCommand(DriveSubsystem subsystem, double speed) {
     m_subsystem = subsystem;
     m_speed = speed;
+
+    addRequirements(m_subsystem);
   }
 
   // Called when the command is initially scheduled.

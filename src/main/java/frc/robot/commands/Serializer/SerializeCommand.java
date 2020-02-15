@@ -7,28 +7,35 @@
 
 package frc.robot.commands.Serializer;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SerializerSubsystem;
 
 public class SerializeCommand extends CommandBase {
   SerializerSubsystem m_subsystem;
   double m_power;
-  public SerializeCommand(SerializerSubsystem subsystem, double power) {
+  BooleanSupplier m_stop;
+  public SerializeCommand(SerializerSubsystem subsystem, double power, BooleanSupplier stop) {
     m_subsystem = subsystem;
     m_power = power;
-
+    m_stop = stop;
     addRequirements(m_subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.setPower(m_power);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if(!m_stop.getAsBoolean()){
+      m_subsystem.setPower(m_power);
+    }else{
+      m_subsystem.stop();
+    }
   }
 
   // Called once the command ends or is interrupted.

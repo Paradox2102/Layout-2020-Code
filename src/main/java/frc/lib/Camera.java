@@ -17,7 +17,7 @@ public class Camera {
     }
 
     public class CameraData{
-        PiCameraRegions m_regions;
+        public PiCameraRegions m_regions;
 
         public CameraData(){
             m_regions = m_piCamera.GetRegions();
@@ -70,7 +70,11 @@ public class Camera {
                 }
             }
 	    	return regionsList;
-	    }
+        }
+        
+        public double getTargetHeight(){
+            return m_regions.GetRegion(0).m_bounds.m_bottom - m_regions.GetRegion(0).m_bounds.m_top;
+        }
 
     }
 

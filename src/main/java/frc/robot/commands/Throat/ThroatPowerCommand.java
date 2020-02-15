@@ -5,24 +5,27 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.Shooter;
+package frc.robot.commands.Throat;
 
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.ThroatSubsystem;
 
-public class PowerCommand extends CommandBase {
+public class ThroatPowerCommand extends CommandBase {
   /**
-   * Creates a new PowerCommand.
+   * Creates a new ThroatPowerCommand.
    */
-  ShooterSubsystem m_subsystem;
-  DoubleSupplier m_getThrottle;
-  public PowerCommand(ShooterSubsystem subsystem, DoubleSupplier getThrottle) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  ThroatSubsystem m_subsystem;
+  double m_power;
+  DoubleSupplier m_getVel;
+  double m_rpmSpeed;
+  double k_deadZone = 200;
+  public ThroatPowerCommand(ThroatSubsystem subsystem, DoubleSupplier getVel, double rpmSpeed, double power) {
     m_subsystem = subsystem;
-    m_getThrottle = getThrottle;
+    m_power = power;
+    m_getVel = getVel;
+    m_rpmSpeed = rpmSpeed;
 
     addRequirements(m_subsystem);
   }
@@ -30,20 +33,23 @@ public class PowerCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.setPower(m_getThrottle.getAsDouble());
-
-
+    if(m_getVel.getAsDouble() - k_deadZone > m_rpmSpeed){
+      m_subsystem.setThroatPower(m_power);
+    }else{
+      m_subsystem.stopThroatPower();
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.stop();
+    m_subsystem.stopThroatPower();
   }
 
   // Returns true when the command should end.

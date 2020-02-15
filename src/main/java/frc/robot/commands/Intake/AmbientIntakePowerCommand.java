@@ -5,24 +5,21 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.Shooter;
+package frc.robot.commands.Intake;
 
-import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
-public class PowerCommand extends CommandBase {
+public class AmbientIntakePowerCommand extends CommandBase {
   /**
-   * Creates a new PowerCommand.
+   * Creates a new AmbientIntakePowerCommand.
    */
-  ShooterSubsystem m_subsystem;
-  DoubleSupplier m_getThrottle;
-  public PowerCommand(ShooterSubsystem subsystem, DoubleSupplier getThrottle) {
+  IntakeSubsystem m_subsystem;
+  double m_power;
+  public AmbientIntakePowerCommand(IntakeSubsystem subsystem, double power) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_subsystem = subsystem;
-    m_getThrottle = getThrottle;
+    m_power = power;
 
     addRequirements(m_subsystem);
   }
@@ -30,14 +27,12 @@ public class PowerCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_subsystem.setAmbientPower(m_power);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.setPower(m_getThrottle.getAsDouble());
-
-
   }
 
   // Called once the command ends or is interrupted.

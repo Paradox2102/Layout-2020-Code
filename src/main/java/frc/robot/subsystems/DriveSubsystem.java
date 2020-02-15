@@ -52,13 +52,13 @@ public class DriveSubsystem extends SubsystemBase {
   PigeonIMU m_gyro = new PigeonIMU(0);
 
   //setting PID terms for 4500
-  double k_fLeft = 0.00017;
-  double k_pLeft = 0.001/10000;
-  double k_iLeft = 0.00001;
+  double k_fLeft = 0.00019;
+  double k_pLeft = 0.0001;
+  double k_iLeft = 0.00001 * 0;
   double k_dLeft = 0.0;
-  double k_fRight = 0.00017; 
-  double k_pRight = 0.001/10000;
-  double k_iRight = 0.00001;
+  double k_fRight = 0.00019; 
+  double k_pRight = 0.0001;
+  double k_iRight = 0.00001 * 0;
   double k_dRight = 0.0;
 
   double k_iRange = 100;
@@ -111,17 +111,17 @@ public class DriveSubsystem extends SubsystemBase {
     m_rightFollower.follow(m_rightDrive);
     m_leftFollower.follow(m_leftDrive);
 
-    m_leftDrive.setIdleMode(IdleMode.kBrake);
-    m_leftFollower.setIdleMode(IdleMode.kBrake);
-    m_rightDrive.setIdleMode(IdleMode.kBrake);
-    m_rightFollower.setIdleMode(IdleMode.kBrake);
+    m_leftDrive.setIdleMode(IdleMode.kCoast);
+    m_leftFollower.setIdleMode(IdleMode.kCoast);
+    m_rightDrive.setIdleMode(IdleMode.kCoast);
+    m_rightFollower.setIdleMode(IdleMode.kCoast);
 
     m_rightDrive.setInverted(false);
     m_leftDrive.setInverted(true);
 
     //optional PID SmartDashboard Control
-    SmartDashboard.setDefaultNumber("leftP", k_pLeft);
-    SmartDashboard.setDefaultNumber("rightP", k_pRight);
+    SmartDashboard.setDefaultNumber("leftP", k_pLeft );
+    SmartDashboard.setDefaultNumber("rightP", k_pRight );
     SmartDashboard.setDefaultNumber("leftI", k_iLeft);
     SmartDashboard.setDefaultNumber("rightI", k_iRight);
     SmartDashboard.setDefaultNumber("leftF", k_fLeft);
@@ -159,8 +159,8 @@ public class DriveSubsystem extends SubsystemBase {
   //used for tuning PID on Smartdashboard
   public void configPID(){
     disablePID();
-    k_pLeft = SmartDashboard.getNumber("leftP", k_pLeft)/10000;
-    k_pRight = SmartDashboard.getNumber("rightP", k_pRight)/10000;
+    k_pLeft = SmartDashboard.getNumber("leftP", k_pLeft);
+    k_pRight = SmartDashboard.getNumber("rightP", k_pRight);
     k_iLeft = SmartDashboard.getNumber("leftI", k_iLeft);
     k_iRight =SmartDashboard.getNumber("rightI", k_iRight);
     k_fLeft = SmartDashboard.getNumber("leftF", k_fLeft);

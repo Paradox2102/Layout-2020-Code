@@ -19,11 +19,11 @@ public class ShooterSubsystem extends SubsystemBase {
    * Creates a new ShooterSubsystem.
    */
   TalonSRX m_shooter = new TalonSRX(Constants.k_shooter);
-  TalonSRX m_shooterFollower = new TalonSRX(Constants.k_shooterFollower);
+  TalonSRX m_shooterFollower = new TalonSRX(Constants.k_shooterFollower); //36000
 
-  double k_f = 0.024300;
-  double k_p = 0.120000;
-  double k_i = 0.001;
+  double k_f = 0.025500;
+  double k_p = 0.4;
+  double k_i = 0.032;
 
   int k_iRange = 100;
   int k_slot = 0;
@@ -31,7 +31,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public ShooterSubsystem() {
     m_shooter.setInverted(true);
     m_shooterFollower.follow(m_shooter);
-    m_shooterFollower.setInverted(true);
+    m_shooterFollower.setInverted(false);
 
     m_shooter.config_kF(k_slot, k_f);
     m_shooter.config_kP(k_slot, k_p);
@@ -42,12 +42,13 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.setDefaultNumber("shooter P", k_p);
     SmartDashboard.setDefaultNumber("shooter I", k_i);
     SmartDashboard.setDefaultNumber("Shooter F", k_f);
-    SmartDashboard.setDefaultNumber("Izone", k_iRange);
+    SmartDashboard.setDefaultNumber("Shooter Izone", k_iRange);
 
     m_shooter.configOpenloopRamp(2);
     m_shooter.configClosedloopRamp(2);
 
     m_shooter.setSelectedSensorPosition(0);
+    m_shooter.setSensorPhase(true);
   }
 
   @Override
@@ -61,7 +62,7 @@ public class ShooterSubsystem extends SubsystemBase {
     k_p = SmartDashboard.getNumber("shooter P", k_p);
     k_i = SmartDashboard.getNumber("shooter I", k_i);
     k_f = SmartDashboard.getNumber("Shooter F", k_f);
-    k_iRange = (int)(SmartDashboard.getNumber("Izone", k_iRange));
+    k_iRange = (int)(SmartDashboard.getNumber("Shooter Izone", k_iRange));
     
     m_shooter.config_kF(k_slot, k_f);
     m_shooter.config_kP(k_slot, k_p);

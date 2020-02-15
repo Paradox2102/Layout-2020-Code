@@ -19,7 +19,7 @@ public class TurretTrackingCommand extends CommandBase {
   TurretSubsystem m_subsystem;
   Camera m_camera;
   boolean regionsSeen = false;
-  double k_p = 0.0005;
+  double k_p = 0.0003;
   double k_x = 1.7;
   double k_deadZone = 0;
   boolean isFinished = false;
@@ -43,26 +43,29 @@ public class TurretTrackingCommand extends CommandBase {
   @Override
   public void execute() {
     CameraData data = m_camera.createData();
-    if(!regionsSeen && data.canSee()){
-      regionsSeen = true;
-    }
-
-    if(regionsSeen && data.canSee()){
-      System.out.println(data.centerLine());
-      double centerDiff = data.centerDiff(data.centerLine());
-      System.out.println(centerDiff);
-
-      if(Math.abs(centerDiff) > k_deadZone){
-        double power = k_p * Math.pow(Math.abs(centerDiff), k_x);
-        if(centerDiff < 0){
-          power *= -1;
-        }
-        m_subsystem.setPower(power);
-      }else{
-        m_subsystem.stop();
-        isFinished = true;
+    if(data.m_regions != null){
+      if(!regionsSeen && data.canSee()){
+        regionsSeen = true;
       }
+  
+      if(regionsSeen && data.canSee()){
+        double centerDiff = data.centerDiff(data.centerLine());
+  
+        if(Math.abs(centerDiff) > k_deadZone){
+          double power = k_p * Math.pow(Math.abs(centerDiff), k_x);
+          if(centerDiff > 0){
+            power *= -1;
+          }
+          m_subsystem.setPower(power);
+        }else{
+          m_subsystem.stop();
+          isFinished = true;
+        }
+      }
+    }else{
+      m_subsystem.stop();
     }
+    
   }
 
   // Called once the command ends or is interrupted.

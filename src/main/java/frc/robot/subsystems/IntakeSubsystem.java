@@ -33,6 +33,10 @@ public class IntakeSubsystem extends SubsystemBase {
     m_intake.set(ControlMode.PercentOutput, power);
   }
 
+  public void setAmbientPower(double power){
+    m_intake.set(ControlMode.PercentOutput, power);
+  }
+
   public void stop(){
     setDeploy(false);
     m_intake.set(ControlMode.PercentOutput, 0);

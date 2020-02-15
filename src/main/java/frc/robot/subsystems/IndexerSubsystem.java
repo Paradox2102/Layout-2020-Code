@@ -16,7 +16,7 @@ import frc.robot.Constants;
 public class IndexerSubsystem extends SubsystemBase {
   TalonSRX m_indexer = new TalonSRX(Constants.k_indexer);
   public IndexerSubsystem() {
-
+    m_indexer.setInverted(true);
   }
 
   @Override

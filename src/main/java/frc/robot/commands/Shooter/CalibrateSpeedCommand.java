@@ -37,11 +37,11 @@ public class CalibrateSpeedCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = m_speed.getAsDouble() * 47000;
+    double speed = (m_speed.getAsDouble() * 10000) + 30000;
 
     SmartDashboard.putNumber("Ideal Speed", speed);
 
-    if(speed < m_subsystem.getSpeed()){
+    if(speed < m_subsystem.getSpeed() - 1500){
       m_subsystem.stop();
     }else{
       m_subsystem.setSpeed(speed);

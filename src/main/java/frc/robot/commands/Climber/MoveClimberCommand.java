@@ -17,10 +17,13 @@ public class MoveClimberCommand extends CommandBase {
   DoubleSupplier m_getY;
 
   double k_top = 10;
+  double k_deadZone = .1;
 
   public MoveClimberCommand(ClimberSubsystem subsystem, DoubleSupplier getY) {
     m_subsystem = subsystem;
     m_getY = getY;
+
+    addRequirements(m_subsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -33,7 +36,11 @@ public class MoveClimberCommand extends CommandBase {
   public void execute() {
     double y = m_getY.getAsDouble();
 
-    m_subsystem.setPower(y);
+    if(Math.abs(y) < k_deadZone){
+      m_subsystem.stop();
+    }else{
+      m_subsystem.setPower(y);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -45,6 +52,6 @@ public class MoveClimberCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_subsystem.getPos() > k_top;
+    return false;
   }
 }

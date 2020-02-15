@@ -10,14 +10,14 @@ package frc.robot.commands.Shooter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class SpeedCommand extends CommandBase {
+public class ShooterSpeedCommand extends CommandBase {
   /**
    * Creates a new SpeedCommand.
    */
   ShooterSubsystem m_subsystem;
   double m_speed;
 
-  public SpeedCommand(ShooterSubsystem subsystem, double speed) {
+  public ShooterSpeedCommand(ShooterSubsystem subsystem, double speed) {
     m_subsystem = subsystem;
 
     m_speed = speed;
@@ -34,7 +34,7 @@ public class SpeedCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      m_subsystem.setSpeed(m_speed);
+    m_subsystem.setSpeed(m_speed);
   }
 
   // Called once the command ends or is interrupted.

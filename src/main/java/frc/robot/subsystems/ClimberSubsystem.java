@@ -15,6 +15,7 @@ import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -24,23 +25,31 @@ public class ClimberSubsystem extends SubsystemBase {
 
   CANEncoder m_encoder = new CANEncoder(m_climber);
   CANDigitalInput m_revLimit = new CANDigitalInput(m_climber, LimitSwitch.kReverse, LimitSwitchPolarity.kNormallyOpen);
+  CANDigitalInput m_fwdLimit = new CANDigitalInput(m_climber, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyOpen);
 
   Solenoid m_brake = new Solenoid(Constants.k_brake);
 
   public ClimberSubsystem() {
     m_follower.follow(m_climber, true);
 
+    m_climber.setInverted(false);
     m_encoder = m_climber.getEncoder();
   }
 
   @Override
   public void periodic() {
     checkReset();
+    SmartDashboard.putBoolean("Rev Limit", m_revLimit.get());
+    SmartDashboard.putBoolean("Fwd Limit", m_fwdLimit.get());
   }
 
   public void setPower(double power){
-    setBrake(false);
-    m_climber.set(power);
+    // if((power > 0 && m_fwdLimit.get()) || (power < 0 && m_revLimit.get())){
+    //   stop();
+    // }else{
+      setBrake(true);
+      m_climber.set(power);
+    // }
   }
 
   public void setBrake(boolean set){
@@ -48,7 +57,7 @@ public class ClimberSubsystem extends SubsystemBase {
   }
   
   public void stop(){
-    setBrake(true);
+    setBrake(false);
     m_climber.set(0);
   }
 
