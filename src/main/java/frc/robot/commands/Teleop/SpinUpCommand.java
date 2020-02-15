@@ -12,6 +12,8 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.lib.Camera;
 import frc.robot.commands.Indexer.IndexCommand;
+import frc.robot.commands.Shooter.CalibrateSpeedCommand;
+import frc.robot.commands.Shooter.ShooterCalculateSpeedCommand;
 import frc.robot.commands.Shooter.ShooterSpeedCommand;
 import frc.robot.commands.Turret.TurretTrackingCommand;
 import frc.robot.subsystems.IndexerSubsystem;
@@ -26,6 +28,10 @@ public class SpinUpCommand extends ParallelCommandGroup {
    * Creates a new SpinUpCommand.
    */
   public SpinUpCommand(TurretSubsystem turretSubsystem, Camera turretCamera, ShooterSubsystem shooterSubsystem, IndexerSubsystem indexerSubsystem, double speed) {
-    addCommands( new ShooterSpeedCommand(shooterSubsystem, speed), new IndexCommand(indexerSubsystem, 0.5));
+    addCommands(new ShooterCalculateSpeedCommand(shooterSubsystem, turretCamera), new IndexCommand(indexerSubsystem, 0.5));
+  }
+
+  public SpinUpCommand(TurretSubsystem turretSubsystem, Camera turretCamera, ShooterSubsystem shooterSubsystem, IndexerSubsystem indexerSubsystem, DoubleSupplier speed) {
+    addCommands( new CalibrateSpeedCommand(shooterSubsystem, speed), new IndexCommand(indexerSubsystem, 0.5));
   }
 }

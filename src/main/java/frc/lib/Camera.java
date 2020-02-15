@@ -73,7 +73,11 @@ public class Camera {
         }
         
         public double getTargetHeight(){
-            return m_regions.GetRegion(0).m_bounds.m_bottom - m_regions.GetRegion(0).m_bounds.m_top;
+            if(m_regions.GetRegionCount() > 0){
+                return m_regions.GetRegion(0).m_bounds.m_bottom - m_regions.GetRegion(0).m_bounds.m_top;
+            }else{
+                return -1;
+            }
         }
 
     }

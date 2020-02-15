@@ -74,7 +74,7 @@ public class RobotContainer {
 
   // JoystickButton m_calibrateBtn = new JoystickButton(m_stick, 1);
   // JoystickButton m_trackBalls = new JoystickButton(m_stick, 2);
-  // JoystickButton m_snoot = new JoystickButton(m_climbStick, 5);
+  JoystickButton m_snoot = new JoystickButton(m_stick, 5);
 
   // JoystickButton m_shoot = new JoystickButton(m_stick, 5);
   // JoystickButton m_throat = new JoystickButton(m_stick, 6);
@@ -146,7 +146,7 @@ public class RobotContainer {
     m_outtake.whileHeld(new IntakeCommand(m_intakeSubsystem, -0.5));
     m_spinUp.toggleWhenPressed(new SpinUpCommand(m_turretSubsystem, m_camera, m_shooterSubsystem, m_indexerSubsystem, shooterSpeed));
     m_spinUp.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_camera));
-    m_fire.whileHeld(new ThroatPowerCommand(m_throatSubsystem, () -> m_shooterSubsystem.getSpeed(), shooterSpeed - 1500, 0.4));
+    m_fire.whileHeld(new ThroatPowerCommand(m_throatSubsystem, () -> m_shooterSubsystem.getSpeed(), () -> m_shooterSubsystem.getSetpoint() - 1500, 0.4));
     m_moveTurrentL.whileHeld(new TurretMoveCommand(m_turretSubsystem, 0.5));
     m_moveTurrentR.whileHeld(new TurretMoveCommand(m_turretSubsystem, -0.5));
 
@@ -155,7 +155,7 @@ public class RobotContainer {
     m_climb.whileHeld(new MoveClimberCommand(m_climberSubsystem, () -> -m_climbStick.getY()));
     // m_calibrateSpeed.whileHeld(new CalibrateSpeedCommand(m_driveSubsystem, 3000));
     
-    // m_snoot.whileHeld(new SnootCommand(m_snootSubsystem, 1));
+    m_snoot.whileHeld(new SnootCommand(m_snootSubsystem, 0.5));
     // m_throat.toggleWhenPressed(new ParallelDeadlineGroup(new ThroatAtSpeedCommand(m_throatSubsystem, 0.75), new IntakeCommand(m_intakeSubsystem, 0.5)));
   }
 
@@ -195,7 +195,7 @@ public class RobotContainer {
   }
 
   public double getThrottle(){
-    return (-m_stick.getThrottle() + 1)/2.0;
+    return (-m_climbStick.getThrottle() + 1)/2.0;
   }
 
   public double getTargetHeight(){

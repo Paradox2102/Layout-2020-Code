@@ -27,6 +27,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
   int k_iRange = 100;
   int k_slot = 0;
+
+  double m_curSpeed = 0;
   
   public ShooterSubsystem() {
     m_shooter.setInverted(true);
@@ -76,6 +78,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setSpeed(double speed){
+    m_curSpeed = speed;
     m_shooter.set(ControlMode.Velocity, speed);
   }
 
@@ -88,6 +91,15 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void stop(){
+    m_curSpeed = 0;
     m_shooter.set(ControlMode.PercentOutput, 0);
+  }
+
+  public double getSetpoint(){
+    return m_curSpeed;
+  }
+
+  public double calculatedSpeed(double height){
+    return (3.956*height*height) - (577.432 * height) + (51611.080);
   }
 }
