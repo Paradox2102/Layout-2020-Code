@@ -115,8 +115,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("X", pos.x);
     SmartDashboard.putNumber("Y", pos.y);
     SmartDashboard.putNumber("Angle", m_robotContainer.getAngle());
-
-    SmartDashboard.putNumber("Target Height", m_robotContainer.getTargetHeight());
   }
 
   @Override

@@ -16,7 +16,6 @@ public class MoveClimberCommand extends CommandBase {
   ClimberSubsystem m_subsystem;
   DoubleSupplier m_getY;
 
-  double k_top = 10;
   double k_deadZone = .1;
 
   public MoveClimberCommand(ClimberSubsystem subsystem, DoubleSupplier getY) {

@@ -37,8 +37,8 @@ public class ShooterCalculateSpeedCommand extends CommandBase {
   public void execute() {
     CameraData data = m_camera.createData();
     if(data.m_regions != null) {
-    m_shooterSubsystem.setSpeed(m_shooterSubsystem.calculatedSpeed(data.getTargetHeight()));
-    SmartDashboard.putNumber("Calculated Speed", m_shooterSubsystem.calculatedSpeed(data.getTargetHeight()));
+      m_shooterSubsystem.setSpeed(m_shooterSubsystem.calculatedSpeed(data.getTargetHeight()));
+      SmartDashboard.putNumber("Calculated Speed", m_shooterSubsystem.calculatedSpeed(data.getTargetHeight()));
     }
   }
 

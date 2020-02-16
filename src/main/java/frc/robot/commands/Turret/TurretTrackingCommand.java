@@ -36,7 +36,6 @@ public class TurretTrackingCommand extends CommandBase {
     m_camera.toggleLights(true);
     regionsSeen = false;
     isFinished = false;
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
