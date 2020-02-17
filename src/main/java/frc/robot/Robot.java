@@ -49,6 +49,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    // System.out.println("Periodic Running");
   }
 
   /**
@@ -72,7 +73,7 @@ public class Robot extends TimedRobot {
     
     m_robotContainer.startPosTracking();
     m_robotContainer.setPos(0, 0);
-    m_robotContainer.setAngle(90);
+    m_robotContainer.setAngle(-90);
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

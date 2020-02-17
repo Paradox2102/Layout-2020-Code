@@ -13,9 +13,20 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class IntakeCommand extends CommandBase {
   IntakeSubsystem m_subsystem;
   double m_power;
+  long m_startTime;
+  long m_time; //in seconds
   public IntakeCommand(IntakeSubsystem subsystem, double power) {
     m_subsystem = subsystem;
     m_power = power;
+    m_time = 0;
+
+    addRequirements(m_subsystem);
+  }
+
+  public IntakeCommand(IntakeSubsystem subsystem, double power, long time) {
+    m_subsystem = subsystem;
+    m_power = power;
+    m_time = time;
 
     addRequirements(m_subsystem);
   }
@@ -24,6 +35,7 @@ public class IntakeCommand extends CommandBase {
   @Override
   public void initialize() {
     m_subsystem.setPower(m_power);
+    m_startTime = System.currentTimeMillis();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,6 +52,9 @@ public class IntakeCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if(m_time == 0){
+      return false;
+    }
+    return (System.currentTimeMillis() - m_startTime) > m_time * 1000;
   }
 }

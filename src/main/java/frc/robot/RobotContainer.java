@@ -23,7 +23,7 @@ import frc.pathfinder.Pathfinder.Waypoint;
 import frc.robot.PositionTracker.PositionContainer;
 import frc.robot.PurePursuit.PathConfigs;
 import frc.robot.commands.Auto.CreatePathCommand;
-import frc.robot.commands.Auto.TrenchRun;
+import frc.robot.commands.Auto.TrenchRun.TrenchRun;
 import frc.robot.commands.Camera.BallDriveCommand;
 import frc.robot.commands.Climber.MoveClimberCommand;
 import frc.robot.commands.Drive.ArcadeDriveCommand;
@@ -143,7 +143,9 @@ public class RobotContainer {
         return null;
       }
     });
-    m_chooser.addOption("Trench Run", new TrenchRun(m_driveSubsystem, m_camera));
+    m_chooser.addOption("Trench Run", new TrenchRun(m_driveSubsystem, m_intakeSubsystem, 
+                                                    m_shooterSubsystem, m_turretSubsystem, m_throatSubsystem, m_indexerSubsystem, m_camera,
+                                                    35000, () -> getPos().x, () -> getPos().y));
     m_chooser.addOption("10 ft", new CreatePathCommand(m_driveSubsystem, k_10ft, PathConfigs.fast));
     // m_chooser.addOption("Print 10 ft", new PrintPathCommand(m_driveSubsystem, drive10Ft, PurePursuit.PathConfigs.fast));
     SmartDashboard.putData("Auto mode", m_chooser);  
@@ -171,7 +173,7 @@ public class RobotContainer {
     m_turretTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_camera));
 
     m_climb.whileHeld(new MoveClimberCommand(m_climberSubsystem, () -> -m_climbStick.getY()));
-    m_calibrateSpeed.whileHeld(new CalibrateSpeedCommand(m_driveSubsystem, 1000));
+    m_calibrateSpeed.whileHeld(new CalibrateSpeedCommand(m_driveSubsystem, 3000));
     
     // m_throat.toggleWhenPressed(new ParallelDeadlineGroup(new ThroatAtSpeedCommand(m_throatSubsystem, 0.75), new IntakeCommand(m_intakeSubsystem, 0.5)));
   }

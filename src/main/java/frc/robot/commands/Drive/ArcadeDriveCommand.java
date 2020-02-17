@@ -41,6 +41,8 @@ public class ArcadeDriveCommand extends CommandBase {
     double x = m_getX.getAsDouble();
     double y = m_getY.getAsDouble();
 
+    // System.out.println("Arcade Drive Execute Running");
+
     x = x * x * x;
     y = y * y * y;
 

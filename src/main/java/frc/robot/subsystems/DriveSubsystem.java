@@ -52,13 +52,13 @@ public class DriveSubsystem extends SubsystemBase {
   PigeonIMU m_gyro = new PigeonIMU(0);
 
   //setting PID terms for 4500
-  double k_fLeft = 0.0002;
-  double k_pLeft = 0.0001;
-  double k_iLeft = 0.001650;
+  double k_fLeft = 0.000195;
+  double k_pLeft = 0.000025;
+  double k_iLeft = 0.000004;
   double k_dLeft = 0.0;
   double k_fRight = 0.000189; 
-  double k_pRight = 0.0001;
-  double k_iRight = 0.001650;
+  double k_pRight = 0.000025;
+  double k_iRight = 0.000004;
   double k_dRight = 0.0;
 
   double k_iRange = 150;
@@ -141,6 +141,11 @@ public class DriveSubsystem extends SubsystemBase {
     m_leftPIDController.setIRange(k_iRange);
     m_rightPIDController = new PIDController(k_iRight, 0, k_pRight, k_fRight, m_rightWrapper, m_rightWrapper, 0.02);
     m_rightPIDController.setIRange(k_iRange);
+
+    // m_leftDrive.setOpenLoopRampRate(0.3);
+    // m_rightDrive.setOpenLoopRampRate(0.3);
+    // m_leftFollower.setOpenLoopRampRate(0.3);
+    // m_rightFollower.setOpenLoopRampRate(0.3);
     
     //Tracking and Pure Pursuit Setup
     m_sensors = new Sensor(m_leftSparkEncoder, m_rightSparkEncoder, m_gyro, k_ticksFootSpark);

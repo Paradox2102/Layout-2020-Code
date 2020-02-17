@@ -221,12 +221,17 @@ public class Network
 				
 				try 
 				{
+					Socket clientSocket = new Socket(m_host, m_port);
+					InputStream inputStream = clientSocket.getInputStream();
+					OutputStream outputStream = clientSocket.getOutputStream();
+					PrintStream printStream = new PrintStream(outputStream);
+
 					synchronized(m_networkReceiver)
 					{
-						m_clientSocket = new Socket(m_host, m_port);
-						m_inputStream = m_clientSocket.getInputStream();
-						m_outputStream = m_clientSocket.getOutputStream();
-						m_printStream = new PrintStream(m_outputStream);
+						m_clientSocket = clientSocket;
+						m_inputStream = inputStream;
+						m_outputStream = outputStream;
+						m_printStream = printStream;
 					}	
 
 					String command = "";
