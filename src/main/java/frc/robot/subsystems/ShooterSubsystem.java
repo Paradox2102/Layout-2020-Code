@@ -100,6 +100,14 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double calculatedSpeed(double height){
-    return (3.956*height*height) - (577.432 * height) + (51611.080);
+    double speed = (3.956*height*height) - (577.432 * height) + (51611.080);
+
+    if(speed > 40000){
+      return 40000;
+    }else if(speed < 30000){
+      return 30000;
+    }
+
+    return speed;
   }
 }

@@ -13,38 +13,44 @@ import frc.lib.Camera;
 import frc.lib.Camera.CameraData;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class ShooterCalculateSpeedCommand extends CommandBase {
-  /**
-   * Creates a new ShooterCalculateSpeedCommand.
-   */
-  ShooterSubsystem m_shooterSubsystem;
+public class CaseShootingCommand extends CommandBase {
+  ShooterSubsystem m_subsystem;
   Camera m_camera;
-  public ShooterCalculateSpeedCommand(ShooterSubsystem shooterSubsystem, Camera camera) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  double m_speed;
+  public CaseShootingCommand(ShooterSubsystem subsystem, Camera camera, double speed) {
+    m_subsystem = subsystem;
     m_camera = camera;
-    m_shooterSubsystem = shooterSubsystem;
-    addRequirements(m_shooterSubsystem);
+    m_speed = speed;
+
+    addRequirements(m_subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_camera.toggleLights(true);
+    m_subsystem.setSpeed(m_speed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     CameraData data = m_camera.createData();
-    if(data.m_regions != null) {
-      m_shooterSubsystem.setSpeed(m_shooterSubsystem.calculatedSpeed(data.getTargetHeight()));
-      SmartDashboard.putNumber("Calculated Speed", m_shooterSubsystem.calculatedSpeed(data.getTargetHeight()));
+
+    if(data.canSee() && data.getTargetWidth() > 50){
+      double speed = m_subsystem.calculatedSpeed(data.getTargetHeight());
+
+      m_speed = speed;
     }
+    SmartDashboard.putNumber("Calculated Speed", m_speed);
+    m_subsystem.setSpeed(m_speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_shooterSubsystem.stop();
+    m_subsystem.stop();
+    m_camera.toggleLights(false);
   }
 
   // Returns true when the command should end.

@@ -80,6 +80,14 @@ public class Camera {
             }
         }
 
+        public double getTargetWidth(){
+            if(m_regions.GetRegionCount() > 0){
+                return m_regions.GetRegion(0).m_bounds.m_right - m_regions.GetRegion(0).m_bounds.m_left;
+            }else{
+                return -1;
+            }
+        }
+
     }
 
     public CameraData createData(){

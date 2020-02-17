@@ -19,7 +19,10 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.lib.Camera;
+import frc.pathfinder.Pathfinder.Waypoint;
 import frc.robot.PositionTracker.PositionContainer;
+import frc.robot.PurePursuit.PathConfigs;
+import frc.robot.commands.Auto.CreatePathCommand;
 import frc.robot.commands.Auto.TrenchRun;
 import frc.robot.commands.Camera.BallDriveCommand;
 import frc.robot.commands.Climber.MoveClimberCommand;
@@ -71,19 +74,20 @@ public class RobotContainer {
 
   Joystick m_stick = new Joystick(0);
   Joystick m_climbStick = new Joystick(1);
+  Joystick m_calibStick = new Joystick(2);
 
-  // JoystickButton m_calibrateBtn = new JoystickButton(m_stick, 1);
+  // JoystickButton m_calibrateBtn = new JoystickButton(m_calibStick, 1);
   // JoystickButton m_trackBalls = new JoystickButton(m_stick, 2);
-  JoystickButton m_snoot = new JoystickButton(m_stick, 5);
+  // JoystickButton m_snoot = new JoystickButton(m_stick, 5);
 
   // JoystickButton m_shoot = new JoystickButton(m_stick, 5);
   // JoystickButton m_throat = new JoystickButton(m_stick, 6);
 
-  JoystickButton m_spinUp = new JoystickButton(m_climbStick, 2);
-  JoystickButton m_spinUpTrack = new JoystickButton(m_climbStick, 2);
+  JoystickButton m_spinUp = new JoystickButton(m_climbStick, 3);
+  JoystickButton m_spinUpTrack = new JoystickButton(m_climbStick, 3);
   JoystickButton m_fire = new JoystickButton(m_climbStick, 1);
 
-  JoystickButton m_intake = new JoystickButton(m_climbStick, 3);
+  JoystickButton m_intake = new JoystickButton(m_climbStick, 2);
 
   JoystickButton m_moveTurrentL = new JoystickButton(m_climbStick, 9);
   JoystickButton m_moveTurrentR = new JoystickButton(m_climbStick, 10);
@@ -100,7 +104,7 @@ public class RobotContainer {
 
   JoystickButton m_unJumble = new JoystickButton(m_climbStick, 11);
 
-  // JoystickButton m_calibrateSpeed = new JoystickButton(m_stick, 4);
+  JoystickButton m_calibrateSpeed = new JoystickButton(m_calibStick, 1);
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -116,7 +120,7 @@ public class RobotContainer {
     m_driveSubsystem.setDefaultCommand(new ArcadeDriveCommand(m_driveSubsystem, () -> m_stick.getX(),() ->  -m_stick.getY(), () -> m_stick.getThrottle()));
     m_serializerSubsystem.setDefaultCommand(new SerializeCommand(m_serializerSubsystem, 0.3, () -> m_throatSubsystem.GetTopBreak()));
     m_throatSubsystem.setDefaultCommand(new ThroatAtSpeedCommand(m_throatSubsystem, 0.4));
-    m_intakeSubsystem.setDefaultCommand(new AmbientIntakePowerCommand(m_intakeSubsystem, 0.25));
+    // m_intakeSubsystem.setDefaultCommand(new AmbientIntakePowerCommand(m_intakeSubsystem, 0.25));
     m_chooser.setDefaultOption("Do Nothing", new Command(){
     
       @Override
@@ -125,8 +129,22 @@ public class RobotContainer {
         return null;
       }
     });
+    
+    Waypoint[] k_10ft = {
+      new Waypoint(0, 0, Math.toRadians(90), 5),
+      new Waypoint(0, 10, Math.toRadians(90))
+    };
 
+    m_chooser.setDefaultOption("Do Nothing", new Command(){
+    
+      @Override
+      public Set<Subsystem> getRequirements() {
+        // TODO Auto-generated method stub
+        return null;
+      }
+    });
     m_chooser.addOption("Trench Run", new TrenchRun(m_driveSubsystem, m_camera));
+    m_chooser.addOption("10 ft", new CreatePathCommand(m_driveSubsystem, k_10ft, PathConfigs.fast));
     // m_chooser.addOption("Print 10 ft", new PrintPathCommand(m_driveSubsystem, drive10Ft, PurePursuit.PathConfigs.fast));
     SmartDashboard.putData("Auto mode", m_chooser);  
   }
@@ -145,7 +163,7 @@ public class RobotContainer {
     m_intake.whileHeld(new IntakeCommand(m_intakeSubsystem, 0.5));
     m_outtake.whileHeld(new IntakeCommand(m_intakeSubsystem, -0.5));
     m_spinUp.toggleWhenPressed(new SpinUpCommand(m_turretSubsystem, m_camera, m_shooterSubsystem, m_indexerSubsystem, shooterSpeed));
-    m_spinUp.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_camera));
+    // m_spinUpTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_camera));
     m_fire.whileHeld(new ThroatPowerCommand(m_throatSubsystem, () -> m_shooterSubsystem.getSpeed(), () -> m_shooterSubsystem.getSetpoint() - 1500, 0.4));
     m_moveTurrentL.whileHeld(new TurretMoveCommand(m_turretSubsystem, 0.5));
     m_moveTurrentR.whileHeld(new TurretMoveCommand(m_turretSubsystem, -0.5));
@@ -153,9 +171,8 @@ public class RobotContainer {
     m_turretTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_camera));
 
     m_climb.whileHeld(new MoveClimberCommand(m_climberSubsystem, () -> -m_climbStick.getY()));
-    // m_calibrateSpeed.whileHeld(new CalibrateSpeedCommand(m_driveSubsystem, 3000));
+    m_calibrateSpeed.whileHeld(new CalibrateSpeedCommand(m_driveSubsystem, 1000));
     
-    m_snoot.whileHeld(new SnootCommand(m_snootSubsystem, 0.5));
     // m_throat.toggleWhenPressed(new ParallelDeadlineGroup(new ThroatAtSpeedCommand(m_throatSubsystem, 0.75), new IntakeCommand(m_intakeSubsystem, 0.5)));
   }
 

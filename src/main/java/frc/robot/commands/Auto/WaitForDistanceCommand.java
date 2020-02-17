@@ -5,51 +5,52 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.Shooter;
+package frc.robot.commands.Auto;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.lib.Camera;
-import frc.lib.Camera.CameraData;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.lib.Logger;
 
-public class ShooterCalculateSpeedCommand extends CommandBase {
-  /**
-   * Creates a new ShooterCalculateSpeedCommand.
-   */
-  ShooterSubsystem m_shooterSubsystem;
-  Camera m_camera;
-  public ShooterCalculateSpeedCommand(ShooterSubsystem shooterSubsystem, Camera camera) {
+public class WaitForDistanceCommand extends CommandBase {
+  DoubleSupplier m_getX;
+  DoubleSupplier m_getY;
+  double m_targetX;
+  double m_targetY;
+  final static double k_tolerance = 2;
+  public WaitForDistanceCommand(DoubleSupplier getX, DoubleSupplier getY, double targetX, double targetY) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_camera = camera;
-    m_shooterSubsystem = shooterSubsystem;
-    addRequirements(m_shooterSubsystem);
+    m_getX = getX;
+    m_getY = getY;
+
+    m_targetX = targetX;
+    m_targetY = targetY;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    Logger.Log("WaitForDistanceCommand", 1 , "initialize");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    CameraData data = m_camera.createData();
-    if(data.m_regions != null) {
-      m_shooterSubsystem.setSpeed(m_shooterSubsystem.calculatedSpeed(data.getTargetHeight()));
-      SmartDashboard.putNumber("Calculated Speed", m_shooterSubsystem.calculatedSpeed(data.getTargetHeight()));
-    }
+    Logger.Log("WaitForDistanceCommand", -1 , "execute");
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_shooterSubsystem.stop();
+    Logger.Log("WaitForDistanceCommand", 1 , "end");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    Logger.Log("WaitForDistanceCommand", -1 , "isFinished");
+    double x = m_getX.getAsDouble() - m_targetX;
+    double y = m_getY.getAsDouble() - m_targetY;
+    return x*x + y*y < k_tolerance*k_tolerance;
   }
 }

@@ -72,7 +72,7 @@ public class Robot extends TimedRobot {
     
     m_robotContainer.startPosTracking();
     m_robotContainer.setPos(0, 0);
-    m_robotContainer.setAngle(-90);
+    m_robotContainer.setAngle(90);
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

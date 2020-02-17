@@ -5,51 +5,44 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.Shooter;
+package frc.robot.commands.Auto;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.lib.Camera;
-import frc.lib.Camera.CameraData;
+import frc.lib.Logger;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class ShooterCalculateSpeedCommand extends CommandBase {
+public class WaitForShooterSpeedCommand extends CommandBase {
   /**
-   * Creates a new ShooterCalculateSpeedCommand.
+   * Creates a new WaitForShooterSpeedCommand.
    */
-  ShooterSubsystem m_shooterSubsystem;
-  Camera m_camera;
-  public ShooterCalculateSpeedCommand(ShooterSubsystem shooterSubsystem, Camera camera) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    m_camera = camera;
-    m_shooterSubsystem = shooterSubsystem;
-    addRequirements(m_shooterSubsystem);
+  ShooterSubsystem m_subsystem;
+  final static int k_tolerance = 500;
+  public WaitForShooterSpeedCommand(ShooterSubsystem subsystem) {
+    m_subsystem = subsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    Logger.Log("WaitForShooterSpeedCommand", 1 , "initialize");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    CameraData data = m_camera.createData();
-    if(data.m_regions != null) {
-      m_shooterSubsystem.setSpeed(m_shooterSubsystem.calculatedSpeed(data.getTargetHeight()));
-      SmartDashboard.putNumber("Calculated Speed", m_shooterSubsystem.calculatedSpeed(data.getTargetHeight()));
-    }
+    Logger.Log("WaitForShooterSpeedCommand", -1 , "execute");
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_shooterSubsystem.stop();
+    Logger.Log("WaitForShooterSpeedCommand", 1 , "end");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    Logger.Log("WaitForShooterSpeedCommand", -1 , "isFinished");
+    return m_subsystem.getSpeed() >= m_subsystem.getSetpoint() - k_tolerance;
   }
 }

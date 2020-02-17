@@ -17,9 +17,9 @@ public class PurePursuit {
 	private final double k_lookAheadDist = 0.75;
 	private final int k_maxTimeLookAhead = 1;
 	
-	private final double k_maxVelFast = 11.94;//10.7
-	private final double k_maxAcc = 6;
-	private final double k_maxDeccel = 5;
+	private final double k_maxVelFast = 7.96;//10.7
+	private final double k_maxAcc = 4;
+	private final double k_maxDeccel = 4;
 	private final double k_maxJerk = 100;
 
 	private final double k_width = 2.17;

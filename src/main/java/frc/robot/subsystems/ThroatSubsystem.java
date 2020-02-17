@@ -22,7 +22,7 @@ public class ThroatSubsystem extends SubsystemBase {
    private DigitalInput m_dioTop = new DigitalInput(Constants.k_dioTop);
    private DigitalInput m_dioBottom = new DigitalInput(Constants.k_dioBottom);
    
-   private DigitalInput m_test = new DigitalInput(8);
+   private DigitalInput m_test = new DigitalInput(4);
   public ThroatSubsystem() {
     m_throatMotor.setInverted(true);
       m_throatMotor.setNeutralMode(NeutralMode.Brake);
@@ -45,7 +45,7 @@ public class ThroatSubsystem extends SubsystemBase {
   }
 
   public boolean GetBottomBreak(){
-    return !m_dioBottom.get();
+    return !m_test.get();
   }
 
   @Override

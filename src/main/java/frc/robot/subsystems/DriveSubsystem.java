@@ -52,16 +52,16 @@ public class DriveSubsystem extends SubsystemBase {
   PigeonIMU m_gyro = new PigeonIMU(0);
 
   //setting PID terms for 4500
-  double k_fLeft = 0.00019;
+  double k_fLeft = 0.0002;
   double k_pLeft = 0.0001;
-  double k_iLeft = 0.00001 * 0;
+  double k_iLeft = 0.001650;
   double k_dLeft = 0.0;
-  double k_fRight = 0.00019; 
+  double k_fRight = 0.000189; 
   double k_pRight = 0.0001;
-  double k_iRight = 0.00001 * 0;
+  double k_iRight = 0.001650;
   double k_dRight = 0.0;
 
-  double k_iRange = 100;
+  double k_iRange = 150;
   double k_minOutput = -1;
   double k_maxOutput = 1;
 
