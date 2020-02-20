@@ -17,34 +17,35 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ThroatSubsystem extends SubsystemBase {
-   private TalonSRX m_throatMotor = new TalonSRX(Constants.k_throat);   
+  private TalonSRX m_throatMotor = new TalonSRX(Constants.k_throat);
 
-   private DigitalInput m_dioTop = new DigitalInput(Constants.k_dioTop);
-   private DigitalInput m_dioBottom = new DigitalInput(Constants.k_dioBottom);
-   
-   private DigitalInput m_test = new DigitalInput(4);
+  private DigitalInput m_dioTop = new DigitalInput(Constants.k_dioTop);
+  private DigitalInput m_dioBottom = new DigitalInput(Constants.k_dioBottom);
+
+  private DigitalInput m_test = new DigitalInput(4);
+
   public ThroatSubsystem() {
     m_throatMotor.setInverted(true);
-      m_throatMotor.setNeutralMode(NeutralMode.Brake);
+    m_throatMotor.setNeutralMode(NeutralMode.Brake);
   }
 
-  public void setThroatPower(double throatPower){
+  public void setThroatPower(double throatPower) {
     m_throatMotor.set(ControlMode.PercentOutput, throatPower);
   }
 
-  public void stopThroatPower(){
+  public void stopThroatPower() {
     m_throatMotor.set(ControlMode.PercentOutput, 0);
   }
 
-  // public boolean GetOutput(){     
-  //   return m_dio.get();
+  // public boolean GetOutput(){
+  // return m_dio.get();
   // }
 
-  public boolean GetTopBreak(){
+  public boolean GetTopBreak() {
     return !m_dioTop.get();
   }
 
-  public boolean GetBottomBreak(){
+  public boolean GetBottomBreak() {
     return !m_test.get();
   }
 

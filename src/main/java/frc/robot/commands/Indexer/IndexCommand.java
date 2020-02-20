@@ -13,6 +13,7 @@ import frc.robot.subsystems.IndexerSubsystem;
 public class IndexCommand extends CommandBase {
   IndexerSubsystem m_subsystem;
   double m_power;
+
   public IndexCommand(IndexerSubsystem subsystem, double power) {
     m_subsystem = subsystem;
     m_power = power;

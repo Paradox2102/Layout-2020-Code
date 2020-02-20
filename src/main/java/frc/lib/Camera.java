@@ -10,91 +10,92 @@ import frc.PiCamera.PiCamera.PiCameraRegions;
 public class Camera {
     public static PiCamera m_piCamera;
 
-    public void connect(String ipAddress){
+    public void connect(String ipAddress) {
         m_piCamera = new PiCamera();
 
         m_piCamera.Connect(ipAddress, 5800);
     }
 
-    public class CameraData{
+    public class CameraData {
         public PiCameraRegions m_regions;
 
-        public CameraData(){
+        public CameraData() {
             m_regions = m_piCamera.GetRegions();
         }
 
-        public boolean canSee(){
+        public boolean canSee() {
+            System.out.println(m_regions.GetRegion(0));
             return m_regions.GetRegion(0) != null;
         }
 
-        public double centerX(){
+        public double centerX() {
             PiCameraRegion region = m_regions.GetRegion(0);
             PiCameraRect bounds = region.m_bounds;
-            return (bounds.m_right + bounds.m_left )/ 2.0;
+            return (bounds.m_right + bounds.m_left) / 2.0;
         }
 
-        public double centerLine(){
+        public double centerLine() {
             return m_regions.m_targetHorzPos;
         }
 
-        public double centerDiff(double center){
+        public double centerDiff(double center) {
             double targetCenter = centerX();
             return center - targetCenter;
         }
 
-        public double ballCenterDiff(double centerLine){
+        public double ballCenterDiff(double centerLine) {
             PiCameraRegions regions = m_regions;
             regions.m_regions = ballFilter();
             PiCameraRegion region1 = m_regions.GetRegion(0);
             PiCameraRegion region2 = m_regions.GetRegion(1);
-            //left case
-            if(region1.m_bounds.m_left < region2.m_bounds.m_left){
+            // left case
+            if (region1.m_bounds.m_left < region2.m_bounds.m_left) {
                 double center = (region1.m_bounds.m_left + region2.m_bounds.m_right) / 2.0;
                 return centerLine - center;
-            }else{
+            } else {
                 double center = (region2.m_bounds.m_left + region1.m_bounds.m_right) / 2.0;
                 return centerLine - center;
             }
         }
 
         public ArrayList<PiCameraRegion> ballFilter() {
-	    	ArrayList<PiCameraRegion> regionsList = new ArrayList<PiCameraRegion>();
-	    	for(int i=0; i < m_regions.GetRegionCount(); i++) {
-	    		PiCameraRect rect = m_regions.GetRegion(i).m_bounds;
+            ArrayList<PiCameraRegion> regionsList = new ArrayList<PiCameraRegion>();
+            for (int i = 0; i < m_regions.GetRegionCount(); i++) {
+                PiCameraRect rect = m_regions.GetRegion(i).m_bounds;
 
                 double height = rect.m_bottom - rect.m_top;
                 double width = rect.m_right - rect.m_left;
-                
-                if(width/height > 0.6 && width/height < 1.4) {
-                	regionsList.add(m_regions.GetRegion(i));
+
+                if (width / height > 0.6 && width / height < 1.4) {
+                    regionsList.add(m_regions.GetRegion(i));
                 }
             }
-	    	return regionsList;
+            return regionsList;
         }
-        
-        public double getTargetHeight(){
-            if(m_regions.GetRegionCount() > 0){
+
+        public double getTargetHeight() {
+            if (m_regions.GetRegionCount() > 0) {
                 return m_regions.GetRegion(0).m_bounds.m_bottom - m_regions.GetRegion(0).m_bounds.m_top;
-            }else{
+            } else {
                 return -1;
             }
         }
 
-        public double getTargetWidth(){
-            if(m_regions.GetRegionCount() > 0){
+        public double getTargetWidth() {
+            if (m_regions.GetRegionCount() > 0) {
                 return m_regions.GetRegion(0).m_bounds.m_right - m_regions.GetRegion(0).m_bounds.m_left;
-            }else{
+            } else {
                 return -1;
             }
         }
 
     }
 
-    public CameraData createData(){
+    public CameraData createData() {
         return new CameraData();
     }
 
-    public void toggleLights(boolean on){
+    public void toggleLights(boolean on) {
 
         m_piCamera.SetLight(on ? 3 : 0);
     }
