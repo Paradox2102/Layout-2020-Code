@@ -23,6 +23,7 @@ import frc.pathfinder.Pathfinder.Waypoint;
 import frc.robot.PositionTracker.PositionContainer;
 import frc.robot.PurePursuit.PathConfigs;
 import frc.robot.commands.Auto.CreatePathCommand;
+import frc.robot.commands.Auto.TrenchRun.TrenchForwardBack;
 import frc.robot.commands.Auto.TrenchRun.TrenchRun;
 import frc.robot.commands.Camera.BallDriveCommand;
 import frc.robot.commands.Climber.MoveClimberCommand;
@@ -113,7 +114,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // Configure the button bindings
-    m_camera.connect("10.21.2.111");
+    m_camera.connect("10.21.2.12");
 
     configureButtonBindings();
 
@@ -147,6 +148,7 @@ public class RobotContainer {
                                                     m_shooterSubsystem, m_turretSubsystem, m_throatSubsystem, m_indexerSubsystem, m_camera,
                                                     35000, () -> getPos().x, () -> getPos().y));
     m_chooser.addOption("10 ft", new CreatePathCommand(m_driveSubsystem, k_10ft, PathConfigs.fast));
+    m_chooser.addOption("Trench Forward Backward", new TrenchForwardBack(m_driveSubsystem));
     // m_chooser.addOption("Print 10 ft", new PrintPathCommand(m_driveSubsystem, drive10Ft, PurePursuit.PathConfigs.fast));
     SmartDashboard.putData("Auto mode", m_chooser);  
   }

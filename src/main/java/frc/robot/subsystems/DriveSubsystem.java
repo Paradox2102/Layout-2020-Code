@@ -142,10 +142,10 @@ public class DriveSubsystem extends SubsystemBase {
     m_rightPIDController = new PIDController(k_iRight, 0, k_pRight, k_fRight, m_rightWrapper, m_rightWrapper, 0.02);
     m_rightPIDController.setIRange(k_iRange);
 
-    // m_leftDrive.setOpenLoopRampRate(0.3);
-    // m_rightDrive.setOpenLoopRampRate(0.3);
-    // m_leftFollower.setOpenLoopRampRate(0.3);
-    // m_rightFollower.setOpenLoopRampRate(0.3);
+    m_leftDrive.setOpenLoopRampRate(0.3);
+    m_rightDrive.setOpenLoopRampRate(0.3);
+    m_leftFollower.setOpenLoopRampRate(0.3);
+    m_rightFollower.setOpenLoopRampRate(0.3);
     
     //Tracking and Pure Pursuit Setup
     m_sensors = new Sensor(m_leftSparkEncoder, m_rightSparkEncoder, m_gyro, k_ticksFootSpark);

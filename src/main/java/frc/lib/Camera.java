@@ -24,7 +24,10 @@ public class Camera {
         }
 
         public boolean canSee(){
-            return m_regions.GetRegion(0) != null;
+            if(m_regions != null){
+                return m_regions.GetRegion(0) != null;
+            }
+            return false;
         }
 
         public double centerX(){

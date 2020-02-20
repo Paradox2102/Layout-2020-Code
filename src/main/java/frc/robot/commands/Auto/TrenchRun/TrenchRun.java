@@ -57,7 +57,7 @@ public class TrenchRun extends SequentialCommandGroup {
                    DoubleSupplier getPosX, DoubleSupplier getPosY) {
     addCommands(
       new ParallelCommandGroup(
-        new SpinUpCommand(turretSubsystem, turretCamera, shooterSubsystem, indexerSubsystem, shooterSpeed),
+        //new SpinUpCommand(turretSubsystem, turretCamera, shooterSubsystem, indexerSubsystem, shooterSpeed),
         new SequentialCommandGroup(
             new BackTrenchRunCommand(driveSubsystem, intakeSubsystem, shooterSubsystem, turretSubsystem, throatSubsystem, 
                                     getPosX, getPosY, turretCamera),

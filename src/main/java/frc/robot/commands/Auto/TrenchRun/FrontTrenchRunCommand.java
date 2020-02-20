@@ -42,9 +42,9 @@ public class FrontTrenchRunCommand extends ParallelCommandGroup {
     
     super(
         new CreatePathCommand(driveSubsystem, k_forwardsTrench, PathConfigs.fast),
-        new IntakeCommand(intakeSubsystem, 0.5, 1),
-        new TurretTrackingCommand(turretSubsystem, camera),
-        new ThroatPowerCommand(throatSubsystem, () -> shooterSubsystem.getSpeed(), () -> shooterSubsystem.getSetpoint() - 1500, 0.4)
+        new IntakeCommand(intakeSubsystem, 0.5, 1)
+        //new TurretTrackingCommand(turretSubsystem, camera),
+        //new ThroatPowerCommand(throatSubsystem, () -> shooterSubsystem.getSpeed(), () -> shooterSubsystem.getSetpoint() - 1500, 0.4)
     );
   }
 }

@@ -12,6 +12,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANDigitalInput.LimitSwitch;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,6 +27,8 @@ public class TurretSubsystem extends SubsystemBase {
 
   public TurretSubsystem() {
     m_turret.setInverted(true);
+
+    m_turret.setIdleMode(IdleMode.kBrake);
 
     m_encoder = m_turret.getEncoder();
 

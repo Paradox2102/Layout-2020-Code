@@ -45,7 +45,7 @@ public class ThroatSubsystem extends SubsystemBase {
   }
 
   public boolean GetBottomBreak(){
-    return !m_test.get();
+    return !m_dioBottom.get();
   }
 
   @Override
