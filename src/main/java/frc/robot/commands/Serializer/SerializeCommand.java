@@ -8,6 +8,7 @@
 package frc.robot.commands.Serializer;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SerializerSubsystem;
@@ -16,10 +17,14 @@ public class SerializeCommand extends CommandBase {
   SerializerSubsystem m_subsystem;
   double m_power;
   BooleanSupplier m_stop;
-  public SerializeCommand(SerializerSubsystem subsystem, double power, BooleanSupplier stop) {
+  DoubleSupplier m_throttle;
+
+  public SerializeCommand(SerializerSubsystem subsystem, double power, BooleanSupplier stop, DoubleSupplier throttle) {
     m_subsystem = subsystem;
     m_power = power;
     m_stop = stop;
+    m_throttle = throttle;
+
     addRequirements(m_subsystem);
   }
 
@@ -31,9 +36,14 @@ public class SerializeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(!m_stop.getAsBoolean()){
+    // if(!m_stop.getAsBoolean()){
+    // m_subsystem.setPower(m_power);
+    // }else{
+    // m_subsystem.stop();
+    // }
+    if (m_throttle.getAsDouble() > 0.5) {
       m_subsystem.setPower(m_power);
-    }else{
+    } else {
       m_subsystem.stop();
     }
   }

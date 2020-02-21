@@ -54,10 +54,11 @@ import frc.robot.subsystems.ThroatSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 
 /**
- * This class is where the bulk of the robot should be declared.  Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
- * (including subsystems, commands, and button mappings) should be declared here.
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a "declarative" paradigm, very little robot logic should
+ * actually be handled in the {@link Robot} periodic methods (other than the
+ * scheduler calls). Instead, the structure of the robot (including subsystems,
+ * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
@@ -84,33 +85,35 @@ public class RobotContainer {
   // JoystickButton m_shoot = new JoystickButton(m_stick, 5);
   // JoystickButton m_throat = new JoystickButton(m_stick, 6);
 
-  JoystickButton m_spinUp = new JoystickButton(m_climbStick, 3);
-  JoystickButton m_spinUpTrack = new JoystickButton(m_climbStick, 3);
-  JoystickButton m_fire = new JoystickButton(m_climbStick, 1);
+  JoystickButton m_spinUp = new JoystickButton(m_stick, 2);
+  JoystickButton m_spinUpTrack = new JoystickButton(m_stick, 2);
+  JoystickButton m_fire = new JoystickButton(m_stick, 1);
 
-  JoystickButton m_intake = new JoystickButton(m_climbStick, 2);
+  JoystickButton m_intake = new JoystickButton(m_stick, 3);
+  JoystickButton m_intakeClimb = new JoystickButton(m_climbStick, 2);
 
-  JoystickButton m_moveTurrentL = new JoystickButton(m_climbStick, 9);
-  JoystickButton m_moveTurrentR = new JoystickButton(m_climbStick, 10);
+  JoystickButton m_moveTurrentL = new JoystickButton(m_stick, 7);
+  JoystickButton m_moveTurrentR = new JoystickButton(m_stick, 8);
 
-  JoystickButton m_turretTrack = new JoystickButton(m_climbStick, 8);
+  JoystickButton m_turretTrack = new JoystickButton(m_stick, 4);
 
   JoystickButton m_controlPanel = new JoystickButton(m_climbStick, 6);
 
   JoystickButton m_manualControlPanel = new JoystickButton(m_climbStick, 5);
 
-  JoystickButton m_outtake = new JoystickButton(m_climbStick, 4);
+  JoystickButton m_outtake = new JoystickButton(m_stick, 5);
+  JoystickButton m_outtakeClimb = new JoystickButton(m_climbStick, 3);
 
   JoystickButton m_climb = new JoystickButton(m_climbStick, 7);
 
-  JoystickButton m_unJumble = new JoystickButton(m_climbStick, 11);
+  JoystickButton m_unJumble = new JoystickButton(m_climbStick, 6);
 
   JoystickButton m_calibrateSpeed = new JoystickButton(m_calibStick, 1);
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   /**
-   * The container for the robot.  Contains subsystems, OI devices, and commands.
+   * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     // Configure the button bindings
@@ -118,35 +121,35 @@ public class RobotContainer {
 
     configureButtonBindings();
 
-    m_driveSubsystem.setDefaultCommand(new ArcadeDriveCommand(m_driveSubsystem, () -> m_stick.getX(),() ->  -m_stick.getY(), () -> m_stick.getThrottle()));
-    m_serializerSubsystem.setDefaultCommand(new SerializeCommand(m_serializerSubsystem, 0.3, () -> m_throatSubsystem.GetTopBreak()));
+    m_driveSubsystem.setDefaultCommand(new ArcadeDriveCommand(m_driveSubsystem, () -> m_stick.getX(),
+        () -> -m_stick.getY(), () -> m_stick.getThrottle()));
+    m_serializerSubsystem.setDefaultCommand(
+        new SerializeCommand(m_serializerSubsystem, 0.3, () -> m_throatSubsystem.GetTopBreak(), () -> getThrottle()));
     m_throatSubsystem.setDefaultCommand(new ThroatAtSpeedCommand(m_throatSubsystem, 0.4));
-    // m_intakeSubsystem.setDefaultCommand(new AmbientIntakePowerCommand(m_intakeSubsystem, 0.25));
-    m_chooser.setDefaultOption("Do Nothing", new Command(){
-    
-      @Override
-      public Set<Subsystem> getRequirements() {
-        // TODO Auto-generated method stub
-        return null;
-      }
-    });
-    
-    Waypoint[] k_10ft = {
-      new Waypoint(0, 0, Math.toRadians(90), 5),
-      new Waypoint(0, 10, Math.toRadians(90))
-    };
 
-    m_chooser.setDefaultOption("Do Nothing", new Command(){
-    
+    // m_intakeSubsystem.setDefaultCommand(new
+    // AmbientIntakePowerCommand(m_intakeSubsystem, 0.25));
+    m_chooser.setDefaultOption("Do Nothing", new Command() {
+
       @Override
       public Set<Subsystem> getRequirements() {
         // TODO Auto-generated method stub
         return null;
       }
     });
-    m_chooser.addOption("Trench Run", new TrenchRun(m_driveSubsystem, m_intakeSubsystem, 
-                                                    m_shooterSubsystem, m_turretSubsystem, m_throatSubsystem, m_indexerSubsystem, m_camera,
-                                                    35000, () -> getPos().x, () -> getPos().y));
+
+    Waypoint[] k_10ft = { new Waypoint(0, 0, Math.toRadians(90), 5), new Waypoint(0, 10, Math.toRadians(90)) };
+
+    m_chooser.setDefaultOption("Do Nothing", new Command() {
+
+      @Override
+      public Set<Subsystem> getRequirements() {
+        // TODO Auto-generated method stub
+        return null;
+      }
+    });
+    m_chooser.addOption("Trench Run", new TrenchRun(m_driveSubsystem, m_intakeSubsystem, m_shooterSubsystem,
+        m_turretSubsystem, m_throatSubsystem, m_indexerSubsystem, m_camera, 35000, () -> getPos().x, () -> getPos().y));
     m_chooser.addOption("10 ft", new CreatePathCommand(m_driveSubsystem, k_10ft, PathConfigs.fast));
     m_chooser.addOption("Trench Forward Backward", new TrenchForwardBack(m_driveSubsystem));
     // m_chooser.addOption("Print 10 ft", new PrintPathCommand(m_driveSubsystem, drive10Ft, PurePursuit.PathConfigs.fast));
@@ -154,32 +157,41 @@ public class RobotContainer {
   }
 
   /**
-   * Use this method to define your button->command mappings.  Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a
-   * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+   * Use this method to define your button->command mappings. Buttons can be
+   * created by instantiating a {@link GenericHID} or one of its subclasses
+   * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
+   * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    double shooterSpeed = 33000;//31000; //36000;
+    double shooterSpeed = 33000;// 31000; //36000;
     // m_calibrateBtn.whileHeld(new SpeedCommand(m_driveSubsystem, 11.94));
-    // m_trackBalls.toggleWhenPressed(new BallDriveCommand(m_driveSubsystem, m_camera, -0.25));
-    // m_shoot.toggleWhenPressed(new ShootAllCommand(m_throatSubsystem, m_shooterSubsystem, m_serializerSubsystem, m_indexerSubsystem, m_intakeSubsystem, () -> getThrottle()));
-    m_intake.whileHeld(new IntakeCommand(m_intakeSubsystem, 0.5));
-    m_outtake.whileHeld(new IntakeCommand(m_intakeSubsystem, -0.5));
-    m_spinUp.toggleWhenPressed(new SpinUpCommand(m_turretSubsystem, m_camera, m_shooterSubsystem, m_indexerSubsystem, shooterSpeed));
-    // m_spinUpTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_camera));
-    m_fire.whileHeld(new ThroatPowerCommand(m_throatSubsystem, () -> m_shooterSubsystem.getSpeed(), () -> m_shooterSubsystem.getSetpoint() - 1500, 0.4));
-    m_moveTurrentL.whileHeld(new TurretMoveCommand(m_turretSubsystem, 0.5));
-    m_moveTurrentR.whileHeld(new TurretMoveCommand(m_turretSubsystem, -0.5));
+    // m_trackBalls.toggleWhenPressed(new BallDriveCommand(m_driveSubsystem,
+    // m_camera, -0.25));
+    // m_shoot.toggleWhenPressed(new ShootAllCommand(m_throatSubsystem,
+    // m_shooterSubsystem, m_serializerSubsystem, m_indexerSubsystem,
+    // m_intakeSubsystem, () -> getThrottle()));
+    m_intake.whileHeld(new IntakeCommand(m_intakeSubsystem, 0.75));
+    m_intakeClimb.whileHeld(new IntakeCommand(m_intakeSubsystem, 0.75));
+    m_outtake.whileHeld(new IntakeCommand(m_intakeSubsystem, -0.75));
+    m_outtakeClimb.whileHeld(new IntakeCommand(m_intakeSubsystem, -0.75));
+    m_spinUp.toggleWhenPressed(
+        new SpinUpCommand(m_turretSubsystem, m_camera, m_shooterSubsystem, m_indexerSubsystem, shooterSpeed));
+    // m_spinUpTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem,
+    // m_camera));
+    m_fire.whileHeld(new ThroatPowerCommand(m_throatSubsystem, () -> m_shooterSubsystem.getSpeed(),
+        () -> m_shooterSubsystem.getSetpoint() - 1500, 0.4));
+    m_moveTurrentL.whileHeld(new TurretMoveCommand(m_turretSubsystem, 0.35));
+    m_moveTurrentR.whileHeld(new TurretMoveCommand(m_turretSubsystem, -0.35));
 
     m_turretTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_camera));
 
     m_climb.whileHeld(new MoveClimberCommand(m_climberSubsystem, () -> -m_climbStick.getY()));
     m_calibrateSpeed.whileHeld(new CalibrateSpeedCommand(m_driveSubsystem, 3000));
-    
-    // m_throat.toggleWhenPressed(new ParallelDeadlineGroup(new ThroatAtSpeedCommand(m_throatSubsystem, 0.75), new IntakeCommand(m_intakeSubsystem, 0.5)));
-  }
 
+    // m_throat.toggleWhenPressed(new ParallelDeadlineGroup(new
+    // ThroatAtSpeedCommand(m_throatSubsystem, 0.75), new
+    // IntakeCommand(m_intakeSubsystem, 0.5)));
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -191,35 +203,41 @@ public class RobotContainer {
     return m_chooser.getSelected();
   }
 
-  public void startPosTracking(){
+  public void startPosTracking() {
     m_driveSubsystem.startPosUpdate();
   }
-  
-  public void stopPosTracking(){
+
+  public void stopPosTracking() {
     m_driveSubsystem.stopPosUpdate();
   }
-  
-  public void setPos(double x, double y){
+
+  public void setPos(double x, double y) {
     m_driveSubsystem.setPos(x, y);
   }
 
-  public void  setAngle(double angle){
+  public void setAngle(double angle) {
     m_driveSubsystem.resetAngle(angle);
   }
 
-  public PositionContainer getPos(){
+  public PositionContainer getPos() {
     return m_driveSubsystem.getPos();
   }
-  
-  public double getAngle(){
+
+  public double getAngle() {
     return m_driveSubsystem.getAngle();
   }
 
-  public double getThrottle(){
-    return (-m_climbStick.getThrottle() + 1)/2.0;
+  // throttle for climb stick
+  public double getThrottle() {
+    return (-m_climbStick.getThrottle() + 1) / 2.0;
   }
 
-  public double getTargetHeight(){
+  // throttle for drive stick
+  public double getDriveThrottle() {
+    return (-m_stick.getThrottle() + 1) / 2.0;
+  }
+
+  public double getTargetHeight() {
     return m_camera.createData().getTargetHeight();
   }
 }

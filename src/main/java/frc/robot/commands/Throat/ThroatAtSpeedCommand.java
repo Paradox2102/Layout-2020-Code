@@ -15,12 +15,13 @@ public class ThroatAtSpeedCommand extends CommandBase {
   /**
    * Creates a new ThroatAtSpeedCommand.
    */
-   private ThroatSubsystem m_throatSubsystem;
-   private double m_power = 0;
+  private ThroatSubsystem m_throatSubsystem;
+  private double m_power = 0;
+
   public ThroatAtSpeedCommand(ThroatSubsystem throatSubsystem, double power) {
     // Use addRequirements() here to declare subsystem dependencies.
     Logger.Log("ThroatAtSpeedCommand", 3, String.format("ThroatAtSpeedCommand: %f", power));
-    
+
     m_power = power;
     m_throatSubsystem = throatSubsystem;
     addRequirements(m_throatSubsystem);
@@ -35,7 +36,12 @@ public class ThroatAtSpeedCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!m_throatSubsystem.GetTopBreak() && m_throatSubsystem.GetBottomBreak()){
+    System.out.println(m_throatSubsystem.GetTopBreak());
+    System.out.println(m_throatSubsystem.GetBottomBreak());
+    System.out.println(m_power);
+    Logger.Log("ThroatAtSpeedCommand", 3, "Executing");
+
+    if (!m_throatSubsystem.GetTopBreak() && m_throatSubsystem.GetBottomBreak()) {
       m_throatSubsystem.setThroatPower(m_power);
     } else {
       m_throatSubsystem.stopThroatPower();

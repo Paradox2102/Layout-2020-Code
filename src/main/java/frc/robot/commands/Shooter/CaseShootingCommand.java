@@ -17,6 +17,7 @@ public class CaseShootingCommand extends CommandBase {
   ShooterSubsystem m_subsystem;
   Camera m_camera;
   double m_speed;
+
   public CaseShootingCommand(ShooterSubsystem subsystem, Camera camera, double speed) {
     m_subsystem = subsystem;
     m_camera = camera;
@@ -37,7 +38,7 @@ public class CaseShootingCommand extends CommandBase {
   public void execute() {
     CameraData data = m_camera.createData();
 
-    if(data.canSee() && data.getTargetWidth() > 50){
+    if (data.canSee() && data.getTargetWidth() > 50) {
       double speed = m_subsystem.calculatedSpeed(data.getTargetHeight());
 
       m_speed = speed;
