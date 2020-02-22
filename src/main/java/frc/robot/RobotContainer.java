@@ -35,6 +35,7 @@ import frc.robot.commands.Intake.IntakeCommand;
 import frc.robot.commands.Serializer.SerializeCommand;
 import frc.robot.commands.Shooter.PowerCommand;
 import frc.robot.commands.Shooter.ShooterSpeedCommand;
+import frc.robot.commands.Snoot.FixedRotationCommand;
 import frc.robot.commands.Snoot.SnootCommand;
 import frc.robot.commands.Snoot.SnootTesting;
 import frc.robot.commands.Teleop.FireCommand;
@@ -120,6 +121,7 @@ public class RobotContainer {
   JoystickButton m_calibrateSpeed = new JoystickButton(m_calibStick, 1);
   JoystickButton m_calibrateSpeedShooter = new JoystickButton(m_calibStick, 2);
   JoystickButton m_snootTesting = new JoystickButton(m_calibStick, 3);
+  JoystickButton m_snootSetRotation = new JoystickButton(m_calibStick, 4);
   
   SendableChooser<Command> m_chooser = new SendableChooser<>();
   
@@ -207,7 +209,8 @@ public class RobotContainer {
     // m_throat.toggleWhenPressed(new ParallelDeadlineGroup(new
     // ThroatAtSpeedCommand(m_throatSubsystem, 0.75), new
     // IntakeCommand(m_intakeSubsystem, 0.5)));
-    // m_snootTesting.whileHeld(new SnootTesting(m_snootSubsystem, 0.1));
+    m_snootTesting.whileHeld(new SnootTesting(m_snootSubsystem, 0.25));
+    m_snootSetRotation.whenPressed(new FixedRotationCommand(m_snootSubsystem, 0.25, 3.2));
   }
 
   /**

@@ -7,6 +7,7 @@
 
 package frc.robot.commands.Snoot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.PiCamera.Logger;
 import frc.robot.subsystems.SnootSubsystem;
@@ -41,6 +42,7 @@ public class FixedRotationCommand extends CommandBase {
     m_startPosition = m_subsystem.getPosInRotations();
     m_setRotations = m_startPosition + m_rotations;
     m_subsystem.setPower(m_power);
+    SmartDashboard.putNumber("Rotations C.P.", m_subsystem.getPosInRotations());
 
     Logger.Log("FixedRotationCommand", 2, "Initialized");
   }
