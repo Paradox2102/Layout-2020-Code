@@ -36,6 +36,7 @@ import frc.robot.commands.Serializer.SerializeCommand;
 import frc.robot.commands.Shooter.PowerCommand;
 import frc.robot.commands.Shooter.ShooterSpeedCommand;
 import frc.robot.commands.Snoot.SnootCommand;
+import frc.robot.commands.Snoot.SnootTesting;
 import frc.robot.commands.Teleop.FireCommand;
 import frc.robot.commands.Teleop.ShootAllCommand;
 import frc.robot.commands.Teleop.ShootCommand;
@@ -93,7 +94,6 @@ public class RobotContainer {
   JoystickButton m_fire =  new JoystickButton(m_stick, 1);
   
   JoystickButton m_intake = new JoystickButton(m_stick, 3);
-  JoystickButton m_outtake = new JoystickButton(m_stick, 5);
   
   JoystickButton m_moveTurrentL = new JoystickButton(m_stick, 7);
   JoystickButton m_moveTurrentR = new JoystickButton(m_stick, 8);
@@ -104,21 +104,25 @@ public class RobotContainer {
   JoystickButton m_spinUpTrackClimb = new JoystickButton(m_climbStick, 2);
   
   JoystickButton m_manualControlPanel = new JoystickButton(m_climbStick, 5);
+
+  
+  JoystickButton m_outtake = new JoystickButton(m_stick, 5);
   JoystickButton m_controlPanel = new JoystickButton(m_climbStick, 6);
   
   JoystickButton m_outtakeClimb = new JoystickButton(m_climbStick, 3);
   JoystickButton m_intakeClimb = new JoystickButton(m_climbStick, 4);
   
   JoystickButton m_climb = new JoystickButton(m_climbStick, 7);
-
+  
   JoystickButton m_unJumble = new JoystickButton(m_climbStick, 6);
   JoystickButton m_feederIntake = new JoystickButton(m_climbStick, 9);
-
+  
   JoystickButton m_calibrateSpeed = new JoystickButton(m_calibStick, 1);
   JoystickButton m_calibrateSpeedShooter = new JoystickButton(m_calibStick, 2);
-
+  JoystickButton m_snootTesting = new JoystickButton(m_calibStick, 3);
+  
   SendableChooser<Command> m_chooser = new SendableChooser<>();
-
+  
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -177,7 +181,7 @@ public class RobotContainer {
     // m_shoot.toggleWhenPressed(new ShootAllCommand(m_throatSubsystem,
     // m_shooterSubsystem, m_serializerSubsystem, m_indexerSubsystem,
     // m_intakeSubsystem, () -> getThrottle()));
-    m_intake.whileHeld(new IntakeCommand(m_intakeSubsystem, 0.75));
+    // m_intake.whileHeld(new IntakeCommand(m_intakeSubsystem, 0.75));
     m_intakeClimb.whileHeld(new IntakeCommand(m_intakeSubsystem, 0.75));
     m_outtake.whileHeld(new IntakeCommand(m_intakeSubsystem, -0.75));
     m_outtakeClimb.whileHeld(new IntakeCommand(m_intakeSubsystem, -0.75));
@@ -203,6 +207,7 @@ public class RobotContainer {
     // m_throat.toggleWhenPressed(new ParallelDeadlineGroup(new
     // ThroatAtSpeedCommand(m_throatSubsystem, 0.75), new
     // IntakeCommand(m_intakeSubsystem, 0.5)));
+    // m_snootTesting.whileHeld(new SnootTesting(m_snootSubsystem, 0.1));
   }
 
   /**

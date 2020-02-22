@@ -36,10 +36,10 @@ public class ThroatAtSpeedCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println(m_throatSubsystem.GetTopBreak());
-    System.out.println(m_throatSubsystem.GetBottomBreak());
-    System.out.println(m_power);
-    Logger.Log("ThroatAtSpeedCommand", 3, "Executing");
+    // System.out.println(m_throatSubsystem.GetTopBreak());
+    // System.out.println(m_throatSubsystem.GetBottomBreak());
+    // System.out.println(m_power);
+    // Logger.Log("ThroatAtSpeedCommand", 3, "Executing");
 
     if (!m_throatSubsystem.GetTopBreak() && m_throatSubsystem.GetBottomBreak()) {
       m_throatSubsystem.setThroatPower(m_power);
