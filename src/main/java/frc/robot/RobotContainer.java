@@ -105,8 +105,7 @@ public class RobotContainer {
   
   JoystickButton m_manualControlPanel = new JoystickButton(m_climbStick, 5);
 
-  // JoystickButton m_snootTesting = new JoystickButton(m_stick, 3);
-
+  
   JoystickButton m_outtake = new JoystickButton(m_stick, 5);
   JoystickButton m_controlPanel = new JoystickButton(m_climbStick, 6);
   
@@ -114,15 +113,16 @@ public class RobotContainer {
   JoystickButton m_intakeClimb = new JoystickButton(m_climbStick, 4);
   
   JoystickButton m_climb = new JoystickButton(m_climbStick, 7);
-
+  
   JoystickButton m_unJumble = new JoystickButton(m_climbStick, 6);
   JoystickButton m_feederIntake = new JoystickButton(m_climbStick, 9);
-
+  
   JoystickButton m_calibrateSpeed = new JoystickButton(m_calibStick, 1);
   JoystickButton m_calibrateSpeedShooter = new JoystickButton(m_calibStick, 2);
-
+  JoystickButton m_snootTesting = new JoystickButton(m_calibStick, 3);
+  
   SendableChooser<Command> m_chooser = new SendableChooser<>();
-
+  
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
