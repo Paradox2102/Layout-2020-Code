@@ -22,6 +22,8 @@ import frc.robot.commands.Auto.WaitForShooterSpeedCommand;
 import frc.robot.commands.Camera.BallDriveCommand;
 import frc.robot.commands.Camera.ToggleLightsCommand;
 import frc.robot.commands.Intake.IntakeCommand;
+import frc.robot.commands.Serializer.PowerSerializeCommand;
+import frc.robot.commands.Serializer.SerializeCommand;
 import frc.robot.commands.Shooter.CaseShootingCommand;
 import frc.robot.commands.Teleop.ShootCommand;
 import frc.robot.commands.Teleop.SpinUpCommand;
@@ -30,6 +32,7 @@ import frc.robot.commands.Turret.TurretTrackingCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.SerializerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.ThroatSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
@@ -53,11 +56,12 @@ public class TrenchRun extends SequentialCommandGroup {
 
   public TrenchRun(DriveSubsystem driveSubsystem, IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem,
                    TurretSubsystem turretSubsystem, ThroatSubsystem throatSubsystem, IndexerSubsystem indexerSubsystem,
-                   Camera turretCamera, double shooterSpeed,
+                   SerializerSubsystem serializerSubsystem, Camera turretCamera, double shooterSpeed,
                    DoubleSupplier getPosX, DoubleSupplier getPosY) {
     addCommands(
       new ParallelCommandGroup(
-        //new SpinUpCommand(turretSubsystem, turretCamera, shooterSubsystem, indexerSubsystem, shooterSpeed),
+        new SpinUpCommand(turretSubsystem, turretCamera, shooterSubsystem, indexerSubsystem, shooterSpeed),
+        new PowerSerializeCommand(serializerSubsystem, 0.5),
         new SequentialCommandGroup(
             new BackTrenchRunCommand(driveSubsystem, intakeSubsystem, shooterSubsystem, turretSubsystem, throatSubsystem, 
                                     getPosX, getPosY, turretCamera),

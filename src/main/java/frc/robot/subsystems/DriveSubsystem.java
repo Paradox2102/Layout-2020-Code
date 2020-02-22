@@ -52,16 +52,16 @@ public class DriveSubsystem extends SubsystemBase {
   PigeonIMU m_gyro = new PigeonIMU(0);
 
   // setting PID terms for 4500
-  double k_fLeft = 0.000195;
-  double k_pLeft = 0.000025;
-  double k_iLeft = 0.000004;
-  double k_dLeft = 0.0;
-  double k_fRight = 0.000189;
-  double k_pRight = 0.000025;
-  double k_iRight = 0.000004;
-  double k_dRight = 0.0;
+  double k_fLeft = Constants.m_pidTerms.k_driveLeftF;
+  double k_pLeft = Constants.m_pidTerms.k_driveLeftP;
+  double k_iLeft = Constants.m_pidTerms.k_driveLeftI;
+  double k_dLeft = Constants.m_pidTerms.k_driveLeftD;
+  double k_fRight = Constants.m_pidTerms.k_driveRightF;
+  double k_pRight = Constants.m_pidTerms.k_driveRightP;
+  double k_iRight = Constants.m_pidTerms.k_driveRightI;
+  double k_dRight = Constants.m_pidTerms.k_driveRightD;
 
-  double k_iRange = 150;
+  double k_iRange = Constants.m_pidTerms.k_driveIRange;
   double k_minOutput = -1;
   double k_maxOutput = 1;
 
@@ -111,10 +111,10 @@ public class DriveSubsystem extends SubsystemBase {
     m_rightFollower.follow(m_rightDrive);
     m_leftFollower.follow(m_leftDrive);
 
-    m_leftDrive.setIdleMode(IdleMode.kBrake);
-    m_leftFollower.setIdleMode(IdleMode.kBrake);
-    m_rightDrive.setIdleMode(IdleMode.kBrake);
-    m_rightFollower.setIdleMode(IdleMode.kBrake);
+    m_leftDrive.setIdleMode(IdleMode.kCoast);
+    m_leftFollower.setIdleMode(IdleMode.kCoast);
+    m_rightDrive.setIdleMode(IdleMode.kCoast);
+    m_rightFollower.setIdleMode(IdleMode.kCoast);
 
     m_rightDrive.setInverted(false);
     m_leftDrive.setInverted(true);
@@ -142,10 +142,10 @@ public class DriveSubsystem extends SubsystemBase {
     m_rightPIDController = new PIDController(k_iRight, 0, k_pRight, k_fRight, m_rightWrapper, m_rightWrapper, 0.02);
     m_rightPIDController.setIRange(k_iRange);
 
-    m_leftDrive.setOpenLoopRampRate(0.3);
-    m_rightDrive.setOpenLoopRampRate(0.3);
-    m_leftFollower.setOpenLoopRampRate(0.3);
-    m_rightFollower.setOpenLoopRampRate(0.3);
+    m_leftDrive.setOpenLoopRampRate(0.75);
+    m_rightDrive.setOpenLoopRampRate(0.75);
+    m_leftFollower.setOpenLoopRampRate(0.75);
+    m_rightFollower.setOpenLoopRampRate(0.75);
     
     //Tracking and Pure Pursuit Setup
     m_sensors = new Sensor(m_leftSparkEncoder, m_rightSparkEncoder, m_gyro, k_ticksFootSpark);
@@ -173,14 +173,16 @@ public class DriveSubsystem extends SubsystemBase {
     k_iRange = (int) (SmartDashboard.getNumber("Izone", k_iRange));
 
     m_leftPIDController.setF(k_fLeft);
-    m_leftPIDController.setP(k_pLeft);
-    m_leftPIDController.setI(k_iLeft);
+    m_leftPIDController.setD(k_pLeft);
+    m_leftPIDController.setP(k_iLeft);
     m_leftPIDController.setIRange(k_iRange);
 
     m_rightPIDController.setF(k_fRight);
-    m_rightPIDController.setP(k_pRight);
-    m_rightPIDController.setI(k_iRight);
+    m_rightPIDController.setD(k_pRight);
+    m_rightPIDController.setP(k_iRight);
     m_rightPIDController.setIRange(k_iRange);
+
+    System.out.println(k_iLeft);
     enablePID();
   }
 

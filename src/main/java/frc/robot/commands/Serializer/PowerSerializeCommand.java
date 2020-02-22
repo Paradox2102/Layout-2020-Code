@@ -5,47 +5,45 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.Shooter;
+package frc.robot.commands.Serializer;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.lib.Logger;
+import frc.robot.subsystems.SerializerSubsystem;
 
-public class ShooterSpeedCommand extends CommandBase {
-  /**
-   * Creates a new SpeedCommand.
-   */
-  ShooterSubsystem m_subsystem;
-  double m_speed;
-
-  public ShooterSpeedCommand(ShooterSubsystem subsystem, double speed) {
+public class PowerSerializeCommand extends CommandBase {
+  SerializerSubsystem m_subsystem;
+  double m_power;
+  public PowerSerializeCommand(SerializerSubsystem subsystem, double power) {
     m_subsystem = subsystem;
-
-    m_speed = speed;
-
+    m_power = power;
     addRequirements(m_subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.configPID();
+    Logger.Log("PowerSerializeCommand", 1 , "initialize");
+    m_subsystem.setPower(m_power);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.setSpeed(m_speed);
+    Logger.Log("PowerSerializeCommand", -1 , "execute");
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    Logger.Log("PowerSerializeCommand", 1 , "end");
     m_subsystem.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    Logger.Log("PowerSerializeCommand", -1 , "isFinished");
     return false;
   }
 }

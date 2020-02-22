@@ -21,11 +21,11 @@ public class ShooterSubsystem extends SubsystemBase {
   TalonSRX m_shooter = new TalonSRX(Constants.k_shooter);
   TalonSRX m_shooterFollower = new TalonSRX(Constants.k_shooterFollower); //36000
 
-  double k_f = 0.025500;
-  double k_p = 0.4;
-  double k_i = 0.032;
+  double k_f = Constants.m_pidTerms.k_shooterF;
+  double k_p = Constants.m_pidTerms.k_shooterP;
+  double k_i = Constants.m_pidTerms.k_shooterI;
 
-  int k_iRange = 100;
+  int k_iRange = Constants.m_pidTerms.k_shooterIRange;
   int k_slot = 0;
 
   double m_curSpeed = 0;

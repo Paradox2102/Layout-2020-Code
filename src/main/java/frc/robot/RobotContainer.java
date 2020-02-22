@@ -36,6 +36,7 @@ import frc.robot.commands.Serializer.SerializeCommand;
 import frc.robot.commands.Shooter.PowerCommand;
 import frc.robot.commands.Shooter.ShooterSpeedCommand;
 import frc.robot.commands.Snoot.SnootCommand;
+import frc.robot.commands.Teleop.FireCommand;
 import frc.robot.commands.Teleop.ShootAllCommand;
 import frc.robot.commands.Teleop.ShootCommand;
 import frc.robot.commands.Teleop.SpinUpCommand;
@@ -87,10 +88,12 @@ public class RobotContainer {
 
   JoystickButton m_spinUp = new JoystickButton(m_stick, 2);
   JoystickButton m_spinUpTrack = new JoystickButton(m_stick, 2);
+  JoystickButton m_spinUpClimb = new JoystickButton(m_climbStick, 2);
+  JoystickButton m_spinUpTrackClimb = new JoystickButton(m_climbStick, 2);
   JoystickButton m_fire = new JoystickButton(m_stick, 1);
 
   JoystickButton m_intake = new JoystickButton(m_stick, 3);
-  JoystickButton m_intakeClimb = new JoystickButton(m_climbStick, 2);
+  JoystickButton m_intakeClimb = new JoystickButton(m_climbStick, 4);
 
   JoystickButton m_moveTurrentL = new JoystickButton(m_stick, 7);
   JoystickButton m_moveTurrentR = new JoystickButton(m_stick, 8);
@@ -109,6 +112,7 @@ public class RobotContainer {
   JoystickButton m_unJumble = new JoystickButton(m_climbStick, 6);
 
   JoystickButton m_calibrateSpeed = new JoystickButton(m_calibStick, 1);
+  JoystickButton m_calibrateSpeedShooter = new JoystickButton(m_calibStick, 2);
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -117,7 +121,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // Configure the button bindings
-    m_camera.connect("10.21.2.12");
+    m_camera.connect(Constants.m_pidTerms.k_ipAddress);
 
     configureButtonBindings();
 
@@ -149,7 +153,7 @@ public class RobotContainer {
       }
     });
     m_chooser.addOption("Trench Run", new TrenchRun(m_driveSubsystem, m_intakeSubsystem, m_shooterSubsystem,
-        m_turretSubsystem, m_throatSubsystem, m_indexerSubsystem, m_camera, 35000, () -> getPos().x, () -> getPos().y));
+        m_turretSubsystem, m_throatSubsystem, m_indexerSubsystem, m_serializerSubsystem, m_camera, 35000, () -> getPos().x, () -> getPos().y));
     m_chooser.addOption("10 ft", new CreatePathCommand(m_driveSubsystem, k_10ft, PathConfigs.fast));
     m_chooser.addOption("Trench Forward Backward", new TrenchForwardBack(m_driveSubsystem));
     // m_chooser.addOption("Print 10 ft", new PrintPathCommand(m_driveSubsystem, drive10Ft, PurePursuit.PathConfigs.fast));
@@ -176,10 +180,11 @@ public class RobotContainer {
     m_outtakeClimb.whileHeld(new IntakeCommand(m_intakeSubsystem, -0.75));
     m_spinUp.toggleWhenPressed(
         new SpinUpCommand(m_turretSubsystem, m_camera, m_shooterSubsystem, m_indexerSubsystem, shooterSpeed));
-    // m_spinUpTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem,
-    // m_camera));
-    m_fire.whileHeld(new ThroatPowerCommand(m_throatSubsystem, () -> m_shooterSubsystem.getSpeed(),
-        () -> m_shooterSubsystem.getSetpoint() - 1500, 0.4));
+    m_spinUpTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_camera));
+    m_spinUpClimb.toggleWhenPressed(
+        new SpinUpCommand(m_turretSubsystem, m_camera, m_shooterSubsystem, m_indexerSubsystem, shooterSpeed));
+    m_spinUpTrackClimb.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_camera));
+    m_fire.whileHeld(new FireCommand(m_throatSubsystem, m_shooterSubsystem, m_intakeSubsystem));
     m_moveTurrentL.whileHeld(new TurretMoveCommand(m_turretSubsystem, 0.35));
     m_moveTurrentR.whileHeld(new TurretMoveCommand(m_turretSubsystem, -0.35));
 
@@ -187,6 +192,7 @@ public class RobotContainer {
 
     m_climb.whileHeld(new MoveClimberCommand(m_climberSubsystem, () -> -m_climbStick.getY()));
     m_calibrateSpeed.whileHeld(new CalibrateSpeedCommand(m_driveSubsystem, 3000));
+    m_calibrateSpeedShooter.toggleWhenPressed(new ShooterSpeedCommand(m_shooterSubsystem, shooterSpeed));
 
     // m_throat.toggleWhenPressed(new ParallelDeadlineGroup(new
     // ThroatAtSpeedCommand(m_throatSubsystem, 0.75), new
@@ -235,6 +241,11 @@ public class RobotContainer {
   // throttle for drive stick
   public double getDriveThrottle() {
     return (-m_stick.getThrottle() + 1) / 2.0;
+  }
+
+  // throttle for climb stick
+  public double getThrottleCalib() {
+    return (-m_calibStick.getThrottle() + 1) / 2.0;
   }
 
   public double getTargetHeight() {
