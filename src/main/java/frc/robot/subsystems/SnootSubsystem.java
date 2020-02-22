@@ -53,7 +53,7 @@ public class SnootSubsystem extends SubsystemBase {
   public void stop(){
     m_snoot.set(0);
   }
-
+  //testing
   //return position in number of 
   public double getPos(){
     return m_encoder.getPosition();
