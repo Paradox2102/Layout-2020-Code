@@ -41,6 +41,7 @@ import frc.robot.commands.Teleop.FireCommand;
 import frc.robot.commands.Teleop.ShootAllCommand;
 import frc.robot.commands.Teleop.ShootCommand;
 import frc.robot.commands.Teleop.SpinUpCommand;
+import frc.robot.commands.Teleop.UnJumbleCommand;
 import frc.robot.commands.Throat.ThroatAtSpeedCommand;
 import frc.robot.commands.Throat.ThroatPowerCommand;
 import frc.robot.commands.Turret.TurretMoveCommand;
@@ -89,30 +90,33 @@ public class RobotContainer {
 
   JoystickButton m_spinUp = new JoystickButton(m_stick, 2);
   JoystickButton m_spinUpTrack = new JoystickButton(m_stick, 2);
-  JoystickButton m_spinUpClimb = new JoystickButton(m_climbStick, 2);
-  JoystickButton m_spinUpTrackClimb = new JoystickButton(m_climbStick, 2);
-  JoystickButton m_fire = new JoystickButton(m_stick, 1);
-
+  
+  JoystickButton m_fire =  new JoystickButton(m_stick, 1);
+  
   JoystickButton m_intake = new JoystickButton(m_stick, 3);
-  JoystickButton m_intakeClimb = new JoystickButton(m_climbStick, 4);
-
+  
   JoystickButton m_moveTurrentL = new JoystickButton(m_stick, 7);
   JoystickButton m_moveTurrentR = new JoystickButton(m_stick, 8);
-
+  
   JoystickButton m_turretTrack = new JoystickButton(m_stick, 4);
-
-  JoystickButton m_controlPanel = new JoystickButton(m_climbStick, 6);
-
+  
+  JoystickButton m_spinUpClimb = new JoystickButton(m_climbStick, 2);
+  JoystickButton m_spinUpTrackClimb = new JoystickButton(m_climbStick, 2);
+  
   JoystickButton m_manualControlPanel = new JoystickButton(m_climbStick, 5);
 
   // JoystickButton m_snootTesting = new JoystickButton(m_stick, 3);
 
   JoystickButton m_outtake = new JoystickButton(m_stick, 5);
+  JoystickButton m_controlPanel = new JoystickButton(m_climbStick, 6);
+  
   JoystickButton m_outtakeClimb = new JoystickButton(m_climbStick, 3);
-
+  JoystickButton m_intakeClimb = new JoystickButton(m_climbStick, 4);
+  
   JoystickButton m_climb = new JoystickButton(m_climbStick, 7);
 
   JoystickButton m_unJumble = new JoystickButton(m_climbStick, 6);
+  JoystickButton m_feederIntake = new JoystickButton(m_climbStick, 9);
 
   JoystickButton m_calibrateSpeed = new JoystickButton(m_calibStick, 1);
   JoystickButton m_calibrateSpeedShooter = new JoystickButton(m_calibStick, 2);
@@ -188,8 +192,11 @@ public class RobotContainer {
         new SpinUpCommand(m_turretSubsystem, m_camera, m_shooterSubsystem, m_indexerSubsystem, shooterSpeed));
     m_spinUpTrackClimb.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_camera));
     m_fire.whileHeld(new FireCommand(m_throatSubsystem, m_shooterSubsystem, m_intakeSubsystem));
-    m_moveTurrentL.whileHeld(new TurretMoveCommand(m_turretSubsystem, 0.35));
-    m_moveTurrentR.whileHeld(new TurretMoveCommand(m_turretSubsystem, -0.35));
+    m_moveTurrentL.whileHeld(new TurretMoveCommand(m_turretSubsystem, -0.35));
+    m_moveTurrentR.whileHeld(new TurretMoveCommand(m_turretSubsystem, 0.35));
+
+    m_unJumble.whileHeld(new UnJumbleCommand(m_intakeSubsystem, m_throatSubsystem, m_serializerSubsystem));
+    m_feederIntake.whileHeld(new AmbientIntakePowerCommand(m_intakeSubsystem, -0.5));
 
     m_turretTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_camera));
 
@@ -219,6 +226,14 @@ public class RobotContainer {
 
   public void stopPosTracking() {
     m_driveSubsystem.stopPosUpdate();
+  }
+
+  public void setCoastMode(){
+    m_driveSubsystem.setCoastMode();
+  }
+  
+  public void setBrakeMode(){
+    m_driveSubsystem.setBrakeMode();
   }
 
   public void setPos(double x, double y) {

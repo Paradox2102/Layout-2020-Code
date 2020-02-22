@@ -111,10 +111,10 @@ public class DriveSubsystem extends SubsystemBase {
     m_rightFollower.follow(m_rightDrive);
     m_leftFollower.follow(m_leftDrive);
 
-    m_leftDrive.setIdleMode(IdleMode.kCoast);
-    m_leftFollower.setIdleMode(IdleMode.kCoast);
-    m_rightDrive.setIdleMode(IdleMode.kCoast);
-    m_rightFollower.setIdleMode(IdleMode.kCoast);
+    m_leftDrive.setIdleMode(IdleMode.kBrake);
+    m_leftFollower.setIdleMode(IdleMode.kBrake);
+    m_rightDrive.setIdleMode(IdleMode.kBrake);
+    m_rightFollower.setIdleMode(IdleMode.kBrake);
 
     m_rightDrive.setInverted(false);
     m_leftDrive.setInverted(true);
@@ -142,10 +142,10 @@ public class DriveSubsystem extends SubsystemBase {
     m_rightPIDController = new PIDController(k_iRight, 0, k_pRight, k_fRight, m_rightWrapper, m_rightWrapper, 0.02);
     m_rightPIDController.setIRange(k_iRange);
 
-    m_leftDrive.setOpenLoopRampRate(0.75);
-    m_rightDrive.setOpenLoopRampRate(0.75);
-    m_leftFollower.setOpenLoopRampRate(0.75);
-    m_rightFollower.setOpenLoopRampRate(0.75);
+    // m_leftDrive.setOpenLoopRampRate(0.75);
+    // m_rightDrive.setOpenLoopRampRate(0.75);
+    // m_leftFollower.setOpenLoopRampRate(0.75);
+    // m_rightFollower.setOpenLoopRampRate(0.75);
     
     //Tracking and Pure Pursuit Setup
     m_sensors = new Sensor(m_leftSparkEncoder, m_rightSparkEncoder, m_gyro, k_ticksFootSpark);
