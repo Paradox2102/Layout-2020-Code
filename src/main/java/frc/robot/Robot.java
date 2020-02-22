@@ -57,6 +57,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    m_robotContainer.setCoastMode();
   }
 
   @Override
@@ -69,7 +70,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
+    m_robotContainer.setBrakeMode();
     
     m_robotContainer.startPosTracking();
     m_robotContainer.setPos(0, 0);
@@ -105,6 +106,8 @@ public class Robot extends TimedRobot {
     m_robotContainer.startPosTracking();
     m_robotContainer.setPos(0, 0);
     m_robotContainer.setAngle(90);
+
+    m_robotContainer.setBrakeMode();
   }
 
   /**

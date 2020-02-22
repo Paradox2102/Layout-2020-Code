@@ -8,24 +8,26 @@
 package frc.robot.commands.Teleop;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.commands.Intake.IntakeCommand;
-import frc.robot.commands.Throat.ThroatAtSpeedCommand;
-import frc.robot.commands.Throat.ThroatPowerCommand;
+import frc.robot.commands.Intake.AmbientIntakePowerCommand;
+import frc.robot.commands.Serializer.PowerSerializeCommand;
+import frc.robot.commands.Serializer.SerializeCommand;
+import frc.robot.commands.Throat.ThroatMoveCommand;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.SerializerSubsystem;
 import frc.robot.subsystems.ThroatSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class FireCommand extends ParallelCommandGroup {
+public class UnJumbleCommand extends ParallelCommandGroup {
   /**
-   * Creates a new FireCommand.
+   * Creates a new UnJumbleCommand.
    */
-  public FireCommand(ThroatSubsystem throatSubsystem, ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem) {
+  public UnJumbleCommand(IntakeSubsystem intakeSubsystem, ThroatSubsystem throatSubsystem, SerializerSubsystem serializerSubsystem) {
     addCommands(
-      new ThroatPowerCommand(throatSubsystem, () -> shooterSubsystem.getSpeed(), () -> shooterSubsystem.getSetpoint() - 1500, 0.4)
-      // new IntakeCommand(intakeSubsystem, 0.5)
+      new AmbientIntakePowerCommand(intakeSubsystem, -0.5), 
+      new ThroatMoveCommand(throatSubsystem, -0.4), 
+      new PowerSerializeCommand(serializerSubsystem, -0.5)
     );
   }
 }
