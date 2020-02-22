@@ -121,7 +121,7 @@ public class RobotContainer {
   JoystickButton m_calibrateSpeed = new JoystickButton(m_calibStick, 1);
   JoystickButton m_calibrateSpeedShooter = new JoystickButton(m_calibStick, 2);
   JoystickButton m_snootTesting = new JoystickButton(m_calibStick, 3);
-  JoystickButton m_snootSetRotation = new JoystickButton(m_calibStick, 4);
+  JoystickButton m_snootSetRotation = new JoystickButton(m_calibStick, 4); //snooter is snooting
   
   SendableChooser<Command> m_chooser = new SendableChooser<>();
   
