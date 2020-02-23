@@ -18,8 +18,8 @@ package frc.robot;
  * wherever the constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static PracticeType m_pidTerms = new PracticeType();
-    // public static FinalType m_pidTerms = new FinalType();
+    //public static PracticeType m_pidTerms = new PracticeType();
+    public static FinalType m_pidTerms = new FinalType();
     public static int k_leftDrive = 1;
     public static int k_leftFollower = 2;
     public static int k_rightDrive = 3;

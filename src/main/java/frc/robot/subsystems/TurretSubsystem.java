@@ -36,12 +36,12 @@ public class TurretSubsystem extends SubsystemBase {
   public TurretSubsystem() {
     m_turret.setInverted(true);
 
-    // m_turret.setSmartCurrentLimit();
     m_turret.setIdleMode(IdleMode.kBrake);
 
     m_encoder = m_turret.getEncoder();
 
     m_softStop.enableLimitSwitch(false);
+    // m_turret.setSmartCurrentLimit(10);
   }
 
   @Override

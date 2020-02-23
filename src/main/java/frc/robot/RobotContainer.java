@@ -35,6 +35,7 @@ import frc.robot.commands.Drive.CalibrateSpeedCommand;
 import frc.robot.commands.Drive.SpeedCommand;
 import frc.robot.commands.Intake.ActuateIntakeCommand;
 import frc.robot.commands.Drive.TinyTurnCommand;
+import frc.robot.commands.Indexer.IndexCommand;
 import frc.robot.commands.Intake.AmbientIntakePowerCommand;
 import frc.robot.commands.Intake.IntakeCommand;
 import frc.robot.commands.Serializer.SerializeCommand;
@@ -129,6 +130,7 @@ public class RobotContainer {
   JoystickButton m_calibrateSpeed = new JoystickButton(m_calibStick, 1);
   JoystickButton m_calibrateSpeedShooter = new JoystickButton(m_calibStick, 2);
   JoystickButton m_snootTesting = new JoystickButton(m_calibStick, 3);
+  JoystickButton m_turretTrackCalib = new JoystickButton(m_calibStick, 4);
 
   JoystickButton m_snootSetRotation = new JoystickButton(m_calibStick, 4); // snooter is snooting
 
@@ -222,14 +224,16 @@ public class RobotContainer {
     m_deployIntake.toggleWhenPressed(new ActuateIntakeCommand(m_intakeSubsystem));
 
     m_climb.whileHeld(new MoveClimberCommand(m_climberSubsystem, () -> -m_climbStick.getY()));
-    m_calibrateSpeed.whileHeld(new CalibrateSpeedCommand(m_driveSubsystem, 3000));
-    m_calibrateSpeedShooter.toggleWhenPressed(new ShooterSpeedCommand(m_shooterSubsystem, m_shooterSpeed));
-
+    m_calibrateSpeed.whileHeld(new FireCommand(m_throatSubsystem, m_shooterSubsystem, m_intakeSubsystem));
+    m_calibrateSpeedShooter.toggleWhenPressed(new frc.robot.commands.Shooter.CalibrateSpeedCommand(m_shooterSubsystem, () -> getThrottleCalib()));
+    m_calibrateSpeedShooter.toggleWhenPressed(new IndexCommand(m_indexerSubsystem, 0.5));
     // m_throat.toggleWhenPressed(new ParallelDeadlineGroup(new
     // ThroatAtSpeedCommand(m_throatSubsystem, 0.75), new
     // IntakeCommand(m_intakeSubsystem, 0.5)));
     m_snootTesting.whileHeld(new SnootTesting(m_snootSubsystem, 0.25));
     m_snootSetRotation.whenPressed(new FixedRotationCommand(m_snootSubsystem, 0.25, 3.2));
+
+    m_turretTrackCalib.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_camera));
   }
 
   /**
@@ -291,5 +295,9 @@ public class RobotContainer {
 
   public double getTargetHeight() {
     return m_camera.createData().getTargetHeight();
+  }
+
+  public boolean canSee(){
+    return m_camera.createData().canSee();
   }
 }

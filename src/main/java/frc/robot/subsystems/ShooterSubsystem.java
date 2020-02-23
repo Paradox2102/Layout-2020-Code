@@ -104,7 +104,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double calculatedSpeed(double height){
-    double speed = (3.956*height*height) - (577.432 * height) + (51611.080);
+    double speed = (Constants.m_pidTerms.k_squareConst *height*height) - (Constants.m_pidTerms.k_linearConst * height) + (Constants.m_pidTerms.k_const);
 
     if(speed > 40000){
       return 40000;

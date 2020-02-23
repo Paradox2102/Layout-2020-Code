@@ -21,4 +21,9 @@ public class PracticeType {
     public final int k_shooterIRange = 100;
 
     public final String k_ipAddress = "10.21.2.111";
+
+    //Shooter Equation Coefficients
+    public final double k_squareConst = 3.433;
+    public final double k_linearConst = 487.948;
+    public final double k_const = 47550.336;
 }
