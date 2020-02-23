@@ -41,8 +41,7 @@ public class SnootTesting extends CommandBase {
     m_currentRotations = m_startRotations;
     
 
-    m_subsystem.setPower(m_power);
-    Logger.Log("SnootTesting", 2, "%f, m_power");
+    // m_subsystem.setPower(m_power);
     Logger.Log("FixedRotationCommand", 2, "Initialized");
   }
 
@@ -54,8 +53,8 @@ public class SnootTesting extends CommandBase {
     m_currentPosition = m_subsystem.getPos() - m_currentPosition;
     m_currentRotations = m_subsystem.getPosInRotations();
 
-    SmartDashboard.putNumber("Snoot Encoder Position", m_currentPosition);
-    SmartDashboard.putNumber("C.P. Rotations", m_currentRotations);
+    // SmartDashboard.putNumber("Snoot Encoder Position", m_currentPosition);
+    // SmartDashboard.putNumber("C.P. Rotations", m_currentRotations);
   }
 
   // Called once the command ends or is interrupted.
