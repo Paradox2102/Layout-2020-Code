@@ -11,6 +11,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -22,7 +23,7 @@ public class SnootSubsystem extends SubsystemBase {
   //measures and constants
   private double k_ticksFootSpark = 1;
   private double k_snootWheelRadius = 1.9375; 
-  private double k_ticksToRotations = 1;
+  private double k_ticksToRotations = 1/40.7;
 
   public SnootSubsystem() {
     m_encoder = m_snoot.getEncoder();
@@ -32,6 +33,7 @@ public class SnootSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("EncoderPosition", getPos());
   }
 
   private double feetToTicks(double feet) {
@@ -51,7 +53,7 @@ public class SnootSubsystem extends SubsystemBase {
   public void stop(){
     m_snoot.set(0);
   }
-
+  //testing
   //return position in number of 
   public double getPos(){
     return m_encoder.getPosition();
