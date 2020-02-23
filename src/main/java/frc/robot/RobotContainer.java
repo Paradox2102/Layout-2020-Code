@@ -26,6 +26,7 @@ import frc.robot.commands.Auto.AlignWithVisionCommand;
 import frc.robot.commands.Auto.CreatePathCommand;
 import frc.robot.commands.Auto.FiveBallCenter.FiveBallCenter;
 import frc.robot.commands.Auto.FiveBallCenter.FrontBallsRun;
+import frc.robot.commands.Auto.RightBallRun.RightBallRun;
 import frc.robot.commands.Auto.TrenchRun.TrenchForwardBack;
 import frc.robot.commands.Auto.TrenchRun.TrenchRun;
 import frc.robot.commands.Camera.BallDriveCommand;
@@ -102,7 +103,7 @@ public class RobotContainer {
 
   JoystickButton m_intake = new JoystickButton(m_stick, 3);
   JoystickButton m_feederIntake = new JoystickButton(m_stick, 6);
-  
+
   JoystickButton m_moveTurrentL = new JoystickButton(m_stick, 7);
   JoystickButton m_moveTurrentR = new JoystickButton(m_stick, 8);
 
@@ -115,7 +116,6 @@ public class RobotContainer {
 
   JoystickButton m_deployIntake = new JoystickButton(m_climbStick, 9);
 
-  
   JoystickButton m_outtake = new JoystickButton(m_stick, 5);
   JoystickButton m_controlPanel = new JoystickButton(m_climbStick, 6);
 
@@ -126,7 +126,7 @@ public class RobotContainer {
 
   JoystickButton m_unJumble = new JoystickButton(m_climbStick, 6);
   JoystickButton m_feederIntakeClimb = new JoystickButton(m_climbStick, 8);
-  
+
   JoystickButton m_calibrateSpeed = new JoystickButton(m_calibStick, 1);
   JoystickButton m_calibrateSpeedShooter = new JoystickButton(m_calibStick, 2);
   JoystickButton m_snootTesting = new JoystickButton(m_calibStick, 3);
@@ -149,8 +149,8 @@ public class RobotContainer {
 
     m_driveSubsystem.setDefaultCommand(new ArcadeDriveCommand(m_driveSubsystem, () -> m_stick.getX(),
         () -> -m_stick.getY(), () -> m_stick.getThrottle()));
-    m_serializerSubsystem.setDefaultCommand(
-        new SerializeCommand(m_serializerSubsystem, 0.3, () -> m_throatSubsystem.GetTopBreak(), () -> getThrottle(), () -> !m_throatSubsystem.GetTopBreak()));
+    m_serializerSubsystem.setDefaultCommand(new SerializeCommand(m_serializerSubsystem, 0.3,
+        () -> m_throatSubsystem.GetTopBreak(), () -> getThrottle(), () -> !m_throatSubsystem.GetTopBreak()));
     m_throatSubsystem.setDefaultCommand(new ThroatAtSpeedCommand(m_throatSubsystem, 0.4));
 
     // m_intakeSubsystem.setDefaultCommand(new
@@ -183,6 +183,8 @@ public class RobotContainer {
         m_turretSubsystem, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed, m_throatSubsystem));
     m_chooser.addOption("Tiny Turn", new TinyTurnCommand(m_driveSubsystem));
     m_chooser.addOption("RobotAlign", new AlignWithVisionCommand(m_driveSubsystem, m_camera, 0.4));
+    m_chooser.addOption("Right 2 Ball Run", new RightBallRun(m_driveSubsystem, m_intakeSubsystem, 0.4,
+        m_turretSubsystem, m_camera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed, m_throatSubsystem));
     // m_chooser.addOption("Print 10 ft", new PrintPathCommand(m_driveSubsystem,
     // drive10Ft, PurePursuit.PathConfigs.fast));
     SmartDashboard.putData("Auto mode", m_chooser);
@@ -225,7 +227,8 @@ public class RobotContainer {
 
     m_climb.whileHeld(new MoveClimberCommand(m_climberSubsystem, () -> -m_climbStick.getY()));
     m_calibrateSpeed.whileHeld(new FireCommand(m_throatSubsystem, m_shooterSubsystem, m_intakeSubsystem));
-    m_calibrateSpeedShooter.toggleWhenPressed(new frc.robot.commands.Shooter.CalibrateSpeedCommand(m_shooterSubsystem, () -> getThrottleCalib()));
+    m_calibrateSpeedShooter.toggleWhenPressed(
+        new frc.robot.commands.Shooter.CalibrateSpeedCommand(m_shooterSubsystem, () -> getThrottleCalib()));
     m_calibrateSpeedShooter.toggleWhenPressed(new IndexCommand(m_indexerSubsystem, 0.5));
     // m_throat.toggleWhenPressed(new ParallelDeadlineGroup(new
     // ThroatAtSpeedCommand(m_throatSubsystem, 0.75), new
@@ -297,7 +300,7 @@ public class RobotContainer {
     return m_camera.createData().getTargetHeight();
   }
 
-  public boolean canSee(){
+  public boolean canSee() {
     return m_camera.createData().canSee();
   }
 }

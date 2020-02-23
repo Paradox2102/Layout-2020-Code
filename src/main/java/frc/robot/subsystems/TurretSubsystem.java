@@ -24,8 +24,10 @@ public class TurretSubsystem extends SubsystemBase {
 
   CANEncoder m_encoder = new CANEncoder(m_turret);
 
-  CANDigitalInput m_softStopFwd = new CANDigitalInput(m_turret, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyOpen);
-  CANDigitalInput m_softStopBack = new CANDigitalInput(m_turret, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyOpen);
+  CANDigitalInput m_softStopFwd = new CANDigitalInput(m_turret, LimitSwitch.kForward,
+      LimitSwitchPolarity.kNormallyOpen);
+  CANDigitalInput m_softStopBack = new CANDigitalInput(m_turret, LimitSwitch.kForward,
+      LimitSwitchPolarity.kNormallyOpen);
 
   double m_lastPower = 0;
 
@@ -53,66 +55,66 @@ public class TurretSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("Turret Limit", m_softStopFwd.get());
     SmartDashboard.putNumber("Turret Last Power", m_lastPower);
     SmartDashboard.putNumber("Turret Current", m_turret.getOutputCurrent());
-    
+
     checkStops();
 
-    if(m_rightStopped && m_lastPower > 0){
+    if (m_rightStopped && m_lastPower > 0) {
       stop();
-    }else if(m_leftStopped && m_lastPower < 0){
+    } else if (m_leftStopped && m_lastPower < 0) {
       stop();
     }
 
-    if(!m_softStopFwd.get() && Math.abs(m_encoder.getPosition()) > k_encoderDeadzone){
+    if (!m_softStopFwd.get() && Math.abs(m_encoder.getPosition()) > k_encoderDeadzone) {
       m_rightStopped = false;
       m_leftStopped = false;
     }
 
-    if(m_softStopFwd.get()){
+    if (m_softStopFwd.get()) {
       resetEncoder();
     }
   }
 
-  public void checkStops(){
-    if(m_softStopFwd.get()){
-      if(m_lastPower > 0 && !m_leftStopped){
-        m_rightStopped = true;
-      }else if (m_lastPower < 0 && !m_rightStopped){
-        m_leftStopped = true;
+  public void checkStops() {
+    if (m_softStopFwd.get()) {
+      if (m_lastPower > 0 && !m_leftStopped) {
+        m_rightStopped = false;
+      } else if (m_lastPower < 0 && !m_rightStopped) {
+        m_leftStopped = false;
       }
     }
   }
 
-  public void setPower(double power){
+  public void setPower(double power) {
     checkStops();
 
-    if(m_rightStopped && power > 0){
+    if (m_rightStopped && power > 0) {
       stop();
-    }else if(m_leftStopped && power < 0){
+    } else if (m_leftStopped && power < 0) {
       stop();
-    }else{
+    } else {
       m_lastPower = power;
       m_turret.set(power);
     }
   }
 
-  public void stop(){
+  public void stop() {
     m_turret.set(0);
     m_lastPower = 0;
   }
 
-  public boolean getLimit(){
+  public boolean getLimit() {
     return m_softStopFwd.get();
   }
 
-  public double getPos(){
+  public double getPos() {
     return m_encoder.getPosition();
   }
 
-  public double getVel(){
+  public double getVel() {
     return m_encoder.getVelocity();
   }
 
-  public void resetEncoder(){
+  public void resetEncoder() {
     m_encoder.setPosition(0);
   }
 }

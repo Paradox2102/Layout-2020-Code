@@ -10,6 +10,8 @@ package frc.robot.commands.Throat;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.lib.Camera;
+import frc.lib.Camera.CameraData;
 import frc.robot.subsystems.ThroatSubsystem;
 
 public class ThroatPowerCommand extends CommandBase {
@@ -20,12 +22,29 @@ public class ThroatPowerCommand extends CommandBase {
   double m_power;
   DoubleSupplier m_getVel;
   DoubleSupplier m_rpmSpeed;
-  double k_deadZone = 200;
+  double k_deadZoneSpeed = 200;
+  double k_deadZoneX = 0;
+  Camera m_turretCamera = null;
+
   public ThroatPowerCommand(ThroatSubsystem subsystem, DoubleSupplier getVel, DoubleSupplier rpmSpeed, double power) {
     m_subsystem = subsystem;
     m_power = power;
     m_getVel = getVel;
     m_rpmSpeed = rpmSpeed;
+    k_deadZoneX = 0;
+    m_turretCamera = null;
+
+    addRequirements(m_subsystem);
+  }
+
+  public ThroatPowerCommand(ThroatSubsystem subsystem, DoubleSupplier getVel, DoubleSupplier rpmSpeed, double power,
+      double deadzone, Camera turretCamera) {
+    m_subsystem = subsystem;
+    m_power = power;
+    m_getVel = getVel;
+    m_rpmSpeed = rpmSpeed;
+    k_deadZoneX = deadzone;
+    m_turretCamera = turretCamera;
 
     addRequirements(m_subsystem);
   }
@@ -33,15 +52,28 @@ public class ThroatPowerCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(m_getVel.getAsDouble() - k_deadZone > m_rpmSpeed.getAsDouble() && m_rpmSpeed.getAsDouble() > 0){
-      m_subsystem.setThroatPower(m_power);
-    }else{
+    if (m_getVel.getAsDouble() - k_deadZoneSpeed > m_rpmSpeed.getAsDouble() && m_rpmSpeed.getAsDouble() > 0) {
+      // turret position
+      if (k_deadZoneX != 0) {
+        CameraData data = m_turretCamera.createData();
+
+        if (data.canSee()) {
+          if (data.centerDiff(data.centerLine()) < k_deadZoneX) {
+            m_subsystem.setThroatPower(m_power);
+          } else {
+            m_subsystem.stopThroatPower();
+          }
+        }
+      } else {
+        m_subsystem.setThroatPower(m_power);
+      }
+    } else {
       m_subsystem.stopThroatPower();
     }
   }
