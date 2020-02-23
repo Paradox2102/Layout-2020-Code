@@ -16,6 +16,18 @@ public class Camera {
         m_piCamera.Connect(ipAddress, 5800);
     }
 
+    public void DumpFrames(int count) {
+        m_piCamera.DumpFrames(count);
+    }
+
+    public void StartPiLog() {
+        m_piCamera.StartPiLog();
+    }
+
+    public void EndPiLog() {
+        m_piCamera.EndPiLog();
+    }
+
     public class CameraData {
         public PiCameraRegions m_regions;
 
@@ -23,8 +35,12 @@ public class Camera {
             m_regions = m_piCamera.GetRegions();
         }
 
-        public boolean canSee(){
-            if(m_regions != null){
+        public void DumpFrames(int count) {
+            m_piCamera.DumpFrames(count);
+        }
+
+        public boolean canSee() {
+            if (m_regions != null) {
                 return m_regions.GetRegion(0) != null;
             }
             return false;
