@@ -30,6 +30,7 @@ import frc.robot.commands.Climber.MoveClimberCommand;
 import frc.robot.commands.Drive.ArcadeDriveCommand;
 import frc.robot.commands.Drive.CalibrateSpeedCommand;
 import frc.robot.commands.Drive.SpeedCommand;
+import frc.robot.commands.Intake.ActuateIntakeCommand;
 import frc.robot.commands.Intake.AmbientIntakePowerCommand;
 import frc.robot.commands.Intake.IntakeCommand;
 import frc.robot.commands.Serializer.SerializeCommand;
@@ -94,6 +95,7 @@ public class RobotContainer {
   JoystickButton m_fire =  new JoystickButton(m_stick, 1);
   
   JoystickButton m_intake = new JoystickButton(m_stick, 3);
+  JoystickButton m_feederIntake = new JoystickButton(m_stick, 6);
   
   JoystickButton m_moveTurrentL = new JoystickButton(m_stick, 7);
   JoystickButton m_moveTurrentR = new JoystickButton(m_stick, 8);
@@ -105,6 +107,8 @@ public class RobotContainer {
   
   JoystickButton m_manualControlPanel = new JoystickButton(m_climbStick, 5);
 
+  JoystickButton m_deployIntake = new JoystickButton(m_climbStick, 9);
+
   
   JoystickButton m_outtake = new JoystickButton(m_stick, 5);
   JoystickButton m_controlPanel = new JoystickButton(m_climbStick, 6);
@@ -115,7 +119,7 @@ public class RobotContainer {
   JoystickButton m_climb = new JoystickButton(m_climbStick, 7);
   
   JoystickButton m_unJumble = new JoystickButton(m_climbStick, 6);
-  JoystickButton m_feederIntake = new JoystickButton(m_climbStick, 9);
+  JoystickButton m_feederIntakeClimb = new JoystickButton(m_climbStick, 8);
   
   JoystickButton m_calibrateSpeed = new JoystickButton(m_calibStick, 1);
   JoystickButton m_calibrateSpeedShooter = new JoystickButton(m_calibStick, 2);
@@ -135,7 +139,7 @@ public class RobotContainer {
     m_driveSubsystem.setDefaultCommand(new ArcadeDriveCommand(m_driveSubsystem, () -> m_stick.getX(),
         () -> -m_stick.getY(), () -> m_stick.getThrottle()));
     m_serializerSubsystem.setDefaultCommand(
-        new SerializeCommand(m_serializerSubsystem, 0.3, () -> m_throatSubsystem.GetTopBreak(), () -> getThrottle()));
+        new SerializeCommand(m_serializerSubsystem, 0.3, () -> m_throatSubsystem.GetTopBreak(), () -> getThrottle(), () -> !m_throatSubsystem.GetTopBreak()));
     m_throatSubsystem.setDefaultCommand(new ThroatAtSpeedCommand(m_throatSubsystem, 0.4));
 
     // m_intakeSubsystem.setDefaultCommand(new
@@ -181,9 +185,9 @@ public class RobotContainer {
     // m_shoot.toggleWhenPressed(new ShootAllCommand(m_throatSubsystem,
     // m_shooterSubsystem, m_serializerSubsystem, m_indexerSubsystem,
     // m_intakeSubsystem, () -> getThrottle()));
-    // m_intake.whileHeld(new IntakeCommand(m_intakeSubsystem, 0.75));
-    m_intakeClimb.whileHeld(new IntakeCommand(m_intakeSubsystem, 0.75));
-    m_outtake.whileHeld(new IntakeCommand(m_intakeSubsystem, -0.75));
+    m_intake.toggleWhenPressed(new IntakeCommand(m_intakeSubsystem, 0.7));
+    m_intakeClimb.whileHeld(new IntakeCommand(m_intakeSubsystem, 0.7));
+    m_outtake.toggleWhenPressed(new IntakeCommand(m_intakeSubsystem, -0.75));
     m_outtakeClimb.whileHeld(new IntakeCommand(m_intakeSubsystem, -0.75));
     m_spinUp.toggleWhenPressed(
         new SpinUpCommand(m_turretSubsystem, m_camera, m_shooterSubsystem, m_indexerSubsystem, shooterSpeed));
@@ -196,9 +200,12 @@ public class RobotContainer {
     m_moveTurrentR.whileHeld(new TurretMoveCommand(m_turretSubsystem, 0.35));
 
     m_unJumble.whileHeld(new UnJumbleCommand(m_intakeSubsystem, m_throatSubsystem, m_serializerSubsystem));
+    m_feederIntakeClimb.whileHeld(new AmbientIntakePowerCommand(m_intakeSubsystem, -0.5));
     m_feederIntake.whileHeld(new AmbientIntakePowerCommand(m_intakeSubsystem, -0.5));
 
     m_turretTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_camera));
+
+    m_deployIntake.toggleWhenPressed(new ActuateIntakeCommand(m_intakeSubsystem));
 
     m_climb.whileHeld(new MoveClimberCommand(m_climberSubsystem, () -> -m_climbStick.getY()));
     m_calibrateSpeed.whileHeld(new CalibrateSpeedCommand(m_driveSubsystem, 3000));

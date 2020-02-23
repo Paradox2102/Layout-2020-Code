@@ -5,27 +5,19 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.Throat;
-
-import java.util.function.DoubleSupplier;
+package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ThroatSubsystem;
+import frc.lib.Logger;
+import frc.robot.subsystems.IntakeSubsystem;
 
-public class ThroatPowerCommand extends CommandBase {
+public class ActuateIntakeCommand extends CommandBase {
   /**
-   * Creates a new ThroatPowerCommand.
+   * Creates a new AcutauteIntakeCommand.
    */
-  ThroatSubsystem m_subsystem;
-  double m_power;
-  DoubleSupplier m_getVel;
-  DoubleSupplier m_rpmSpeed;
-  double k_deadZone = 200;
-  public ThroatPowerCommand(ThroatSubsystem subsystem, DoubleSupplier getVel, DoubleSupplier rpmSpeed, double power) {
-    m_subsystem = subsystem;
-    m_power = power;
-    m_getVel = getVel;
-    m_rpmSpeed = rpmSpeed;
+  IntakeSubsystem m_subsystem;
+  public ActuateIntakeCommand(IntakeSubsystem intakeSubsystem) {
+    m_subsystem = intakeSubsystem;
 
     addRequirements(m_subsystem);
   }
@@ -33,28 +25,27 @@ public class ThroatPowerCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    Logger.Log("AcutauteIntakeCommand", 1 , "initialize");
+    m_subsystem.setDeploy(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(m_getVel.getAsDouble() - k_deadZone > m_rpmSpeed.getAsDouble() && m_rpmSpeed.getAsDouble() > 0){
-      m_subsystem.setThroatPower(m_power);
-    }else{
-      m_subsystem.stopThroatPower();
-    }
+    Logger.Log("AcutauteIntakeCommand", -1 , "execute");
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.stopThroatPower();
+    Logger.Log("AcutauteIntakeCommand", 1 , "end");
+    m_subsystem.setDeploy(false);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    Logger.Log("AcutauteIntakeCommand", -1 , "isFinished");
     return false;
   }
 }

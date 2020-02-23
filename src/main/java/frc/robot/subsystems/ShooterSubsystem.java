@@ -29,6 +29,7 @@ public class ShooterSubsystem extends SubsystemBase {
   int k_slot = 0;
 
   double m_curSpeed = 0;
+  boolean m_revved = false;
   
   public ShooterSubsystem() {
     m_shooter.setInverted(true);
@@ -58,6 +59,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Shooter Speed", getSpeed());
     SmartDashboard.putNumber("Shooter Pos", getPos());
+    SmartDashboard.putBoolean("Shooter Revved", isRevved());  
   }
 
   public void configPID(){
@@ -80,6 +82,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public void setSpeed(double speed){
     m_curSpeed = speed;
     m_shooter.set(ControlMode.Velocity, speed);
+    m_revved = true;
   }
 
   public int getSpeed(){
@@ -92,6 +95,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void stop(){
     m_curSpeed = 0;
+    m_revved = false;
     m_shooter.set(ControlMode.PercentOutput, 0);
   }
 
@@ -109,5 +113,9 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     return speed;
+  }
+
+  public boolean isRevved(){
+    return m_revved;
   }
 }

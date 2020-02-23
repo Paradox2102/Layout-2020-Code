@@ -18,12 +18,14 @@ public class SerializeCommand extends CommandBase {
   double m_power;
   BooleanSupplier m_stop;
   DoubleSupplier m_throttle;
+  BooleanSupplier m_topLimit;
 
-  public SerializeCommand(SerializerSubsystem subsystem, double power, BooleanSupplier stop, DoubleSupplier throttle) {
+  public SerializeCommand(SerializerSubsystem subsystem, double power, BooleanSupplier stop, DoubleSupplier throttle, BooleanSupplier topLimit) {
     m_subsystem = subsystem;
     m_power = power;
     m_stop = stop;
     m_throttle = throttle;
+    m_topLimit = topLimit;
 
     addRequirements(m_subsystem);
   }
@@ -41,7 +43,7 @@ public class SerializeCommand extends CommandBase {
     // }else{
     // m_subsystem.stop();
     // }
-    if (m_throttle.getAsDouble() > 0.5) {
+    if (m_throttle.getAsDouble() > 0.5 && m_topLimit.getAsBoolean()) {
       m_subsystem.setPower(m_power);
     } else {
       m_subsystem.stop();

@@ -36,6 +36,7 @@ public class TurretSubsystem extends SubsystemBase {
   public TurretSubsystem() {
     m_turret.setInverted(true);
 
+    // m_turret.setSmartCurrentLimit();
     m_turret.setIdleMode(IdleMode.kBrake);
 
     m_encoder = m_turret.getEncoder();
@@ -49,6 +50,7 @@ public class TurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Turret Vel", getVel());
     SmartDashboard.putBoolean("Turret Limit", m_softStop.get());
     SmartDashboard.putNumber("Turret Last Power", m_lastPower);
+    SmartDashboard.putNumber("Turret Current", m_turret.getOutputCurrent());
     
     checkStops();
 

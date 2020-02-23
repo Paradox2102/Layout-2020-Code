@@ -34,6 +34,8 @@ public class ClimberSubsystem extends SubsystemBase {
 
     m_climber.setInverted(false);
     m_encoder = m_climber.getEncoder();
+
+    m_fwdLimit.enableLimitSwitch(true);
   }
 
   @Override

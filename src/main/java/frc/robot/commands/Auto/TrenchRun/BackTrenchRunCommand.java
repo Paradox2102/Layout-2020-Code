@@ -56,7 +56,7 @@ public class BackTrenchRunCommand extends ParallelDeadlineGroup {
         new WaitForShooterSpeedCommand(shooterSubsystem),
         new ParallelCommandGroup(
           new TurretTrackingCommand(turretSubsystem, camera),
-          new FireCommand(throatSubsystem, shooterSubsystem, intakeSubsystem)
+          new FireCommand(throatSubsystem, shooterSubsystem)
         )
       )
     );

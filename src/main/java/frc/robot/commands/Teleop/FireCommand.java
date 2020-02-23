@@ -8,6 +8,7 @@
 package frc.robot.commands.Teleop;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.commands.Intake.AmbientIntakePowerCommand;
 import frc.robot.commands.Intake.IntakeCommand;
 import frc.robot.commands.Throat.ThroatAtSpeedCommand;
 import frc.robot.commands.Throat.ThroatPowerCommand;
@@ -22,10 +23,16 @@ public class FireCommand extends ParallelCommandGroup {
   /**
    * Creates a new FireCommand.
    */
-  public FireCommand(ThroatSubsystem throatSubsystem, ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem) {
+  public FireCommand(ThroatSubsystem throatSubsystem, ShooterSubsystem shooterSubsystem) {
     addCommands(
       new ThroatPowerCommand(throatSubsystem, () -> shooterSubsystem.getSpeed(), () -> shooterSubsystem.getSetpoint() - 1500, 0.4)
       // new IntakeCommand(intakeSubsystem, 0.5)
+    );
+  }
+  public FireCommand(ThroatSubsystem throatSubsystem, ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem) {
+    addCommands(
+      new ThroatPowerCommand(throatSubsystem, () -> shooterSubsystem.getSpeed(), () -> shooterSubsystem.getSetpoint() - 1500, 0.4),
+      new AmbientIntakePowerCommand(intakeSubsystem, 0.5)
     );
   }
 }
