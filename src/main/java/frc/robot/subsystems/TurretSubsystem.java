@@ -24,7 +24,8 @@ public class TurretSubsystem extends SubsystemBase {
 
   CANEncoder m_encoder = new CANEncoder(m_turret);
 
-  CANDigitalInput m_softStop = new CANDigitalInput(m_turret, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyOpen);
+  CANDigitalInput m_softStopFwd = new CANDigitalInput(m_turret, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyOpen);
+  CANDigitalInput m_softStopBack = new CANDigitalInput(m_turret, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyOpen);
 
   double m_lastPower = 0;
 
@@ -40,7 +41,8 @@ public class TurretSubsystem extends SubsystemBase {
 
     m_encoder = m_turret.getEncoder();
 
-    m_softStop.enableLimitSwitch(false);
+    m_softStopFwd.enableLimitSwitch(true);
+    m_softStopBack.enableLimitSwitch(true);
     // m_turret.setSmartCurrentLimit(10);
   }
 
@@ -48,7 +50,7 @@ public class TurretSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Turret Vel", getVel());
-    SmartDashboard.putBoolean("Turret Limit", m_softStop.get());
+    SmartDashboard.putBoolean("Turret Limit", m_softStopFwd.get());
     SmartDashboard.putNumber("Turret Last Power", m_lastPower);
     SmartDashboard.putNumber("Turret Current", m_turret.getOutputCurrent());
     
@@ -60,18 +62,18 @@ public class TurretSubsystem extends SubsystemBase {
       stop();
     }
 
-    if(!m_softStop.get() && Math.abs(m_encoder.getPosition()) > k_encoderDeadzone){
+    if(!m_softStopFwd.get() && Math.abs(m_encoder.getPosition()) > k_encoderDeadzone){
       m_rightStopped = false;
       m_leftStopped = false;
     }
 
-    if(m_softStop.get()){
+    if(m_softStopFwd.get()){
       resetEncoder();
     }
   }
 
   public void checkStops(){
-    if(m_softStop.get()){
+    if(m_softStopFwd.get()){
       if(m_lastPower > 0 && !m_leftStopped){
         m_rightStopped = true;
       }else if (m_lastPower < 0 && !m_rightStopped){
@@ -99,7 +101,7 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public boolean getLimit(){
-    return m_softStop.get();
+    return m_softStopFwd.get();
   }
 
   public double getPos(){

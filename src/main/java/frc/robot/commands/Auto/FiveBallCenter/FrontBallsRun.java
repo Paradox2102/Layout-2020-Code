@@ -34,10 +34,9 @@ public class FrontBallsRun extends ParallelDeadlineGroup {
   final static Waypoint[] k_frontBalls = { new Waypoint(-1.5, 10, Math.toRadians(90), 2, 4, 3),
       new Waypoint(0.8, 20, Math.toRadians(50))/* , new Waypoint(1.92, 20.32, Math.toRadians(50)) */ };
 
-  public FrontBallsRun(DriveSubsystem driveSubsystem, IntakeSubsystem intakeSubsystem) {
+  public FrontBallsRun(DriveSubsystem driveSubsystem) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new CreatePathCommand(driveSubsystem, k_frontBalls, PathConfigs.fast, true, true, true),
-        new IntakeCommand(intakeSubsystem, 0.6));
+    super(new CreatePathCommand(driveSubsystem, k_frontBalls, PathConfigs.fast, true, true, true));
   }
 }

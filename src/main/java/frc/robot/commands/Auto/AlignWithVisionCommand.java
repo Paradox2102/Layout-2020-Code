@@ -40,7 +40,7 @@ public class AlignWithVisionCommand extends CommandBase {
     m_timer = System.currentTimeMillis();
     m_camera.toggleLights(true);
     m_subsystem.setPower(-m_power, m_power);
-    m_camera.StartPiLog();
+    //m_camera.StartPiLog();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -59,8 +59,8 @@ public class AlignWithVisionCommand extends CommandBase {
   public boolean isFinished() {
     CameraData data = m_camera.createData();
     if (System.currentTimeMillis() > m_timer + k_timeOut) {
-      m_camera.EndPiLog();
-      m_camera.DumpFrames(100);
+      // m_camera.EndPiLog();
+      // m_camera.DumpFrames(100);
       Logger.Log("AlignWithVisionCommand", 2, "Timed Out");
       return true;
     } else if (data.canSee()) {
