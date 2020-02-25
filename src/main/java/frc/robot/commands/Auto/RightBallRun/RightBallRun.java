@@ -8,11 +8,11 @@
 package frc.robot.commands.Auto.RightBallRun;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.lib.Camera;
 import frc.robot.commands.Intake.IntakeCommand;
-import frc.robot.commands.Teleop.FireCommand;
 import frc.robot.commands.Teleop.SpinUpCommand;
 import frc.robot.commands.Turret.TurretTrackingCommand;
 import frc.robot.subsystems.DriveSubsystem;
@@ -31,14 +31,15 @@ public class RightBallRun extends ParallelCommandGroup {
    */
   public RightBallRun(DriveSubsystem driveSubsystem, IntakeSubsystem intakeSubsystem, double power,
       TurretSubsystem turretSubsystem, Camera turretCamera, ShooterSubsystem shooterSubsystem,
-      IndexerSubsystem indexerSubsystem, double shooterSpeed, ThroatSubsystem throatSubsystem) {
+      IndexerSubsystem indexerSubsystem, double shooterSpeed, ThroatSubsystem throatSubsystem, Camera backCamera) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     super(new IntakeCommand(intakeSubsystem, power),
         new SpinUpCommand(turretSubsystem, turretCamera, shooterSubsystem, indexerSubsystem, shooterSpeed),
         new TurretTrackingCommand(turretSubsystem, turretCamera),
         new SequentialCommandGroup(new TwoBallRun(driveSubsystem), new WaitCommand(0.5),
-            new ParallelCommandGroup(new DriveToCenter(driveSubsystem),
-                new FireFromCenter(throatSubsystem, shooterSubsystem, 50, turretCamera))));
+            new ParallelDeadlineGroup(new DriveToCenter(driveSubsystem),
+                new FireFromCenter(throatSubsystem, shooterSubsystem, 50, turretCamera)),
+            new TurnToBallsCommand(driveSubsystem, backCamera, power)));
   }
 }
