@@ -53,6 +53,8 @@ public class Robot extends TimedRobot {
     if(m_robotContainer.canSee()){
       SmartDashboard.putNumber("Target Height", m_robotContainer.getTargetHeight());
     }
+
+    m_robotContainer.periodic();
   }
 
   /**
@@ -78,6 +80,8 @@ public class Robot extends TimedRobot {
     m_robotContainer.startPosTracking();
     m_robotContainer.setPos(0, 0);
     m_robotContainer.setAngle(-90);
+
+    m_robotContainer.setTrim(0);
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -106,6 +110,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    m_robotContainer.setTrim(0);
+
     m_robotContainer.startPosTracking();
     m_robotContainer.setPos(0, 0);
     m_robotContainer.setAngle(90);

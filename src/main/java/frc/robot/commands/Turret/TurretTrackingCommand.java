@@ -22,7 +22,7 @@ public class TurretTrackingCommand extends CommandBase {
   double k_p = 0.0003;
   double k_x = 1.7;
   double k_deadZone = 0;
-  boolean isFinished = false;
+  
   public TurretTrackingCommand(TurretSubsystem subsystem, Camera camera) {
     m_subsystem = subsystem;
     m_camera = camera;
@@ -35,7 +35,6 @@ public class TurretTrackingCommand extends CommandBase {
   public void initialize() {
     m_camera.toggleLights(true);
     regionsSeen = false;
-    isFinished = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -58,7 +57,6 @@ public class TurretTrackingCommand extends CommandBase {
           m_subsystem.setPower(power);
         }else{
           m_subsystem.stop();
-          isFinished = true;
         }
       }
     }else{
@@ -70,8 +68,9 @@ public class TurretTrackingCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.stop();
-    m_camera.toggleLights(false);
+      m_subsystem.stop();
+      // m_subsystem.setEnabled(false);
+      m_camera.toggleLights(false);
   }
 
   // Returns true when the command should end.

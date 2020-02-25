@@ -52,16 +52,16 @@ public class DriveSubsystem extends SubsystemBase {
   PigeonIMU m_gyro = new PigeonIMU(0);
 
   // setting PID terms for 4500
-  double k_fLeft = Constants.m_pidTerms.k_driveLeftF;
-  double k_pLeft = Constants.m_pidTerms.k_driveLeftP;
-  double k_iLeft = Constants.m_pidTerms.k_driveLeftI;
-  double k_dLeft = Constants.m_pidTerms.k_driveLeftD;
-  double k_fRight = Constants.m_pidTerms.k_driveRightF;
-  double k_pRight = Constants.m_pidTerms.k_driveRightP;
-  double k_iRight = Constants.m_pidTerms.k_driveRightI;
-  double k_dRight = Constants.m_pidTerms.k_driveRightD;
+  double k_fLeft = Constants.m_robotConstants.k_driveLeftF;
+  double k_pLeft = Constants.m_robotConstants.k_driveLeftP;
+  double k_iLeft = Constants.m_robotConstants.k_driveLeftI;
+  double k_dLeft = Constants.m_robotConstants.k_driveLeftD;
+  double k_fRight = Constants.m_robotConstants.k_driveRightF;
+  double k_pRight = Constants.m_robotConstants.k_driveRightP;
+  double k_iRight = Constants.m_robotConstants.k_driveRightI;
+  double k_dRight = Constants.m_robotConstants.k_driveRightD;
 
-  double k_iRange = Constants.m_pidTerms.k_driveIRange;
+  double k_iRange = Constants.m_robotConstants.k_driveIRange;
   double k_minOutput = -1;
   double k_maxOutput = 1;
 
