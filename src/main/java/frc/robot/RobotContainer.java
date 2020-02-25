@@ -83,7 +83,8 @@ public class RobotContainer {
   ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
   SnootSubsystem m_snootSubsystem = new SnootSubsystem();
 
-  Camera m_camera = new Camera();
+  Camera m_turretCamera = new Camera();
+  Camera m_backCamera = new Camera();
 
   Joystick m_stick = new Joystick(0);
   Joystick m_climbStick = new Joystick(1);
@@ -132,7 +133,9 @@ public class RobotContainer {
   JoystickButton m_snootTesting = new JoystickButton(m_calibStick, 3);
   JoystickButton m_turretTrackCalib = new JoystickButton(m_calibStick, 4);
 
-  JoystickButton m_snootSetRotation = new JoystickButton(m_calibStick, 4); // snooter is snooting
+  JoystickButton m_snootSetRotation = new JoystickButton(m_calibStick, 5); // snooter is snooting
+
+  JoystickButton m_trackBalls = new JoystickButton(m_calibStick, 6);
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -143,7 +146,8 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // Configure the button bindings
-    m_camera.connect(Constants.m_pidTerms.k_ipAddress);
+    m_turretCamera.connect(Constants.m_pidTerms.k_ipAddress);
+    m_backCamera.connect(Constants.m_pidTerms.k_ipAddressBack);
 
     configureButtonBindings();
 
@@ -176,15 +180,15 @@ public class RobotContainer {
     });
     m_chooser.addOption("Trench Run",
         new TrenchRun(m_driveSubsystem, m_intakeSubsystem, m_shooterSubsystem, m_turretSubsystem, m_throatSubsystem,
-            m_indexerSubsystem, m_serializerSubsystem, m_camera, 35000, () -> getPos().x, () -> getPos().y));
+            m_indexerSubsystem, m_serializerSubsystem, m_turretCamera, 35000, () -> getPos().x, () -> getPos().y));
     m_chooser.addOption("10 ft", new CreatePathCommand(m_driveSubsystem, k_10ft, PathConfigs.fast));
     m_chooser.addOption("Trench Forward Backward", new TrenchForwardBack(m_driveSubsystem));
-    m_chooser.addOption("5 Ball Center", new FiveBallCenter(m_driveSubsystem, m_intakeSubsystem, m_camera, 0.4,
+    m_chooser.addOption("5 Ball Center", new FiveBallCenter(m_driveSubsystem, m_intakeSubsystem, m_turretCamera, 0.4,
         m_turretSubsystem, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed, m_throatSubsystem));
     m_chooser.addOption("Tiny Turn", new TinyTurnCommand(m_driveSubsystem));
-    m_chooser.addOption("RobotAlign", new AlignWithVisionCommand(m_driveSubsystem, m_camera, 0.4));
+    m_chooser.addOption("RobotAlign", new AlignWithVisionCommand(m_driveSubsystem, m_turretCamera, 0.4));
     m_chooser.addOption("Right 2 Ball Run", new RightBallRun(m_driveSubsystem, m_intakeSubsystem, 0.4,
-        m_turretSubsystem, m_camera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed, m_throatSubsystem));
+        m_turretSubsystem, m_turretCamera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed, m_throatSubsystem));
     // m_chooser.addOption("Print 10 ft", new PrintPathCommand(m_driveSubsystem,
     // drive10Ft, PurePursuit.PathConfigs.fast));
     SmartDashboard.putData("Auto mode", m_chooser);
@@ -208,11 +212,11 @@ public class RobotContainer {
     m_outtake.toggleWhenPressed(new IntakeCommand(m_intakeSubsystem, -0.75));
     m_outtakeClimb.whileHeld(new IntakeCommand(m_intakeSubsystem, -0.75));
     m_spinUp.toggleWhenPressed(
-        new SpinUpCommand(m_turretSubsystem, m_camera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed));
-    m_spinUpTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_camera));
+        new SpinUpCommand(m_turretSubsystem, m_turretCamera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed));
+    m_spinUpTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_turretCamera));
     m_spinUpClimb.toggleWhenPressed(
-        new SpinUpCommand(m_turretSubsystem, m_camera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed));
-    m_spinUpTrackClimb.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_camera));
+        new SpinUpCommand(m_turretSubsystem, m_turretCamera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed));
+    m_spinUpTrackClimb.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_turretCamera));
     m_fire.whileHeld(new FireCommand(m_throatSubsystem, m_shooterSubsystem, m_intakeSubsystem));
     m_moveTurrentL.whileHeld(new TurretMoveCommand(m_turretSubsystem, -0.35));
     m_moveTurrentR.whileHeld(new TurretMoveCommand(m_turretSubsystem, 0.35));
@@ -221,7 +225,7 @@ public class RobotContainer {
     m_feederIntakeClimb.whileHeld(new AmbientIntakePowerCommand(m_intakeSubsystem, -0.5));
     m_feederIntake.whileHeld(new AmbientIntakePowerCommand(m_intakeSubsystem, -0.5));
 
-    m_turretTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_camera));
+    m_turretTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_turretCamera));
 
     m_deployIntake.toggleWhenPressed(new ActuateIntakeCommand(m_intakeSubsystem));
 
@@ -236,7 +240,9 @@ public class RobotContainer {
     m_snootTesting.whileHeld(new SnootTesting(m_snootSubsystem, 0.25));
     m_snootSetRotation.whenPressed(new FixedRotationCommand(m_snootSubsystem, 0.25, 3.2));
 
-    m_turretTrackCalib.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_camera));
+    m_trackBalls.whileHeld(new BallDriveCommand(m_driveSubsystem, m_backCamera, -0.25));
+
+    m_turretTrackCalib.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_turretCamera));
   }
 
   /**
@@ -297,10 +303,10 @@ public class RobotContainer {
   }
 
   public double getTargetHeight() {
-    return m_camera.createData().getTargetHeight();
+    return m_turretCamera.createData().getTargetHeight();
   }
 
   public boolean canSee() {
-    return m_camera.createData().canSee();
+    return m_turretCamera.createData().canSee();
   }
 }

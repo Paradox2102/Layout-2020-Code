@@ -1,6 +1,7 @@
 package frc.lib;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import frc.PiCamera.PiCamera;
 import frc.PiCamera.PiCamera.PiCameraRect;
@@ -28,6 +29,11 @@ public class Camera {
         m_piCamera.EndPiLog();
     }
 
+    public static enum BallSide {
+        RIGHT,
+        LEFT
+    };
+
     public class CameraData {
         public PiCameraRegions m_regions;
 
@@ -42,6 +48,18 @@ public class Camera {
         public boolean canSee() {
             if (m_regions != null) {
                 return m_regions.GetRegion(0) != null;
+            }
+            return false;
+        }
+
+        public boolean canSeeMulti(int num) {
+            if (m_regions != null) {
+                for(int i=0; i<num; i++){
+                    if(m_regions.GetRegion(i) == null){
+                        return false;
+                    }
+                }
+                return true;
             }
             return false;
         }
@@ -76,16 +94,69 @@ public class Camera {
             }
         }
 
+        public double ballCenterDiff(double centerLine, ArrayList<PiCameraRegion> regions) {
+            PiCameraRegion region1 = m_regions.GetRegion(0);
+            PiCameraRegion region2 = m_regions.GetRegion(1);
+            // left case
+            if (region1.m_bounds.m_left < region2.m_bounds.m_left) {
+                double center = (region1.m_bounds.m_left + region2.m_bounds.m_right) / 2.0;
+                return centerLine - center;
+            } else {
+                double center = (region2.m_bounds.m_left + region1.m_bounds.m_right) / 2.0;
+                return centerLine - center;
+            }
+        }
+
+        public List<PiCameraRegion> sortRegions() {
+            List<PiCameraRegion> regions = m_regions.m_regions;
+            regions = ballFilter();
+            if(regions.size() > 1){
+                List<PiCameraRegion> sortedTargets = new ArrayList<PiCameraRegion>();
+                sortedTargets.add(regions.get(0));
+    
+                for(int i=1; i<regions.size(); i++){
+                    int idx = sortedTargets.size();
+                    for(int j=sortedTargets.size()-1; j>-1; j--){
+                        if(regions.get(i).m_bounds.m_left < sortedTargets.get(j).m_bounds.m_left){
+                            idx = j;
+                        }
+                    }
+                    sortedTargets.add(idx, regions.get(i));
+                }
+    
+                return sortedTargets;
+            }else{
+                return null;
+            }
+        }
+
+        public ArrayList<PiCameraRegion> ballSelector(BallSide side){
+            List<PiCameraRegion> regions = sortRegions();
+            ArrayList<PiCameraRegion> returnRegions = new ArrayList<PiCameraRegion>();
+           
+            if(side.equals(BallSide.RIGHT)){
+                returnRegions.add(regions.get(regions.size() - 1));
+                returnRegions.add(regions.get(regions.size() - 2));
+            }else if(side.equals(BallSide.LEFT)){
+                returnRegions.add(regions.get(0));
+                returnRegions.add(regions.get(1));
+            }
+
+            return returnRegions;
+        }
+
         public ArrayList<PiCameraRegion> ballFilter() {
             ArrayList<PiCameraRegion> regionsList = new ArrayList<PiCameraRegion>();
-            for (int i = 0; i < m_regions.GetRegionCount(); i++) {
-                PiCameraRect rect = m_regions.GetRegion(i).m_bounds;
-
-                double height = rect.m_bottom - rect.m_top;
-                double width = rect.m_right - rect.m_left;
-
-                if (width / height > 0.6 && width / height < 1.4) {
-                    regionsList.add(m_regions.GetRegion(i));
+            if(m_regions != null){
+                for (int i = 0; i < m_regions.GetRegionCount(); i++) {
+                    PiCameraRect rect = m_regions.GetRegion(i).m_bounds;
+    
+                    double height = rect.m_bottom - rect.m_top;
+                    double width = rect.m_right - rect.m_left;
+    
+                    if (width / height > 0.6 && width / height < 1.4) {
+                        regionsList.add(m_regions.GetRegion(i));
+                    }
                 }
             }
             return regionsList;

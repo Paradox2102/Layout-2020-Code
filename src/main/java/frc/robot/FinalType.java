@@ -21,6 +21,7 @@ public class FinalType {
     public final int k_shooterIRange = 100;
 
     public final String k_ipAddress = "10.21.2.12";
+    public final String k_ipAddressBack = "10.21.2.13";
 
     //Shooter Equation Coefficients
     public final double k_squareConst = 3.956;
