@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.lib.Camera;
 import frc.robot.commands.Auto.AlignWithVisionCommand;
+import frc.robot.commands.Auto.FireCommandAuto;
 import frc.robot.commands.Drive.TinyTurnCommand;
 import frc.robot.commands.Intake.IntakeCommand;
 import frc.robot.commands.Teleop.FireCommand;
@@ -31,15 +32,15 @@ public class FiveBallCenter extends ParallelCommandGroup {
   /**
    * Creates a new FiveBallCenter.
    */
-  public FiveBallCenter(DriveSubsystem driveSubsystem, IntakeSubsystem intakeSubsystem, Camera camera, double power,
+  public FiveBallCenter(DriveSubsystem driveSubsystem, IntakeSubsystem intakeSubsystem, Camera turretCamera, double power,
       TurretSubsystem turretSubsystem, ShooterSubsystem shooterSubsystem, IndexerSubsystem indexerSubsystem,
       double speed, ThroatSubsystem throatSubsystem) {
     addCommands(
-        new SpinUpCommand(turretSubsystem, camera, shooterSubsystem, indexerSubsystem, speed),
+        new SpinUpCommand(turretSubsystem, turretCamera, shooterSubsystem, indexerSubsystem, speed),
         new IntakeCommand(intakeSubsystem, 0.6),
         new SequentialCommandGroup(new FrontBallsRun(driveSubsystem),
-            new AlignWithVisionCommand(driveSubsystem, camera, power), new WaitCommand(0.5),
-            new ParallelCommandGroup(new TurretTrackingCommand(turretSubsystem, camera),
-                new FireCommand(throatSubsystem, shooterSubsystem))));
+            new AlignWithVisionCommand(driveSubsystem, turretCamera, power), new WaitCommand(0.5),
+            new ParallelCommandGroup(new TurretTrackingCommand(turretSubsystem, turretCamera),
+                new FireCommandAuto(throatSubsystem, shooterSubsystem, turretCamera, 50))));
   }
 }

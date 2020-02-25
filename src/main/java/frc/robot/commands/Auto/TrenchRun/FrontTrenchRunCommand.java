@@ -16,6 +16,7 @@ import frc.lib.Camera;
 import frc.pathfinder.Pathfinder.Waypoint;
 import frc.robot.PurePursuit.PathConfigs;
 import frc.robot.commands.Auto.CreatePathCommand;
+import frc.robot.commands.Auto.FireCommandAuto;
 import frc.robot.commands.Intake.IntakeCommand;
 import frc.robot.commands.Teleop.FireCommand;
 import frc.robot.commands.Throat.ThroatPowerCommand;
@@ -38,13 +39,13 @@ public class FrontTrenchRunCommand extends ParallelCommandGroup {
     new Waypoint(-11, 15, Math.toRadians(-90))
   };
   
-  public FrontTrenchRunCommand(DriveSubsystem driveSubsystem, TurretSubsystem turretSubsystem, ThroatSubsystem throatSubsystem, ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem, Camera camera) {
+  public FrontTrenchRunCommand(DriveSubsystem driveSubsystem, TurretSubsystem turretSubsystem, ThroatSubsystem throatSubsystem, ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem, Camera turretCamera) {
     
     
     super(
         new CreatePathCommand(driveSubsystem, k_forwardsTrench, PathConfigs.fast),
-        new TurretTrackingCommand(turretSubsystem, camera),
-        new FireCommand(throatSubsystem, shooterSubsystem)
+        new TurretTrackingCommand(turretSubsystem, turretCamera),
+        new FireCommandAuto(throatSubsystem, shooterSubsystem, turretCamera, 50)
     );
   }
 }

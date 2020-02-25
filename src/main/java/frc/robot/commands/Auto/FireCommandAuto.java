@@ -5,13 +5,10 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.Auto.RightBallRun;
+package frc.robot.commands.Auto;
 
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.lib.Camera;
-import frc.robot.commands.Auto.FireCommandAuto;
-import frc.robot.commands.Teleop.FireCommand;
 import frc.robot.commands.Throat.ThroatPowerCommand;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.ThroatSubsystem;
@@ -19,13 +16,14 @@ import frc.robot.subsystems.ThroatSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class FireFromCenter extends ParallelDeadlineGroup {
+public class FireCommandAuto extends SequentialCommandGroup {
   /**
-   * Creates a new FireFromCenter.
+   * Creates a new FireCommandAuto.
    */
-  public FireFromCenter(ThroatSubsystem throatSubsystem, ShooterSubsystem shooterSubsystem, double deadzone,
-      Camera turretCamera) {
-    // Add your commands in the super() call. Add the deadline first.
-    super(new WaitCommand(5), new FireCommandAuto(throatSubsystem, shooterSubsystem, turretCamera, deadzone));
+  public FireCommandAuto(ThroatSubsystem throatSubsystem, ShooterSubsystem shooterSubsystem, Camera turretCamera, double deadzone) {
+    // Add your commands in the super() call, e.g.
+    // super(new FooCommand(), new BarCommand());
+    super(new ThroatPowerCommand(throatSubsystem, () -> shooterSubsystem.getSpeed(),
+    () -> shooterSubsystem.getSetpoint() - 1500, 0.6, deadzone, turretCamera));
   }
 }

@@ -17,6 +17,7 @@ import frc.lib.Camera;
 import frc.pathfinder.Pathfinder.Waypoint;
 import frc.robot.PurePursuit.PathConfigs;
 import frc.robot.commands.Auto.CreatePathCommand;
+import frc.robot.commands.Auto.FireCommandAuto;
 import frc.robot.commands.Auto.WaitForDistanceCommand;
 import frc.robot.commands.Auto.WaitForShooterSpeedCommand;
 import frc.robot.commands.Intake.IntakeCommand;
@@ -47,7 +48,7 @@ public class BackTrenchRunCommand extends ParallelDeadlineGroup {
 
   public BackTrenchRunCommand(DriveSubsystem driveSubsystem, IntakeSubsystem intakeSubsystem, 
                                 ShooterSubsystem shooterSubsystem, TurretSubsystem turretSubsystem, ThroatSubsystem throatSubsystem,
-                                DoubleSupplier getX, DoubleSupplier getY, Camera camera) {
+                                DoubleSupplier getX, DoubleSupplier getY, Camera turretCamera) {
 
     super(
       new CreatePathCommand(driveSubsystem, k_backwardsTrench, PathConfigs.fast, true, true, true),
@@ -55,8 +56,8 @@ public class BackTrenchRunCommand extends ParallelDeadlineGroup {
         new WaitForDistanceCommand(getX, getY, k_firingX, k_firingY),
         new WaitForShooterSpeedCommand(shooterSubsystem),
         new ParallelCommandGroup(
-          new TurretTrackingCommand(turretSubsystem, camera),
-          new FireCommand(throatSubsystem, shooterSubsystem)
+          new TurretTrackingCommand(turretSubsystem, turretCamera),
+          new FireCommandAuto(throatSubsystem, shooterSubsystem, turretCamera, 50)
         )
       )
     );
