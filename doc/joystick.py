@@ -60,7 +60,7 @@ def md_joysticks(data):
     output = io.StringIO()
     joysticks = sorted(data.values(), key=lambda d: d['port'])
     print("# Joystick layout", file=output)
-    print("\n![joystick image](Joystick.png)", file=output)
+    print("\n<img align=\"right\" src=\"Joystick.png\">", file=output)
     for j in joysticks:
         print("\n## Joystick %d: %s" % (j['port'], clean_name(j['name'])), file=output)
         buttonlists = sorted(j['buttons'].items())
