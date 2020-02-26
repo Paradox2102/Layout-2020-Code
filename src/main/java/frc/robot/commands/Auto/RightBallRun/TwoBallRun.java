@@ -30,7 +30,7 @@ public class TwoBallRun extends ParallelDeadlineGroup {
 
   // Waypoints for angled drive
   static final Waypoint[] k_2Ball = { new Waypoint(6, 10, Math.toRadians(90), 2, 4, 5),
-      new Waypoint(10.5, 20.5, Math.toRadians(50)) };
+      new Waypoint(10.1, 20.5, Math.toRadians(50)) };
 
   public TwoBallRun(DriveSubsystem driveSubsystem) {
     // Add your commands in the super() call, e.g.

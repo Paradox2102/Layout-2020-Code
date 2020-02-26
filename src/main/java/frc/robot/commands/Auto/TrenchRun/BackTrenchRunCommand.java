@@ -51,6 +51,6 @@ public class BackTrenchRunCommand extends ParallelDeadlineGroup {
     super(new CreatePathCommand(driveSubsystem, k_backwardsTrench, PathConfigs.fast, true, true, true),
         new SequentialCommandGroup(new WaitForDistanceCommand(getX, getY, k_firingX, k_firingY),
             new WaitForShooterSpeedCommand(shooterSubsystem), new ParallelCommandGroup(
-                new FireCommandAuto(throatSubsystem, shooterSubsystem, turretCamera, 50, () -> turretSubsystem.getOffset()))));
+                new FireCommandAuto(throatSubsystem, turretSubsystem, shooterSubsystem, turretCamera, 50))));
   }
 }

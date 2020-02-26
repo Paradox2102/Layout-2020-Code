@@ -40,6 +40,6 @@ public class FiveBallCenter extends ParallelCommandGroup {
         new SequentialCommandGroup(new FrontBallsRun(driveSubsystem),
             new AlignWithVisionCommand(driveSubsystem, turretCamera, power), new WaitCommand(0.5),
             new ParallelCommandGroup(new TurretTrackingCommand(turretSubsystem, turretCamera),
-                new FireCommandAuto(throatSubsystem, shooterSubsystem, turretCamera, 50, () -> turretSubsystem.getOffset()))));
+                new FireCommandAuto(throatSubsystem, turretSubsystem, shooterSubsystem, turretCamera, 50))));
   }
 }

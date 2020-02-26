@@ -14,6 +14,7 @@ import frc.lib.Camera;
 import frc.robot.commands.Throat.ThroatPowerCommand;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.ThroatSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -22,11 +23,11 @@ public class FireCommandAuto extends SequentialCommandGroup {
   /**
    * Creates a new FireCommandAuto.
    */
-  public FireCommandAuto(ThroatSubsystem throatSubsystem, ShooterSubsystem shooterSubsystem, Camera turretCamera,
-      double deadzone, DoubleSupplier offset) {
+  public FireCommandAuto(ThroatSubsystem throatSubsystem, TurretSubsystem turretSubsystem, ShooterSubsystem shooterSubsystem, Camera turretCamera,
+      double deadzone) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     super(new ThroatPowerCommand(throatSubsystem, () -> shooterSubsystem.getSpeed(),
-        () -> shooterSubsystem.getSetpoint() - 1500, 0.6, deadzone, turretCamera, offset));
+        () -> shooterSubsystem.getSetpoint() - 1500, 0.6, deadzone, turretCamera, () -> turretSubsystem.getOffset()));
   }
 }

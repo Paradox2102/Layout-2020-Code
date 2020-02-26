@@ -42,6 +42,6 @@ public class FrontTrenchRunCommand extends ParallelCommandGroup {
       Camera turretCamera) {
 
     super(new CreatePathCommand(driveSubsystem, k_forwardsTrench, PathConfigs.fast),
-        new FireCommandAuto(throatSubsystem, shooterSubsystem, turretCamera, 50, () -> turretSubsystem.getOffset()));
+        new FireCommandAuto(throatSubsystem, turretSubsystem, shooterSubsystem, turretCamera, 50));
   }
 }
