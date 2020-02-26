@@ -9,6 +9,7 @@ package frc.robot.commands.Teleop;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.Intake.AmbientIntakePowerCommand;
+import frc.robot.commands.Intake.IntakeCommand;
 import frc.robot.commands.Serializer.PowerSerializeCommand;
 import frc.robot.commands.Serializer.SerializeCommand;
 import frc.robot.commands.Throat.ThroatMoveCommand;
@@ -25,7 +26,7 @@ public class UnJumbleCommand extends ParallelCommandGroup {
    */
   public UnJumbleCommand(IntakeSubsystem intakeSubsystem, ThroatSubsystem throatSubsystem, SerializerSubsystem serializerSubsystem) {
     addCommands(
-      new AmbientIntakePowerCommand(intakeSubsystem, -0.5), 
+      new IntakeCommand(intakeSubsystem, -0.5), 
       new ThroatMoveCommand(throatSubsystem, -0.4), 
       new PowerSerializeCommand(serializerSubsystem, -0.5)
     );

@@ -9,6 +9,7 @@ package frc.robot.commands.Climber;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClimberSubsystem;
 
@@ -35,7 +36,7 @@ public class MoveClimberCommand extends CommandBase {
   public void execute() {
     double y = m_getY.getAsDouble();
 
-    if(Math.abs(y) < k_deadZone){
+    if(Math.abs(y) < k_deadZone || DriverStation.getInstance().getMatchTime() > 30){
       m_subsystem.stop();
     }else{
       m_subsystem.setPower(y);

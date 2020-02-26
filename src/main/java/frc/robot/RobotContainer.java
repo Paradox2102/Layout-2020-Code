@@ -22,6 +22,8 @@ import frc.lib.Camera;
 import frc.pathfinder.Pathfinder.Waypoint;
 import frc.robot.PositionTracker.PositionContainer;
 import frc.robot.PurePursuit.PathConfigs;
+import frc.robot.Triggers.DecreaseTrimTrigger;
+import frc.robot.Triggers.IncreaseTrimTrigger;
 import frc.robot.commands.Auto.AlignWithVisionCommand;
 import frc.robot.commands.Auto.CreatePathCommand;
 import frc.robot.commands.Auto.FiveBallCenter.FiveBallCenter;
@@ -40,6 +42,7 @@ import frc.robot.commands.Indexer.IndexCommand;
 import frc.robot.commands.Intake.AmbientIntakePowerCommand;
 import frc.robot.commands.Intake.IntakeCommand;
 import frc.robot.commands.Serializer.SerializeCommand;
+import frc.robot.commands.Shooter.IncrementTrimCommand;
 import frc.robot.commands.Shooter.PowerCommand;
 import frc.robot.commands.Shooter.ShooterSpeedCommand;
 import frc.robot.commands.Snoot.FixedRotationCommand;
@@ -115,8 +118,6 @@ public class RobotContainer {
 
   JoystickButton m_manualControlPanel = new JoystickButton(m_climbStick, 5);
 
-  JoystickButton m_deployIntake = new JoystickButton(m_climbStick, 9);
-
   JoystickButton m_outtake = new JoystickButton(m_stick, 5);
   JoystickButton m_controlPanel = new JoystickButton(m_climbStick, 6);
 
@@ -137,6 +138,9 @@ public class RobotContainer {
 
   JoystickButton m_trackBalls = new JoystickButton(m_calibStick, 6);
 
+  IncreaseTrimTrigger m_increaseTrim = new IncreaseTrimTrigger(m_climbStick);
+  DecreaseTrimTrigger m_decreaseTrim = new DecreaseTrimTrigger(m_climbStick);
+
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   double m_shooterSpeed = 33000;// 31000; //36000;
@@ -146,8 +150,8 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // Configure the button bindings
-    m_turretCamera.connect(Constants.m_pidTerms.k_ipAddress);
-    m_backCamera.connect(Constants.m_pidTerms.k_ipAddressBack);
+    m_turretCamera.connect(Constants.m_robotConstants.k_ipAddress);
+    // m_backCamera.connect(Constants.m_pidTerms.k_ipAddressBack);
 
     configureButtonBindings();
 
@@ -207,8 +211,8 @@ public class RobotContainer {
     // m_shoot.toggleWhenPressed(new ShootAllCommand(m_throatSubsystem,
     // m_shooterSubsystem, m_serializerSubsystem, m_indexerSubsystem,
     // m_intakeSubsystem, () -> getThrottle()));
-    m_intake.toggleWhenPressed(new IntakeCommand(m_intakeSubsystem, 0.7));
-    m_intakeClimb.whileHeld(new IntakeCommand(m_intakeSubsystem, 0.7));
+    m_intake.toggleWhenPressed(new IntakeCommand(m_intakeSubsystem, 0.9));
+    m_intakeClimb.whileHeld(new IntakeCommand(m_intakeSubsystem, 0.9));
     m_outtake.toggleWhenPressed(new IntakeCommand(m_intakeSubsystem, -0.75));
     m_outtakeClimb.whileHeld(new IntakeCommand(m_intakeSubsystem, -0.75));
     m_spinUp.toggleWhenPressed(
@@ -225,9 +229,12 @@ public class RobotContainer {
     m_feederIntakeClimb.whileHeld(new AmbientIntakePowerCommand(m_intakeSubsystem, -0.5));
     m_feederIntake.whileHeld(new AmbientIntakePowerCommand(m_intakeSubsystem, -0.5));
 
-    m_turretTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_turretCamera));
+    m_manualControlPanel.whenPressed(new FixedRotationCommand(m_snootSubsystem, 0.25, 3.2));
 
-    m_deployIntake.toggleWhenPressed(new ActuateIntakeCommand(m_intakeSubsystem));
+    m_increaseTrim.whenActive(new IncrementTrimCommand(m_shooterSubsystem, 500), true);
+    m_decreaseTrim.whenActive(new IncrementTrimCommand(m_shooterSubsystem, -500), true);
+
+    m_turretTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_turretCamera));
 
     m_climb.whileHeld(new MoveClimberCommand(m_climberSubsystem, () -> -m_climbStick.getY()));
     m_calibrateSpeed.whileHeld(new FireCommand(m_throatSubsystem, m_shooterSubsystem, m_intakeSubsystem));
@@ -243,6 +250,9 @@ public class RobotContainer {
     m_trackBalls.whileHeld(new BallDriveCommand(m_driveSubsystem, m_backCamera, -0.25));
 
     m_turretTrackCalib.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_turretCamera));
+  }
+
+  public void periodic(){
   }
 
   /**
@@ -308,5 +318,9 @@ public class RobotContainer {
 
   public boolean canSee() {
     return m_turretCamera.createData().canSee();
+  }
+
+  public void setTrim(double amount){
+    m_shooterSubsystem.setTrim(amount);
   }
 }

@@ -21,15 +21,17 @@ public class ShooterSubsystem extends SubsystemBase {
   TalonSRX m_shooter = new TalonSRX(Constants.k_shooter);
   TalonSRX m_shooterFollower = new TalonSRX(Constants.k_shooterFollower); //36000
 
-  double k_f = Constants.m_pidTerms.k_shooterF;
-  double k_p = Constants.m_pidTerms.k_shooterP;
-  double k_i = Constants.m_pidTerms.k_shooterI;
+  double k_f = Constants.m_robotConstants.k_shooterF;
+  double k_p = Constants.m_robotConstants.k_shooterP;
+  double k_i = Constants.m_robotConstants.k_shooterI;
 
-  int k_iRange = Constants.m_pidTerms.k_shooterIRange;
+  int k_iRange = Constants.m_robotConstants.k_shooterIRange;
   int k_slot = 0;
 
   double m_curSpeed = 0;
   boolean m_revved = false;
+
+  double m_trim = 0;
   
   public ShooterSubsystem() {
     m_shooter.setInverted(true);
@@ -80,6 +82,8 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setSpeed(double speed){
+    speed += m_trim;
+
     m_curSpeed = speed;
     m_shooter.set(ControlMode.Velocity, speed);
     m_revved = true;
@@ -104,18 +108,27 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double calculatedSpeed(double height){
-    double speed = (Constants.m_pidTerms.k_squareConst *height*height) - (Constants.m_pidTerms.k_linearConst * height) + (Constants.m_pidTerms.k_const);
+    double speed = (Constants.m_robotConstants.k_squareConst *height*height) - (Constants.m_robotConstants.k_linearConst * height) + (Constants.m_robotConstants.k_const);
 
+    
     if(speed > 40000){
       return 40000;
     }else if(speed < 30000){
       return 30000;
     }
-
+    
     return speed;
   }
 
   public boolean isRevved(){
     return m_revved;
+  }
+
+  public void incrementTrim(double amount){
+    m_trim += amount;
+  }
+
+  public void setTrim(double trim){
+    m_trim = trim;
   }
 }
