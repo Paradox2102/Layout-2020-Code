@@ -187,9 +187,8 @@ public class RobotContainer {
         m_turretSubsystem, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed, m_throatSubsystem));
     m_chooser.addOption("Tiny Turn", new TinyTurnCommand(m_driveSubsystem));
     m_chooser.addOption("RobotAlign", new AlignWithVisionCommand(m_driveSubsystem, m_turretCamera, 0.4));
-    m_chooser.addOption("Right 2 Ball Run",
-        new RightBallRun(m_driveSubsystem, m_intakeSubsystem, 0.4, m_turretSubsystem, m_turretCamera,
-            m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed, m_throatSubsystem, m_backCamera));
+    m_chooser.addOption("Right 2 Ball Run", new RightBallRun(m_driveSubsystem, m_intakeSubsystem, 0.4,
+        m_turretSubsystem, m_turretCamera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed, m_throatSubsystem));
     // m_chooser.addOption("Print 10 ft", new PrintPathCommand(m_driveSubsystem,
     // drive10Ft, PurePursuit.PathConfigs.fast));
     SmartDashboard.putData("Auto mode", m_chooser);

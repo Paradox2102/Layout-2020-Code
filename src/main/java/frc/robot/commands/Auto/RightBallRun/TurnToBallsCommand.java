@@ -19,14 +19,14 @@ public class TurnToBallsCommand extends CommandBase {
    * Creates a new TurnToBallsCommand.
    */
   DriveSubsystem m_driveSubsystem;
-  Camera m_backCamera;
+  Camera m_frontCamera;
   double m_power;
   double k_deadZone = 50;
 
-  public TurnToBallsCommand(DriveSubsystem driveSubsystem, Camera backCamera, double power) {
+  public TurnToBallsCommand(DriveSubsystem driveSubsystem, Camera frontCamera, double power) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_driveSubsystem = driveSubsystem;
-    m_backCamera = backCamera;
+    m_frontCamera = frontCamera;
     m_power = power;
 
     addRequirements(m_driveSubsystem);
@@ -36,7 +36,7 @@ public class TurnToBallsCommand extends CommandBase {
   @Override
   public void initialize() {
     Logger.Log("TurnToBallsCommand", 2, "Initialized");
-    m_backCamera.toggleLights(true);
+    m_frontCamera.toggleLights(true);
     m_driveSubsystem.setPower(m_power, -m_power);
   }
 
@@ -49,12 +49,13 @@ public class TurnToBallsCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     Logger.Log("TurnToBallsCommand", 2, "Ended");
+    m_driveSubsystem.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    CameraData data = m_backCamera.createData();
+    CameraData data = m_frontCamera.createData();
 
     if (data.canSeeMulti(2)) {
       double offset = data.ballCenterDiff(data.centerLine(), data.ballSelector(BallSide.RIGHT));

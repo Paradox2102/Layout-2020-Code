@@ -31,7 +31,7 @@ public class RightBallRun extends ParallelCommandGroup {
    */
   public RightBallRun(DriveSubsystem driveSubsystem, IntakeSubsystem intakeSubsystem, double power,
       TurretSubsystem turretSubsystem, Camera turretCamera, ShooterSubsystem shooterSubsystem,
-      IndexerSubsystem indexerSubsystem, double shooterSpeed, ThroatSubsystem throatSubsystem, Camera backCamera) {
+      IndexerSubsystem indexerSubsystem, double shooterSpeed, ThroatSubsystem throatSubsystem) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     super(new IntakeCommand(intakeSubsystem, power),
@@ -40,6 +40,6 @@ public class RightBallRun extends ParallelCommandGroup {
         new SequentialCommandGroup(new TwoBallRun(driveSubsystem), new WaitCommand(0.5),
             new ParallelDeadlineGroup(new DriveToCenter(driveSubsystem),
                 new FireFromCenter(throatSubsystem, shooterSubsystem, 50, turretCamera)),
-            new TurnToBallsCommand(driveSubsystem, backCamera, power)));
+            new TurnToBallsCommand(driveSubsystem, turretCamera, power)));
   }
 }
