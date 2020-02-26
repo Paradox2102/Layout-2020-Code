@@ -1,6 +1,6 @@
 # Joystick layout
 
-<img src="Joystick.png" align="right">
+<img align="right" src="Joystick.png">
 
 ## Joystick 0: stick
 
