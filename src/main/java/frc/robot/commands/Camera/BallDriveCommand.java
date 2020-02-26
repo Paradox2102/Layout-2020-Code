@@ -18,6 +18,7 @@ public class BallDriveCommand extends CommandBase {
   double m_power;
   boolean m_seenBalls = false;
   double k_p = 0.0005;
+
   public BallDriveCommand(DriveSubsystem subsystem, Camera camera, double power) {
     m_subsystem = subsystem;
     m_camera = camera;
@@ -38,23 +39,23 @@ public class BallDriveCommand extends CommandBase {
   public void execute() {
     CameraData data = m_camera.createData();
     int numBalls = data.ballFilter().size();
-    if(numBalls >=2){
+    if (numBalls >= 2) {
       double diff = data.ballCenterDiff(data.centerLine());
       double powerDiff = Math.abs(diff) * k_p;
-  
-      //turn left
-      if(diff > 0){
+
+      // turn left
+      if (diff > 0) {
         m_subsystem.setPower(m_power - powerDiff, m_power + powerDiff);
-      }else{
+      } else {
         m_subsystem.setPower(m_power + powerDiff, m_power - powerDiff);
       }
-    }else if(numBalls >= 1){
-      double diff = data.centerDiff(data.centerLine());
+    } else if (numBalls >= 1) {
+      double diff = data.centerDiff(data.centerLine(), 0);
       double powerDiff = Math.abs(diff) * k_p;
 
-      if(diff > 0){
+      if (diff > 0) {
         m_subsystem.setPower(m_power - powerDiff, m_power + powerDiff);
-      }else{
+      } else {
         m_subsystem.setPower(m_power + powerDiff, m_power - powerDiff);
       }
     }
@@ -72,12 +73,12 @@ public class BallDriveCommand extends CommandBase {
   public boolean isFinished() {
     CameraData data = m_camera.createData();
     boolean canSeeMulti = data.ballFilter().size() >= 1;
-    
-    if(!m_seenBalls && canSeeMulti){
+
+    if (!m_seenBalls && canSeeMulti) {
       m_seenBalls = true;
     }
 
-    if(m_seenBalls){
+    if (m_seenBalls) {
       return !canSeeMulti;
     }
     return false;

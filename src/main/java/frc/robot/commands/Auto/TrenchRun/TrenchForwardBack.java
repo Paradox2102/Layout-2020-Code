@@ -13,7 +13,6 @@ import frc.robot.commands.Auto.CreatePathCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.pathfinder.Pathfinder.Waypoint;
 
-
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
@@ -22,22 +21,16 @@ public class TrenchForwardBack extends SequentialCommandGroup {
    * Creates a new TrenchForwardBack.
    */
 
-  final static Waypoint[] k_backwardsTrench = { 
-    new Waypoint(-11, 10, Math.toRadians(90), 5),
-    new Waypoint(-11, 25, Math.toRadians(90))
-  };
+  final static Waypoint[] k_backwardsTrench = { new Waypoint(-11, 10, Math.toRadians(90), 5),
+      new Waypoint(-11, 25, Math.toRadians(90)) };
 
-  final static Waypoint[] k_forwardsTrench = {
-    new Waypoint(-11, 25, Math.toRadians(-90), 7),
-    new Waypoint(-11, 15, Math.toRadians(-90))
-  };
+  final static Waypoint[] k_forwardsTrench = { new Waypoint(-11, 25, Math.toRadians(-90), 5),
+      new Waypoint(-11, 15, Math.toRadians(-90)) };
 
   public TrenchForwardBack(DriveSubsystem driveSubsystem) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    addCommands(
-      new CreatePathCommand(driveSubsystem, k_backwardsTrench, PathConfigs.fast, true, true, true),
-      new CreatePathCommand(driveSubsystem, k_forwardsTrench, PathConfigs.fast)
-    );
+    addCommands(new CreatePathCommand(driveSubsystem, k_backwardsTrench, PathConfigs.fast, true, true, true),
+        new CreatePathCommand(driveSubsystem, k_forwardsTrench, PathConfigs.fast));
   }
 }

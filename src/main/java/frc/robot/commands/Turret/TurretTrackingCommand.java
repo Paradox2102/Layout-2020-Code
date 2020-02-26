@@ -19,13 +19,15 @@ public class TurretTrackingCommand extends CommandBase {
   TurretSubsystem m_subsystem;
   Camera m_camera;
   boolean regionsSeen = false;
-  double k_p = 0.0003;
-  double k_x = 1.7;
+  double k_p = 0.0004;
+  double k_x = 1.9;
   double k_deadZone = 0;
-  
-  public TurretTrackingCommand(TurretSubsystem subsystem, Camera camera) {
+  double m_offset;
+
+  public TurretTrackingCommand(TurretSubsystem subsystem, Camera camera, double offset) {
     m_subsystem = subsystem;
     m_camera = camera;
+    m_offset = offset;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_subsystem);
   }
@@ -41,45 +43,45 @@ public class TurretTrackingCommand extends CommandBase {
   @Override
   public void execute() {
     CameraData data = m_camera.createData();
-    if(data.m_regions != null){
-      if(!regionsSeen && data.canSee()){
+    if (data.m_regions != null) {
+      if (!regionsSeen && data.canSee()) {
         regionsSeen = true;
       }
-  
-      if(regionsSeen && data.canSee()){
-        double centerDiff = data.centerDiff(data.centerLine());
-  
-        if(Math.abs(centerDiff) > k_deadZone){
+
+      if (regionsSeen && data.canSee()) {
+        double centerDiff = data.centerDiff(data.centerLine(), m_offset);
+
+        if (Math.abs(centerDiff) > k_deadZone) {
           double power = k_p * Math.pow(Math.abs(centerDiff), k_x);
-          if(centerDiff > 0){
+          if (centerDiff > 0) {
             power *= -1;
           }
           m_subsystem.setPower(power);
-        }else{
+        } else {
           m_subsystem.stop();
         }
       }
-    }else{
+    } else {
       m_subsystem.stop();
     }
-    
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-      m_subsystem.stop();
-      // m_subsystem.setEnabled(false);
-      m_camera.toggleLights(false);
+    m_subsystem.stop();
+    // m_subsystem.setEnabled(false);
+    m_camera.toggleLights(false);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     // if(regionsSeen){
-    //   if(!m_camera.createData().canSee()){
-    //   }
-    //   return !m_camera.createData().canSee();
+    // if(!m_camera.createData().canSee()){
+    // }
+    // return !m_camera.createData().canSee();
     // }
     return false;
   }

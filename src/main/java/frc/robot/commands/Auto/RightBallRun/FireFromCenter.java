@@ -24,8 +24,8 @@ public class FireFromCenter extends ParallelDeadlineGroup {
    * Creates a new FireFromCenter.
    */
   public FireFromCenter(ThroatSubsystem throatSubsystem, ShooterSubsystem shooterSubsystem, double deadzone,
-      Camera turretCamera) {
+      Camera turretCamera, double offset) {
     // Add your commands in the super() call. Add the deadline first.
-    super(new WaitCommand(5), new FireCommandAuto(throatSubsystem, shooterSubsystem, turretCamera, deadzone));
+    super(new WaitCommand(5), new FireCommandAuto(throatSubsystem, shooterSubsystem, turretCamera, deadzone, offset));
   }
 }

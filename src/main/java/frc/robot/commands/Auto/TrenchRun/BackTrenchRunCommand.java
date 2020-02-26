@@ -37,29 +37,20 @@ public class BackTrenchRunCommand extends ParallelDeadlineGroup {
   /**
    * Creates a new BackTrenchRunCommand.
    */
-  
-  final static Waypoint[] k_backwardsTrench = { 
-      new Waypoint(-11, 10, Math.toRadians(90), 5),
-      new Waypoint(-11, 25, Math.toRadians(90))
-  };
+
+  final static Waypoint[] k_backwardsTrench = { new Waypoint(-11, 10, Math.toRadians(90), 5),
+      new Waypoint(-11, 25, Math.toRadians(90)) };
 
   final static double k_firingX = -11;
   final static double k_firingY = 20;
 
-  public BackTrenchRunCommand(DriveSubsystem driveSubsystem, IntakeSubsystem intakeSubsystem, 
-                                ShooterSubsystem shooterSubsystem, TurretSubsystem turretSubsystem, ThroatSubsystem throatSubsystem,
-                                DoubleSupplier getX, DoubleSupplier getY, Camera turretCamera) {
+  public BackTrenchRunCommand(DriveSubsystem driveSubsystem, IntakeSubsystem intakeSubsystem,
+      ShooterSubsystem shooterSubsystem, TurretSubsystem turretSubsystem, ThroatSubsystem throatSubsystem,
+      DoubleSupplier getX, DoubleSupplier getY, Camera turretCamera, double offset) {
 
-    super(
-      new CreatePathCommand(driveSubsystem, k_backwardsTrench, PathConfigs.fast, true, true, true),
-      new SequentialCommandGroup(
-        new WaitForDistanceCommand(getX, getY, k_firingX, k_firingY),
-        new WaitForShooterSpeedCommand(shooterSubsystem),
-        new ParallelCommandGroup(
-          new TurretTrackingCommand(turretSubsystem, turretCamera),
-          new FireCommandAuto(throatSubsystem, shooterSubsystem, turretCamera, 50)
-        )
-      )
-    );
+    super(new CreatePathCommand(driveSubsystem, k_backwardsTrench, PathConfigs.fast, true, true, true),
+        new SequentialCommandGroup(new WaitForDistanceCommand(getX, getY, k_firingX, k_firingY),
+            new WaitForShooterSpeedCommand(shooterSubsystem), new ParallelCommandGroup(
+                new FireCommandAuto(throatSubsystem, shooterSubsystem, turretCamera, 50, offset))));
   }
 }

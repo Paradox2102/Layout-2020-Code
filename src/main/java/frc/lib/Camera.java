@@ -30,8 +30,7 @@ public class Camera {
     }
 
     public static enum BallSide {
-        RIGHT,
-        LEFT
+        RIGHT, LEFT
     };
 
     public class CameraData {
@@ -54,8 +53,8 @@ public class Camera {
 
         public boolean canSeeMulti(int num) {
             if (m_regions != null) {
-                for(int i=0; i<num; i++){
-                    if(m_regions.GetRegion(i) == null){
+                for (int i = 0; i < num; i++) {
+                    if (m_regions.GetRegion(i) == null) {
                         return false;
                     }
                 }
@@ -74,9 +73,9 @@ public class Camera {
             return m_regions.m_targetHorzPos;
         }
 
-        public double centerDiff(double center) {
+        public double centerDiff(double center, double offset) {
             double targetCenter = centerX();
-            return center - targetCenter;
+            return center - targetCenter - offset;
         }
 
         public double ballCenterDiff(double centerLine) {
@@ -110,34 +109,34 @@ public class Camera {
         public List<PiCameraRegion> sortRegions() {
             List<PiCameraRegion> regions = m_regions.m_regions;
             regions = ballFilter();
-            if(regions.size() > 1){
+            if (regions.size() > 1) {
                 List<PiCameraRegion> sortedTargets = new ArrayList<PiCameraRegion>();
                 sortedTargets.add(regions.get(0));
-    
-                for(int i=1; i<regions.size(); i++){
+
+                for (int i = 1; i < regions.size(); i++) {
                     int idx = sortedTargets.size();
-                    for(int j=sortedTargets.size()-1; j>-1; j--){
-                        if(regions.get(i).m_bounds.m_left < sortedTargets.get(j).m_bounds.m_left){
+                    for (int j = sortedTargets.size() - 1; j > -1; j--) {
+                        if (regions.get(i).m_bounds.m_left < sortedTargets.get(j).m_bounds.m_left) {
                             idx = j;
                         }
                     }
                     sortedTargets.add(idx, regions.get(i));
                 }
-    
+
                 return sortedTargets;
-            }else{
+            } else {
                 return null;
             }
         }
 
-        public ArrayList<PiCameraRegion> ballSelector(BallSide side){
+        public ArrayList<PiCameraRegion> ballSelector(BallSide side) {
             List<PiCameraRegion> regions = sortRegions();
             ArrayList<PiCameraRegion> returnRegions = new ArrayList<PiCameraRegion>();
-           
-            if(side.equals(BallSide.RIGHT)){
+
+            if (side.equals(BallSide.RIGHT)) {
                 returnRegions.add(regions.get(regions.size() - 1));
                 returnRegions.add(regions.get(regions.size() - 2));
-            }else if(side.equals(BallSide.LEFT)){
+            } else if (side.equals(BallSide.LEFT)) {
                 returnRegions.add(regions.get(0));
                 returnRegions.add(regions.get(1));
             }
@@ -147,13 +146,13 @@ public class Camera {
 
         public ArrayList<PiCameraRegion> ballFilter() {
             ArrayList<PiCameraRegion> regionsList = new ArrayList<PiCameraRegion>();
-            if(m_regions != null){
+            if (m_regions != null) {
                 for (int i = 0; i < m_regions.GetRegionCount(); i++) {
                     PiCameraRect rect = m_regions.GetRegion(i).m_bounds;
-    
+
                     double height = rect.m_bottom - rect.m_top;
                     double width = rect.m_right - rect.m_left;
-    
+
                     if (width / height > 0.6 && width / height < 1.4) {
                         regionsList.add(m_regions.GetRegion(i));
                     }

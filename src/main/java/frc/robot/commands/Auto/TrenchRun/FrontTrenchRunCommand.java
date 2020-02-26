@@ -34,18 +34,14 @@ public class FrontTrenchRunCommand extends ParallelCommandGroup {
   /**
    * Creates a new FrontTrenchRunCommand.
    */
-  final static Waypoint[] k_forwardsTrench = {
-    new Waypoint(-11, 25, Math.toRadians(-90), 7),
-    new Waypoint(-11, 15, Math.toRadians(-90))
-  };
-  
-  public FrontTrenchRunCommand(DriveSubsystem driveSubsystem, TurretSubsystem turretSubsystem, ThroatSubsystem throatSubsystem, ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem, Camera turretCamera) {
-    
-    
-    super(
-        new CreatePathCommand(driveSubsystem, k_forwardsTrench, PathConfigs.fast),
-        new TurretTrackingCommand(turretSubsystem, turretCamera),
-        new FireCommandAuto(throatSubsystem, shooterSubsystem, turretCamera, 50)
-    );
+  final static Waypoint[] k_forwardsTrench = { new Waypoint(-11, 25, Math.toRadians(-90), 7),
+      new Waypoint(-11, 17, Math.toRadians(-90)) };
+
+  public FrontTrenchRunCommand(DriveSubsystem driveSubsystem, TurretSubsystem turretSubsystem,
+      ThroatSubsystem throatSubsystem, ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem,
+      Camera turretCamera, double offset) {
+
+    super(new CreatePathCommand(driveSubsystem, k_forwardsTrench, PathConfigs.fast),
+        new FireCommandAuto(throatSubsystem, shooterSubsystem, turretCamera, 50, offset));
   }
 }
