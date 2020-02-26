@@ -38,10 +38,10 @@ public class RightBallRun extends ParallelCommandGroup {
     // super(new FooCommand(), new BarCommand());
     addCommands(new IntakeCommand(intakeSubsystem, power),
         new SpinUpCommand(turretSubsystem, turretCamera, shooterSubsystem, indexerSubsystem, shooterSpeed),
-        new TurretTrackingCommand(turretSubsystem, turretCamera, k_offset),
+        new TurretTrackingCommand(turretSubsystem, turretCamera),
         new SequentialCommandGroup(new TwoBallRun(driveSubsystem), new WaitCommand(0.5),
             new ParallelDeadlineGroup(new DriveToCenter(driveSubsystem),
-                new FireFromCenter(throatSubsystem, shooterSubsystem, 50, turretCamera, k_offset)),
+                new FireFromCenter(throatSubsystem, turretSubsystem, shooterSubsystem, 50, turretCamera)),
             new TurnToBallsCommand(driveSubsystem, turretCamera, power)));
   }
 }

@@ -36,6 +36,8 @@ public class TurretSubsystem extends SubsystemBase {
 
   double k_encoderDeadzone = 5;
 
+  double m_offset = 0;
+
   public TurretSubsystem() {
     m_turret.setInverted(true);
 
@@ -116,5 +118,17 @@ public class TurretSubsystem extends SubsystemBase {
 
   public void resetEncoder() {
     m_encoder.setPosition(0);
+  }
+
+  public void incrementOffset(double amount){
+    m_offset += amount;
+  }
+
+  public void setOffset(double offset){
+    m_offset = offset;
+  }
+
+  public double getOffset(){
+    return m_offset;
   }
 }

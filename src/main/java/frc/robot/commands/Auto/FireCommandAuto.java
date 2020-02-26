@@ -7,6 +7,8 @@
 
 package frc.robot.commands.Auto;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.lib.Camera;
 import frc.robot.commands.Throat.ThroatPowerCommand;
@@ -21,7 +23,7 @@ public class FireCommandAuto extends SequentialCommandGroup {
    * Creates a new FireCommandAuto.
    */
   public FireCommandAuto(ThroatSubsystem throatSubsystem, ShooterSubsystem shooterSubsystem, Camera turretCamera,
-      double deadzone, double offset) {
+      double deadzone, DoubleSupplier offset) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     super(new ThroatPowerCommand(throatSubsystem, () -> shooterSubsystem.getSpeed(),

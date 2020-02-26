@@ -9,6 +9,7 @@ package frc.robot;
 
 import java.util.Set;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -217,10 +218,10 @@ public class RobotContainer {
     m_outtakeClimb.whileHeld(new IntakeCommand(m_intakeSubsystem, -0.75));
     m_spinUp.toggleWhenPressed(
         new SpinUpCommand(m_turretSubsystem, m_turretCamera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed));
-    m_spinUpTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_turretCamera, 0));
+    m_spinUpTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_turretCamera));
     m_spinUpClimb.toggleWhenPressed(
         new SpinUpCommand(m_turretSubsystem, m_turretCamera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed));
-    m_spinUpTrackClimb.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_turretCamera, 0));
+    m_spinUpTrackClimb.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_turretCamera));
     m_fire.whileHeld(new FireCommand(m_throatSubsystem, m_shooterSubsystem, m_intakeSubsystem));
     m_moveTurrentL.whileHeld(new TurretMoveCommand(m_turretSubsystem, -0.35));
     m_moveTurrentR.whileHeld(new TurretMoveCommand(m_turretSubsystem, 0.35));
@@ -234,7 +235,7 @@ public class RobotContainer {
     m_increaseTrim.whenActive(new IncrementTrimCommand(m_shooterSubsystem, 500), true);
     m_decreaseTrim.whenActive(new IncrementTrimCommand(m_shooterSubsystem, -500), true);
 
-    m_turretTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_turretCamera, 0));
+    m_turretTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_turretCamera));
 
     m_climb.whileHeld(new MoveClimberCommand(m_climberSubsystem, () -> -m_climbStick.getY()));
     m_calibrateSpeed.whileHeld(new FireCommand(m_throatSubsystem, m_shooterSubsystem, m_intakeSubsystem));
@@ -249,10 +250,12 @@ public class RobotContainer {
 
     m_trackBalls.whileHeld(new BallDriveCommand(m_driveSubsystem, m_backCamera, -0.25));
 
-    m_turretTrackCalib.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_turretCamera, 0));
+    m_turretTrackCalib.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_turretCamera));
   }
 
   public void periodic() {
+    SmartDashboard.putNumber("Trim", m_shooterSubsystem.getTrim());
+    SmartDashboard.putNumber("Time Left", DriverStation.getInstance().getMatchTime());
   }
 
   /**

@@ -32,8 +32,6 @@ public class FiveBallCenter extends ParallelCommandGroup {
   /**
    * Creates a new FiveBallCenter.
    */
-  double k_offset = 0;
-
   public FiveBallCenter(DriveSubsystem driveSubsystem, IntakeSubsystem intakeSubsystem, Camera turretCamera,
       double power, TurretSubsystem turretSubsystem, ShooterSubsystem shooterSubsystem,
       IndexerSubsystem indexerSubsystem, double speed, ThroatSubsystem throatSubsystem) {
@@ -41,7 +39,7 @@ public class FiveBallCenter extends ParallelCommandGroup {
         new IntakeCommand(intakeSubsystem, 0.6),
         new SequentialCommandGroup(new FrontBallsRun(driveSubsystem),
             new AlignWithVisionCommand(driveSubsystem, turretCamera, power), new WaitCommand(0.5),
-            new ParallelCommandGroup(new TurretTrackingCommand(turretSubsystem, turretCamera, k_offset),
-                new FireCommandAuto(throatSubsystem, shooterSubsystem, turretCamera, 50, k_offset))));
+            new ParallelCommandGroup(new TurretTrackingCommand(turretSubsystem, turretCamera),
+                new FireCommandAuto(throatSubsystem, shooterSubsystem, turretCamera, 50, () -> turretSubsystem.getOffset()))));
   }
 }

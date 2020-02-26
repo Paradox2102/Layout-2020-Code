@@ -7,6 +7,8 @@
 
 package frc.robot.commands.Turret;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.Camera;
 import frc.lib.Camera.CameraData;
@@ -22,12 +24,10 @@ public class TurretTrackingCommand extends CommandBase {
   double k_p = 0.0004;
   double k_x = 1.9;
   double k_deadZone = 0;
-  double m_offset;
 
-  public TurretTrackingCommand(TurretSubsystem subsystem, Camera camera, double offset) {
+  public TurretTrackingCommand(TurretSubsystem subsystem, Camera camera) {
     m_subsystem = subsystem;
     m_camera = camera;
-    m_offset = offset;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_subsystem);
   }
@@ -49,7 +49,7 @@ public class TurretTrackingCommand extends CommandBase {
       }
 
       if (regionsSeen && data.canSee()) {
-        double centerDiff = data.centerDiff(data.centerLine(), m_offset);
+        double centerDiff = data.centerDiff(data.centerLine(), m_subsystem.getOffset());
 
         if (Math.abs(centerDiff) > k_deadZone) {
           double power = k_p * Math.pow(Math.abs(centerDiff), k_x);

@@ -25,7 +25,7 @@ public class ThroatPowerCommand extends CommandBase {
   double k_deadZoneSpeed = 200;
   double k_deadZoneX = 0;
   Camera m_turretCamera = null;
-  double m_offset = 0;
+  DoubleSupplier m_offset;
 
   public ThroatPowerCommand(ThroatSubsystem subsystem, DoubleSupplier getVel, DoubleSupplier rpmSpeed, double power) {
     m_subsystem = subsystem;
@@ -33,14 +33,14 @@ public class ThroatPowerCommand extends CommandBase {
     m_getVel = getVel;
     m_rpmSpeed = rpmSpeed;
     k_deadZoneX = 0;
-    m_offset = 0;
+    m_offset = () -> 0;
     m_turretCamera = null;
 
     addRequirements(m_subsystem);
   }
 
   public ThroatPowerCommand(ThroatSubsystem subsystem, DoubleSupplier getVel, DoubleSupplier rpmSpeed, double power,
-      double deadzone, Camera turretCamera, double offset) {
+      double deadzone, Camera turretCamera, DoubleSupplier offset) {
     m_subsystem = subsystem;
     m_power = power;
     m_getVel = getVel;
@@ -67,7 +67,7 @@ public class ThroatPowerCommand extends CommandBase {
         CameraData data = m_turretCamera.createData();
 
         if (data.canSee()) {
-          if (data.centerDiff(data.centerLine(), m_offset) < k_deadZoneX) {
+          if (data.centerDiff(data.centerLine(), m_offset.getAsDouble()) < k_deadZoneX) {
             m_subsystem.setThroatPower(m_power);
           } else {
             m_subsystem.stopThroatPower();

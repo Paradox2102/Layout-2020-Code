@@ -131,4 +131,8 @@ public class ShooterSubsystem extends SubsystemBase {
   public void setTrim(double trim){
     m_trim = trim;
   }
+
+  public double getTrim(){
+    return m_trim;
+  }
 }

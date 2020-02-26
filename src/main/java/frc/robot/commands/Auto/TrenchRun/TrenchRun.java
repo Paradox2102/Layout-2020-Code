@@ -48,21 +48,19 @@ public class TrenchRun extends SequentialCommandGroup {
   final Waypoint[] k_2balls = { new Waypoint(-11, 15, Math.toRadians(90), 1, 2, 3, 2, 6),
       new Waypoint(-5, 17, Math.toRadians(40)) };
 
-  double k_offset = 0;
-
   public TrenchRun(DriveSubsystem driveSubsystem, IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem,
       TurretSubsystem turretSubsystem, ThroatSubsystem throatSubsystem, IndexerSubsystem indexerSubsystem,
       SerializerSubsystem serializerSubsystem, Camera turretCamera, double shooterSpeed, DoubleSupplier getPosX,
       DoubleSupplier getPosY) {
     addCommands(new ParallelCommandGroup(
         new SpinUpCommand(turretSubsystem, turretCamera, shooterSubsystem, indexerSubsystem, shooterSpeed),
-        new TurretTrackingCommand(turretSubsystem, turretCamera, k_offset), new IntakeCommand(intakeSubsystem, 0.9),
+        new TurretTrackingCommand(turretSubsystem, turretCamera), new IntakeCommand(intakeSubsystem, 0.9),
         new PowerSerializeCommand(serializerSubsystem, 0.75),
         new SequentialCommandGroup(
             new BackTrenchRunCommand(driveSubsystem, intakeSubsystem, shooterSubsystem, turretSubsystem,
-                throatSubsystem, getPosX, getPosY, turretCamera, k_offset),
+                throatSubsystem, getPosX, getPosY, turretCamera),
             new FrontTrenchRunCommand(driveSubsystem, turretSubsystem, throatSubsystem, shooterSubsystem,
-                intakeSubsystem, turretCamera, k_offset))));
+                intakeSubsystem, turretCamera))));
     // // new ToggleLightsCommand(frontCamera, true),
     // new ParallelDeadlineGroup(new WaitForBallCommand(frontCamera), new
     // CreatePathCommand(driveSubsystem, k_2balls, PathConfigs.fast, true, false,
