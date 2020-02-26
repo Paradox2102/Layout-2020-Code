@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.Auto.RightBallRun;
+package frc.robot.commands.Auto.RightBallRun8Ball;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -26,6 +26,6 @@ public class FireFromCenter extends ParallelDeadlineGroup {
   public FireFromCenter(ThroatSubsystem throatSubsystem, ShooterSubsystem shooterSubsystem, double deadzone,
       Camera turretCamera, double offset) {
     // Add your commands in the super() call. Add the deadline first.
-    super(new FireCommandAuto(throatSubsystem, shooterSubsystem, turretCamera, deadzone, offset));
+    super(new WaitCommand(5), new FireCommandAuto(throatSubsystem, shooterSubsystem, turretCamera, deadzone, offset));
   }
 }

@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.Auto.RightBallRun;
+package frc.robot.commands.Auto.RightBallRun8Ball;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
@@ -25,13 +25,13 @@ import frc.robot.subsystems.TurretSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class RightBallRun extends ParallelCommandGroup {
+public class RightBallRun8Ball extends ParallelCommandGroup {
   /**
    * Creates a new RightBallRun.
    */
   double k_offset = 0;
 
-  public RightBallRun(DriveSubsystem driveSubsystem, IntakeSubsystem intakeSubsystem, double power,
+  public RightBallRun8Ball(DriveSubsystem driveSubsystem, IntakeSubsystem intakeSubsystem, double power,
       TurretSubsystem turretSubsystem, Camera turretCamera, ShooterSubsystem shooterSubsystem,
       IndexerSubsystem indexerSubsystem, double shooterSpeed, ThroatSubsystem throatSubsystem) {
     // Add your commands in the super() call, e.g.
@@ -40,12 +40,8 @@ public class RightBallRun extends ParallelCommandGroup {
         new SpinUpCommand(turretSubsystem, turretCamera, shooterSubsystem, indexerSubsystem, shooterSpeed),
         new TurretTrackingCommand(turretSubsystem, turretCamera, k_offset),
         new SequentialCommandGroup(new TwoBallRun(driveSubsystem), new WaitCommand(0.5),
-            /* new ParallelDeadlineGroup( */new DriveToCenter(driveSubsystem),
-            /*
-             * new FireFromCenter(throatSubsystem, shooterSubsystem, 50, turretCamera,
-             * k_offset)),
-             */
-            new FireFromCenter(throatSubsystem, shooterSubsystem, 50, turretCamera, k_offset),
+            new ParallelDeadlineGroup(new DriveToCenter(driveSubsystem),
+                new FireFromCenter(throatSubsystem, shooterSubsystem, 50, turretCamera, k_offset)),
             new TurnToBallsCommand(driveSubsystem, turretCamera, power)));
   }
 }

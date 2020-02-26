@@ -19,8 +19,8 @@ public class TurretTrackingCommand extends CommandBase {
   TurretSubsystem m_subsystem;
   Camera m_camera;
   boolean regionsSeen = false;
-  double k_p = 0.0004;
-  double k_x = 1.9;
+  double k_p = 0.0003;
+  double k_x = 1.7;
   double k_deadZone = 0;
   double m_offset;
 
