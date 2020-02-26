@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.Auto.RightBallRun;
+package frc.robot.commands.Auto.RightBallRun8Ball;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -15,7 +15,6 @@ import frc.robot.commands.Teleop.FireCommand;
 import frc.robot.commands.Throat.ThroatPowerCommand;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.ThroatSubsystem;
-import frc.robot.subsystems.TurretSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -24,9 +23,9 @@ public class FireFromCenter extends ParallelDeadlineGroup {
   /**
    * Creates a new FireFromCenter.
    */
-  public FireFromCenter(ThroatSubsystem throatSubsystem, TurretSubsystem turretSubsystem, ShooterSubsystem shooterSubsystem, double deadzone,
-      Camera turretCamera) {
+  public FireFromCenter(ThroatSubsystem throatSubsystem, ShooterSubsystem shooterSubsystem, double deadzone,
+      Camera turretCamera, double offset) {
     // Add your commands in the super() call. Add the deadline first.
-    super(new FireCommandAuto(throatSubsystem, shooterSubsystem, turretCamera, deadzone, () -> turretSubsystem.getOffset()));
+    super(new WaitCommand(5), new FireCommandAuto(throatSubsystem, shooterSubsystem, turretCamera, deadzone, offset));
   }
 }
