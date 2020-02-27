@@ -23,6 +23,7 @@ import frc.robot.commands.Auto.WaitForShooterSpeedCommand;
 import frc.robot.commands.Intake.IntakeCommand;
 import frc.robot.commands.Teleop.FireCommand;
 import frc.robot.commands.Throat.ThroatPowerCommand;
+import frc.robot.commands.Turret.SetOffsetCommand;
 import frc.robot.commands.Turret.TurretTrackingCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -50,7 +51,8 @@ public class BackTrenchRunCommand extends ParallelDeadlineGroup {
 
     super(new CreatePathCommand(driveSubsystem, k_backwardsTrench, PathConfigs.fast, true, true, true),
         new SequentialCommandGroup(new WaitForDistanceCommand(getX, getY, k_firingX, k_firingY),
-            new WaitForShooterSpeedCommand(shooterSubsystem), new ParallelCommandGroup(
+            new WaitForShooterSpeedCommand(shooterSubsystem),
+            new ParallelCommandGroup(new SetOffsetCommand(turretSubsystem, 30),
                 new FireCommandAuto(throatSubsystem, turretSubsystem, shooterSubsystem, turretCamera, 50))));
   }
 }

@@ -16,7 +16,11 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.lib.Camera;
 import frc.pathfinder.Pathfinder.Waypoint;
 import frc.robot.PurePursuit.PathConfigs;
+import frc.robot.commands.Auto.AlignWithVisionCommand;
 import frc.robot.commands.Auto.CreatePathCommand;
+import frc.robot.commands.Auto.TurnToBallsCommand;
+import frc.robot.commands.Auto.TurnToCenterBallsCommand;
+import frc.robot.commands.Auto.WaitForBallCommand;
 import frc.robot.commands.Auto.WaitForDistanceCommand;
 import frc.robot.commands.Auto.WaitForShooterSpeedCommand;
 import frc.robot.commands.Camera.BallDriveCommand;
@@ -28,6 +32,7 @@ import frc.robot.commands.Shooter.CaseShootingCommand;
 import frc.robot.commands.Teleop.ShootCommand;
 import frc.robot.commands.Teleop.SpinUpCommand;
 import frc.robot.commands.Throat.ThroatPowerCommand;
+import frc.robot.commands.Turret.SetOffsetCommand;
 import frc.robot.commands.Turret.TurretTrackingCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
@@ -51,16 +56,16 @@ public class TrenchRun extends SequentialCommandGroup {
   public TrenchRun(DriveSubsystem driveSubsystem, IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem,
       TurretSubsystem turretSubsystem, ThroatSubsystem throatSubsystem, IndexerSubsystem indexerSubsystem,
       SerializerSubsystem serializerSubsystem, Camera turretCamera, double shooterSpeed, DoubleSupplier getPosX,
-      DoubleSupplier getPosY) {
+      DoubleSupplier getPosY, Camera backCamera) {
     addCommands(new ParallelCommandGroup(
         new SpinUpCommand(turretSubsystem, turretCamera, shooterSubsystem, indexerSubsystem, shooterSpeed),
         new TurretTrackingCommand(turretSubsystem, turretCamera), new IntakeCommand(intakeSubsystem, 0.9),
-        new PowerSerializeCommand(serializerSubsystem, 0.75),
+        new PowerSerializeCommand(serializerSubsystem, 0.75), new ToggleLightsCommand(backCamera, true),
         new SequentialCommandGroup(
             new BackTrenchRunCommand(driveSubsystem, intakeSubsystem, shooterSubsystem, turretSubsystem,
                 throatSubsystem, getPosX, getPosY, turretCamera),
-            new FrontTrenchRunCommand(driveSubsystem, turretSubsystem, throatSubsystem, shooterSubsystem,
-                intakeSubsystem, turretCamera))));
+            new SetOffsetCommand(turretSubsystem, 0), new FrontTrenchRunCommand(driveSubsystem, turretSubsystem,
+                throatSubsystem, shooterSubsystem, intakeSubsystem, turretCamera))));
     // // new ToggleLightsCommand(frontCamera, true),
     // new ParallelDeadlineGroup(new WaitForBallCommand(frontCamera), new
     // CreatePathCommand(driveSubsystem, k_2balls, PathConfigs.fast, true, false,

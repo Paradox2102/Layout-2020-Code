@@ -356,11 +356,6 @@ public class PiCamera implements Network.NetworkReceiver {
 	public void SetLight(int value) {
 		m_network.SendMessage(String.format("L %d", value));
 	}
-	
-	public void SendJpeg(boolean send)
-	{
-		m_network.SendMessage("J" + (send ? "y" : "n"));
-	}
 
 	/**
 	 * Specifies which capture profile should be used.

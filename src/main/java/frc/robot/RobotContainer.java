@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.lib.Camera;
@@ -27,6 +28,7 @@ import frc.robot.Triggers.DecreaseTrimTrigger;
 import frc.robot.Triggers.IncreaseTrimTrigger;
 import frc.robot.commands.Auto.AlignWithVisionCommand;
 import frc.robot.commands.Auto.CreatePathCommand;
+import frc.robot.commands.Auto.TurnToBallsCommand;
 import frc.robot.commands.Auto.FiveBallCenter.FiveBallCenter;
 import frc.robot.commands.Auto.FiveBallCenter.FrontBallsRun;
 import frc.robot.commands.Auto.RightBallRun.RightBallRun;
@@ -152,7 +154,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     m_turretCamera.connect(Constants.m_robotConstants.k_ipAddress);
-    // m_backCamera.connect(Constants.m_pidTerms.k_ipAddressBack);
+    m_backCamera.connect(Constants.m_robotConstants.k_ipAddressBack);
 
     configureButtonBindings();
 
@@ -185,13 +187,20 @@ public class RobotContainer {
     });
     m_chooser.addOption("Trench Run",
         new TrenchRun(m_driveSubsystem, m_intakeSubsystem, m_shooterSubsystem, m_turretSubsystem, m_throatSubsystem,
-            m_indexerSubsystem, m_serializerSubsystem, m_turretCamera, 35000, () -> getPos().x, () -> getPos().y));
-    m_chooser.addOption("10 ft", new CreatePathCommand(m_driveSubsystem, k_10ft, PathConfigs.fast));
-    m_chooser.addOption("Trench Forward Backward", new TrenchForwardBack(m_driveSubsystem));
+            m_indexerSubsystem, m_serializerSubsystem, m_turretCamera, 35000, () -> getPos().x, () -> getPos().y,
+            m_backCamera));
+    // m_chooser.addOption("10 ft", new CreatePathCommand(m_driveSubsystem, k_10ft,
+    // PathConfigs.fast));
+    // m_chooser.addOption("Trench Forward Backward", new
+    // TrenchForwardBack(m_driveSubsystem));
     m_chooser.addOption("5 Ball Center", new FiveBallCenter(m_driveSubsystem, m_intakeSubsystem, m_turretCamera, 0.4,
         m_turretSubsystem, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed, m_throatSubsystem));
-    m_chooser.addOption("Tiny Turn", new TinyTurnCommand(m_driveSubsystem));
-    m_chooser.addOption("RobotAlign", new AlignWithVisionCommand(m_driveSubsystem, m_turretCamera, 0.4));
+    // m_chooser.addOption("Test Turn",
+    // new SequentialCommandGroup(new TurnToBallsCommand(m_driveSubsystem,
+    // m_backCamera, 0.4),
+    // new BallDriveCommand(m_driveSubsystem, m_backCamera, -0.25)));
+    // m_chooser.addOption("RobotAlign", new
+    // AlignWithVisionCommand(m_driveSubsystem, m_turretCamera, 0.4));
     m_chooser.addOption("Right 2 Ball Run", new RightBallRun(m_driveSubsystem, m_intakeSubsystem, 0.4,
         m_turretSubsystem, m_turretCamera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed, m_throatSubsystem));
     // m_chooser.addOption("Print 10 ft", new PrintPathCommand(m_driveSubsystem,

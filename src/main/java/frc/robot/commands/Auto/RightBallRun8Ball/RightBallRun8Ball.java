@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.lib.Camera;
+import frc.robot.commands.Auto.TurnToBallsCommand;
 import frc.robot.commands.Intake.IntakeCommand;
 import frc.robot.commands.Teleop.SpinUpCommand;
 import frc.robot.commands.Turret.TurretTrackingCommand;
