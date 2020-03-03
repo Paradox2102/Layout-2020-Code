@@ -66,5 +66,5 @@
 
 * __Button 6__: trackBalls: _whileHeld_: ```new BallDriveCommand(m_driveSubsystem, m_backCamera, -0.25)```
 
-```commit 698a07aa6b2519114b6837ca4602991f430d47bc Author: Blake Lieber <blakelieber@gmail.com> Date:   Tue Feb 25 20:53:49 2020 -0800 Turret offsett fixing ```
+```commit 374d820cd91213fb8c3427fe3e2f748e212a7472 Author: Ryder Casazza <rydercasazza@me.com> Date:   Wed Feb 26 18:14:21 2020 -0800 Final Commit before LA ```
 
