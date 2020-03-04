@@ -5,58 +5,61 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.Shooter;
+package frc.robot.commands.Drive;
 
-import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.lib.Logger;
+import frc.robot.subsystems.DriveSubsystem;
 
-public class CalibrateSpeedCommand extends CommandBase {
-  /**
-   * Creates a new SpeedCommand.
-   */
-  ShooterSubsystem m_subsystem;
-  DoubleSupplier m_speed;
+public class TurnToAngleCommand extends CommandBase {
+  DriveSubsystem m_subsystem;
+  double m_angle;
+  Direction k_dir;
+  double m_power;
+  double k_deadzone = 10;
 
-  public CalibrateSpeedCommand(ShooterSubsystem subsystem, DoubleSupplier speed) {
-    m_subsystem = subsystem;
-
-    m_speed = speed;
-
+  public static enum Direction {
+    LEFT, RIGHT
+  }
+  public TurnToAngleCommand(DriveSubsystem driveSubsystem, double angle, Direction direction, double power) {
+    m_subsystem = driveSubsystem;
+    m_angle = angle;
+    k_dir = direction;
+    m_power = power;
     addRequirements(m_subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.configPID();
+    Logger.Log("TurnToAngleCommand", 1 , "initialize");
+
+    if(k_dir.equals(Direction.RIGHT)){
+      m_subsystem.setPower(m_power, -m_power);
+    }else if(k_dir.equals(Direction.LEFT)){
+      m_subsystem.setPower(-m_power, m_power);
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = (m_speed.getAsDouble() * 12000) + 30000;
-
-    SmartDashboard.putNumber("Ideal Speed", speed);
-
-    if(speed < m_subsystem.getSpeed() - 1500){
-      m_subsystem.stop();
-    }else{
-      m_subsystem.setSpeed(speed);
-    }
+    Logger.Log("TurnToAngleCommand", -1 , "execute");
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    Logger.Log("TurnToAngleCommand", 1 , "end");
+    
     m_subsystem.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    Logger.Log("TurnToAngleCommand", -1 , "isFinished");
+
+    return Math.abs(m_subsystem.getAngle() - m_angle) < k_deadzone;
   }
 }

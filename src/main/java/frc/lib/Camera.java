@@ -68,6 +68,11 @@ public class Camera {
             PiCameraRect bounds = region.m_bounds;
             return (bounds.m_right + bounds.m_left) / 2.0;
         }
+        
+        public double centerX(PiCameraRegion region) {
+            PiCameraRect bounds = region.m_bounds;
+            return (bounds.m_right + bounds.m_left) / 2.0;
+        }
 
         public double centerLine() {
             return m_regions.m_targetHorzPos;
@@ -75,6 +80,11 @@ public class Camera {
 
         public double centerDiff(double center, double offset) {
             double targetCenter = centerX();
+            return center - targetCenter - offset;
+        }
+
+        public double centerDiff(double center, double offset, PiCameraRegion region) {
+            double targetCenter = centerX(region);
             return center - targetCenter - offset;
         }
 
@@ -122,7 +132,9 @@ public class Camera {
                     }
                     sortedTargets.add(idx, regions.get(i));
                 }
-
+                for(PiCameraRegion region : sortedTargets){
+                    System.out.println(region.m_bounds.m_left);
+                }
                 return sortedTargets;
             } else {
                 return null;
@@ -137,6 +149,9 @@ public class Camera {
                 returnRegions.add(regions.get(regions.size() - 1));
                 returnRegions.add(regions.get(regions.size() - 2));
             } else if (side.equals(BallSide.LEFT)) {
+                System.out.println(regions.get(0).m_bounds.m_left);
+                System.out.println(regions.get(1).m_bounds.m_left);
+
                 returnRegions.add(regions.get(0));
                 returnRegions.add(regions.get(1));
             }
@@ -182,10 +197,15 @@ public class Camera {
     public CameraData createData() {
         return new CameraData();
     }
-
+    
+    boolean m_lightsState = false;
     public void toggleLights(boolean on) {
-
+        m_lightsState = on;
         m_piCamera.SetLight(on ? 3 : 0);
+    }
+
+    public boolean getLightsState(){
+        return m_lightsState;
     }
 
 }

@@ -24,8 +24,8 @@ public class FinalType {
     public final String k_ipAddressBack = "10.21.2.13";
 
     //Shooter Equation Coefficients
-    public final double k_squareConst = 3.956;
-    public final double k_linearConst = 577.432;
-    public final double k_const = 51611.080;
+    public final double k_squareConst = 4.606;
+    public final double k_linearConst = 693.94;
+    public final double k_const = 56610.027;
 
 }

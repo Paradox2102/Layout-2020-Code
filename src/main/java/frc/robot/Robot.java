@@ -69,6 +69,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    SmartDashboard.putNumber("Angle", m_robotContainer.getAngle());
   }
 
   /**
@@ -81,7 +82,7 @@ public class Robot extends TimedRobot {
     
     m_robotContainer.startPosTracking();
     m_robotContainer.setPos(0, 0);
-    m_robotContainer.setAngle(-90);
+    m_robotContainer.setAngle(-103);
 
     m_robotContainer.setTrim(0);
 

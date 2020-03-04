@@ -29,7 +29,7 @@ public class ThroatSubsystem extends SubsystemBase {
     m_throatMotor.setInverted(true);
     m_throatMotor.setNeutralMode(NeutralMode.Brake);
 
-    
+    m_throatMotor.configContinuousCurrentLimit(30);
   }
 
 

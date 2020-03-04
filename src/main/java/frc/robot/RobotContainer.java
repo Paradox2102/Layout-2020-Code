@@ -17,9 +17,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.lib.Camera;
+import frc.lib.Camera.BallSide;
 import frc.pathfinder.Pathfinder.Waypoint;
 import frc.robot.PositionTracker.PositionContainer;
 import frc.robot.PurePursuit.PathConfigs;
@@ -27,18 +29,23 @@ import frc.robot.Triggers.DecreaseTrimTrigger;
 import frc.robot.Triggers.IncreaseTrimTrigger;
 import frc.robot.commands.Auto.AlignWithVisionCommand;
 import frc.robot.commands.Auto.CreatePathCommand;
+import frc.robot.commands.Auto.DoNothingCommand;
 import frc.robot.commands.Auto.FiveBallCenter.FiveBallCenter;
 import frc.robot.commands.Auto.FiveBallCenter.FrontBallsRun;
 import frc.robot.commands.Auto.RightBallRun.RightBallRun;
 import frc.robot.commands.Auto.TrenchRun.TrenchForwardBack;
 import frc.robot.commands.Auto.TrenchRun.TrenchRun;
+import frc.robot.commands.Auto.TrenchRunWait.TrenchRunWait;
 import frc.robot.commands.Camera.BallDriveCommand;
+import frc.robot.commands.Camera.ToggleLightsCommand;
 import frc.robot.commands.Climber.MoveClimberCommand;
 import frc.robot.commands.Drive.ArcadeDriveCommand;
 import frc.robot.commands.Drive.CalibrateSpeedCommand;
 import frc.robot.commands.Drive.SpeedCommand;
 import frc.robot.commands.Intake.ActuateIntakeCommand;
 import frc.robot.commands.Drive.TinyTurnCommand;
+import frc.robot.commands.Drive.TurnToAngleCommand;
+import frc.robot.commands.Drive.TurnToAngleCommand.Direction;
 import frc.robot.commands.Indexer.IndexCommand;
 import frc.robot.commands.Intake.AmbientIntakePowerCommand;
 import frc.robot.commands.Intake.IntakeCommand;
@@ -55,7 +62,9 @@ import frc.robot.commands.Teleop.ShootCommand;
 import frc.robot.commands.Teleop.SpinUpCommand;
 import frc.robot.commands.Teleop.UnJumbleCommand;
 import frc.robot.commands.Throat.ThroatAtSpeedCommand;
+import frc.robot.commands.Throat.ThroatMoveCommand;
 import frc.robot.commands.Throat.ThroatPowerCommand;
+import frc.robot.commands.Turret.IncrementOffsetCommand;
 import frc.robot.commands.Turret.TurretMoveCommand;
 import frc.robot.commands.Turret.TurretTrackingCommand;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -130,6 +139,9 @@ public class RobotContainer {
   JoystickButton m_unJumble = new JoystickButton(m_climbStick, 6);
   JoystickButton m_feederIntakeClimb = new JoystickButton(m_climbStick, 8);
 
+  JoystickButton m_offsetRight = new JoystickButton(m_climbStick, 10);
+  JoystickButton m_offsetLeft = new JoystickButton(m_climbStick, 9);
+
   JoystickButton m_calibrateSpeed = new JoystickButton(m_calibStick, 1);
   JoystickButton m_calibrateSpeedShooter = new JoystickButton(m_calibStick, 2);
   JoystickButton m_snootTesting = new JoystickButton(m_calibStick, 3);
@@ -138,6 +150,8 @@ public class RobotContainer {
   JoystickButton m_snootSetRotation = new JoystickButton(m_calibStick, 5); // snooter is snooting
 
   JoystickButton m_trackBalls = new JoystickButton(m_calibStick, 6);
+  JoystickButton m_toggleIntake = new JoystickButton(m_calibStick, 8);
+
 
   IncreaseTrimTrigger m_increaseTrim = new IncreaseTrimTrigger(m_climbStick);
   DecreaseTrimTrigger m_decreaseTrim = new DecreaseTrimTrigger(m_climbStick);
@@ -152,7 +166,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     m_turretCamera.connect(Constants.m_robotConstants.k_ipAddress);
-    // m_backCamera.connect(Constants.m_pidTerms.k_ipAddressBack);
+    m_backCamera.connect(Constants.m_robotConstants.k_ipAddressBack);
 
     configureButtonBindings();
 
@@ -160,31 +174,19 @@ public class RobotContainer {
         () -> -m_stick.getY(), () -> m_stick.getThrottle()));
     m_serializerSubsystem.setDefaultCommand(new SerializeCommand(m_serializerSubsystem, 0.3,
         () -> m_throatSubsystem.GetTopBreak(), () -> getThrottle(), () -> !m_throatSubsystem.GetTopBreak()));
-    m_throatSubsystem.setDefaultCommand(new ThroatAtSpeedCommand(m_throatSubsystem, 0.4));
+    m_throatSubsystem.setDefaultCommand(new ThroatAtSpeedCommand(m_throatSubsystem, 0.56));
 
     // m_intakeSubsystem.setDefaultCommand(new
     // AmbientIntakePowerCommand(m_intakeSubsystem, 0.25));
-    m_chooser.setDefaultOption("Do Nothing", new Command() {
-
-      @Override
-      public Set<Subsystem> getRequirements() {
-        // TODO Auto-generated method stub
-        return null;
-      }
-    });
 
     Waypoint[] k_10ft = { new Waypoint(0, 0, Math.toRadians(90), 5), new Waypoint(0, 10, Math.toRadians(90)) };
 
-    m_chooser.setDefaultOption("Do Nothing", new Command() {
-
-      @Override
-      public Set<Subsystem> getRequirements() {
-        // TODO Auto-generated method stub
-        return null;
-      }
-    });
+    m_chooser.setDefaultOption("Do Nothing", new DoNothingCommand());
     m_chooser.addOption("Trench Run",
         new TrenchRun(m_driveSubsystem, m_intakeSubsystem, m_shooterSubsystem, m_turretSubsystem, m_throatSubsystem,
+            m_indexerSubsystem, m_serializerSubsystem, m_turretCamera, 35000, () -> getPos().x, () -> getPos().y, m_backCamera));
+    m_chooser.addOption("New Trench Run",
+        new TrenchRunWait(m_driveSubsystem, m_intakeSubsystem, m_shooterSubsystem, m_turretSubsystem, m_throatSubsystem,
             m_indexerSubsystem, m_serializerSubsystem, m_turretCamera, 35000, () -> getPos().x, () -> getPos().y));
     m_chooser.addOption("10 ft", new CreatePathCommand(m_driveSubsystem, k_10ft, PathConfigs.fast));
     m_chooser.addOption("Trench Forward Backward", new TrenchForwardBack(m_driveSubsystem));
@@ -194,6 +196,8 @@ public class RobotContainer {
     m_chooser.addOption("RobotAlign", new AlignWithVisionCommand(m_driveSubsystem, m_turretCamera, 0.4));
     m_chooser.addOption("Right 2 Ball Run", new RightBallRun(m_driveSubsystem, m_intakeSubsystem, 0.4,
         m_turretSubsystem, m_turretCamera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed, m_throatSubsystem));
+    m_chooser.addOption("Turn To Angle", new SequentialCommandGroup(new ToggleLightsCommand(m_backCamera, true), new TurnToAngleCommand(m_driveSubsystem, -132, Direction.RIGHT, 0.5),
+    new BallDriveCommand(m_driveSubsystem, m_backCamera, 0.5, BallSide.LEFT, true)));
     // m_chooser.addOption("Print 10 ft", new PrintPathCommand(m_driveSubsystem,
     // drive10Ft, PurePursuit.PathConfigs.fast));
     SmartDashboard.putData("Auto mode", m_chooser);
@@ -212,8 +216,8 @@ public class RobotContainer {
     // m_shoot.toggleWhenPressed(new ShootAllCommand(m_throatSubsystem,
     // m_shooterSubsystem, m_serializerSubsystem, m_indexerSubsystem,
     // m_intakeSubsystem, () -> getThrottle()));
-    m_intake.toggleWhenPressed(new IntakeCommand(m_intakeSubsystem, 0.9));
-    m_intakeClimb.whileHeld(new IntakeCommand(m_intakeSubsystem, 0.9));
+    m_intake.toggleWhenPressed(new IntakeCommand(m_intakeSubsystem, 0.8));
+    m_intakeClimb.whileHeld(new IntakeCommand(m_intakeSubsystem, 0.8));
     m_outtake.toggleWhenPressed(new IntakeCommand(m_intakeSubsystem, -0.75));
     m_outtakeClimb.whileHeld(new IntakeCommand(m_intakeSubsystem, -0.75));
     m_spinUp.toggleWhenPressed(
@@ -226,11 +230,14 @@ public class RobotContainer {
     m_moveTurrentL.whileHeld(new TurretMoveCommand(m_turretSubsystem, -0.35));
     m_moveTurrentR.whileHeld(new TurretMoveCommand(m_turretSubsystem, 0.35));
 
+    m_offsetLeft.whenPressed(new IncrementOffsetCommand(m_turretSubsystem, -5));
+    m_offsetRight.whenPressed(new IncrementOffsetCommand(m_turretSubsystem, 5));
+
     m_unJumble.whileHeld(new UnJumbleCommand(m_intakeSubsystem, m_throatSubsystem, m_serializerSubsystem));
     m_feederIntakeClimb.whileHeld(new AmbientIntakePowerCommand(m_intakeSubsystem, -0.5));
     m_feederIntake.whileHeld(new AmbientIntakePowerCommand(m_intakeSubsystem, -0.5));
 
-    m_manualControlPanel.whenPressed(new FixedRotationCommand(m_snootSubsystem, 0.25, 3.2));
+    m_manualControlPanel.whileActiveOnce(new FixedRotationCommand(m_snootSubsystem, 0.25, 4.125));
 
     m_increaseTrim.whenActive(new IncrementTrimCommand(m_shooterSubsystem, 500), true);
     m_decreaseTrim.whenActive(new IncrementTrimCommand(m_shooterSubsystem, -500), true);
@@ -238,7 +245,7 @@ public class RobotContainer {
     m_turretTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_turretCamera));
 
     m_climb.whileHeld(new MoveClimberCommand(m_climberSubsystem, () -> -m_climbStick.getY()));
-    m_calibrateSpeed.whileHeld(new FireCommand(m_throatSubsystem, m_shooterSubsystem, m_intakeSubsystem));
+    m_calibrateSpeed.whileHeld(new ThroatMoveCommand(m_throatSubsystem, 0.85));
     m_calibrateSpeedShooter.toggleWhenPressed(
         new frc.robot.commands.Shooter.CalibrateSpeedCommand(m_shooterSubsystem, () -> getThrottleCalib()));
     m_calibrateSpeedShooter.toggleWhenPressed(new IndexCommand(m_indexerSubsystem, 0.5));
@@ -248,14 +255,39 @@ public class RobotContainer {
     m_snootTesting.whileHeld(new SnootTesting(m_snootSubsystem, 0.25));
     m_snootSetRotation.whenPressed(new FixedRotationCommand(m_snootSubsystem, 0.25, 3.2));
 
-    m_trackBalls.whileHeld(new BallDriveCommand(m_driveSubsystem, m_backCamera, -0.25));
+    m_toggleIntake.whenPressed(new ActuateIntakeCommand(m_intakeSubsystem));
+
+    m_trackBalls.whileHeld(new BallDriveCommand(m_driveSubsystem, m_backCamera, 0.25, BallSide.LEFT, true));
 
     m_turretTrackCalib.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_turretCamera));
   }
 
   public void periodic() {
+    String color = DriverStation.getInstance().getGameSpecificMessage();
+    String pColor = "None";
+      if(color.length() > 0){
+        switch (color.charAt(0)){
+          case 'B':
+          pColor = "Red";
+          break;
+          case 'R':
+          pColor = "Blue";
+          break;
+          case 'G':
+          pColor = "Yellow";
+          break;
+          case 'Y':
+          pColor = "Green";
+          break;
+        }
+      } else {
+        pColor = "None";
+      }
+    SmartDashboard.putString("Control Panel Color:", pColor);
     SmartDashboard.putNumber("Trim", m_shooterSubsystem.getTrim());
     SmartDashboard.putNumber("Time Left", DriverStation.getInstance().getMatchTime());
+    SmartDashboard.putNumber("Offset", m_turretSubsystem.getOffset());
+    SmartDashboard.putBoolean("Lights State", m_turretCamera.getLightsState());
   }
 
   /**

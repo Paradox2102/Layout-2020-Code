@@ -28,6 +28,6 @@ public class FireCommandAuto extends SequentialCommandGroup {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     super(new ThroatPowerCommand(throatSubsystem, () -> shooterSubsystem.getSpeed(),
-        () -> shooterSubsystem.getSetpoint() - 1500, 0.6, deadzone, turretCamera, () -> turretSubsystem.getOffset()));
+        () -> shooterSubsystem.getSetpoint() - 1500, 0.85, deadzone, turretCamera, () -> turretSubsystem.getOffset()));
   }
 }

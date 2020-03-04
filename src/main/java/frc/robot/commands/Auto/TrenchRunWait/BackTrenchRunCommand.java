@@ -5,21 +5,24 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.Auto.TrenchRun;
+package frc.robot.commands.Auto.TrenchRunWait;
 
-import javax.swing.GroupLayout.ParallelGroup;
-import javax.swing.GroupLayout.SequentialGroup;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.lib.Camera;
 import frc.pathfinder.Pathfinder.Waypoint;
 import frc.robot.PurePursuit.PathConfigs;
 import frc.robot.commands.Auto.CreatePathCommand;
 import frc.robot.commands.Auto.FireCommandAuto;
+import frc.robot.commands.Auto.WaitForDistanceCommand;
+import frc.robot.commands.Auto.WaitForShooterSpeedCommand;
 import frc.robot.commands.Intake.IntakeCommand;
+import frc.robot.commands.Shooter.SetTrimCommand;
 import frc.robot.commands.Teleop.FireCommand;
 import frc.robot.commands.Throat.ThroatPowerCommand;
 import frc.robot.commands.Turret.TurretTrackingCommand;
@@ -32,18 +35,26 @@ import frc.robot.subsystems.TurretSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class FrontTrenchRunCommand extends ParallelDeadlineGroup {
+public class BackTrenchRunCommand extends SequentialCommandGroup {
   /**
-   * Creates a new FrontTrenchRunCommand.
+   * Creates a new BackTrenchRunCommand.
    */
-  final static Waypoint[] k_forwardsTrench = { new Waypoint(-11, 25, Math.toRadians(-90), 7),
-      new Waypoint(-11, 17, Math.toRadians(-90)) };
 
-  public FrontTrenchRunCommand(DriveSubsystem driveSubsystem, TurretSubsystem turretSubsystem,
-      ThroatSubsystem throatSubsystem, ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem,
-      Camera turretCamera) {
+  final static Waypoint[] k_backwardsTrenchPart1 = { new Waypoint(-11, 10, Math.toRadians(90), 5),
+      new Waypoint(-11, 17.75, Math.toRadians(90)) };
 
-    super(new CreatePathCommand(driveSubsystem, k_forwardsTrench, PathConfigs.fast),
-        new FireCommandAuto(throatSubsystem, turretSubsystem, shooterSubsystem, turretCamera, 50));
+  final static Waypoint[] k_backwardsTrenchPart2 = { new Waypoint(-11, 17.75, Math.toRadians(90), 5),
+    new Waypoint(-11, 25, Math.toRadians(90)) };
+
+  final static double k_firingX = -11;
+  final static double k_firingY = 20;
+
+  public BackTrenchRunCommand(DriveSubsystem driveSubsystem, IntakeSubsystem intakeSubsystem,
+      ShooterSubsystem shooterSubsystem, TurretSubsystem turretSubsystem, ThroatSubsystem throatSubsystem,
+      DoubleSupplier getX, DoubleSupplier getY, Camera turretCamera) {
+
+    super(new CreatePathCommand(driveSubsystem, k_backwardsTrenchPart1, PathConfigs.fast, true, true, true),
+        new ParallelDeadlineGroup(new WaitCommand(2.5), new FireCommandAuto(throatSubsystem, turretSubsystem, shooterSubsystem, turretCamera, 50)),
+        new CreatePathCommand(driveSubsystem, k_backwardsTrenchPart2, PathConfigs.fast, true, false, true));
   }
 }

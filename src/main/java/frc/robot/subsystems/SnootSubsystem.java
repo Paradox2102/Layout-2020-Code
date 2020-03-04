@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,6 +28,7 @@ public class SnootSubsystem extends SubsystemBase {
 
   public SnootSubsystem() {
     m_encoder = m_snoot.getEncoder();
+    m_snoot.setIdleMode(IdleMode.kBrake);
     m_snoot.setSmartCurrentLimit(25);
   }
 

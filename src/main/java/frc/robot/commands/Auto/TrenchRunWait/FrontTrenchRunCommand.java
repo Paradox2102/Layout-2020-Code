@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.Auto.TrenchRun;
+package frc.robot.commands.Auto.TrenchRunWait;
 
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
@@ -32,7 +32,7 @@ import frc.robot.subsystems.TurretSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class FrontTrenchRunCommand extends ParallelDeadlineGroup {
+public class FrontTrenchRunCommand extends SequentialCommandGroup {
   /**
    * Creates a new FrontTrenchRunCommand.
    */
