@@ -17,8 +17,12 @@ import frc.lib.Camera;
 import frc.lib.Camera.BallSide;
 import frc.pathfinder.Pathfinder.Waypoint;
 import frc.robot.PurePursuit.PathConfigs;
+import frc.robot.commands.Auto.AlignWithVisionCommand;
 import frc.robot.commands.Auto.CreatePathCommand;
 import frc.robot.commands.Auto.DriveToCenterBallsCommand;
+import frc.robot.commands.Auto.TurnToBallsCommand;
+import frc.robot.commands.Auto.TurnToCenterBallsCommand;
+import frc.robot.commands.Auto.WaitForBallCommand;
 import frc.robot.commands.Auto.WaitForDistanceCommand;
 import frc.robot.commands.Auto.WaitForShooterSpeedCommand;
 import frc.robot.commands.Camera.BallDriveCommand;
@@ -32,6 +36,7 @@ import frc.robot.commands.Shooter.CaseShootingCommand;
 import frc.robot.commands.Teleop.ShootCommand;
 import frc.robot.commands.Teleop.SpinUpCommand;
 import frc.robot.commands.Throat.ThroatPowerCommand;
+import frc.robot.commands.Turret.SetOffsetCommand;
 import frc.robot.commands.Turret.TurretTrackingCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
@@ -59,14 +64,15 @@ public class TrenchRun extends SequentialCommandGroup {
     addCommands(new ParallelCommandGroup(
         new SpinUpCommand(turretSubsystem, turretCamera, shooterSubsystem, indexerSubsystem, shooterSpeed),
         new TurretTrackingCommand(turretSubsystem, turretCamera), new IntakeCommand(intakeSubsystem, 0.9),
-        new PowerSerializeCommand(serializerSubsystem, 0.75),
+        new PowerSerializeCommand(serializerSubsystem, 0.75), new ToggleLightsCommand(backCamera, true),
         new SequentialCommandGroup(
             new BackTrenchRunCommand(driveSubsystem, intakeSubsystem, shooterSubsystem, turretSubsystem,
                 throatSubsystem, getPosX, getPosY, turretCamera),
+                new SetOffsetCommand(turretSubsystem, 0),
             new FrontTrenchRunCommand(driveSubsystem, turretSubsystem, throatSubsystem, shooterSubsystem,
                 intakeSubsystem, turretCamera),
             new TurnToAngleCommand(driveSubsystem, -152, Direction.RIGHT, 0.5),
-            new BallDriveCommand(driveSubsystem, backCamera, -0.5, BallSide.LEFT))));
+            new BallDriveCommand(driveSubsystem, backCamera, 0.5, BallSide.LEFT, true))));
     // // new ToggleLightsCommand(frontCamera, true),
     // new ParallelDeadlineGroup(new WaitForBallCommand(frontCamera), new
     // CreatePathCommand(driveSubsystem, k_2balls, PathConfigs.fast, true, false,

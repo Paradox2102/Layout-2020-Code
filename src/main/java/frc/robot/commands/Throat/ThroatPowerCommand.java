@@ -70,7 +70,7 @@ public class ThroatPowerCommand extends CommandBase {
           if (data.centerDiff(data.centerLine(), m_offset.getAsDouble()) < k_deadZoneX) {
             m_subsystem.setThroatPower(m_power);
           } else {
-            System.out.println("Turret not aligned");
+            // System.out.println("Turret not aligned");
             m_subsystem.stopThroatPower();
           }
         }
@@ -78,7 +78,7 @@ public class ThroatPowerCommand extends CommandBase {
         m_subsystem.setThroatPower(m_power);
       }
     } else {
-      System.out.println("Speed not Met");
+      // System.out.println("Speed not Met");
       m_subsystem.stopThroatPower();
     }
   }

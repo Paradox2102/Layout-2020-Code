@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.Auto.RightBallRun8Ball;
+package frc.robot.commands.Auto;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.Camera;
@@ -50,6 +50,7 @@ public class TurnToBallsCommand extends CommandBase {
   public void end(boolean interrupted) {
     Logger.Log("TurnToBallsCommand", 2, "Ended");
     m_driveSubsystem.stop();
+    m_frontCamera.toggleLights(false);
   }
 
   // Returns true when the command should end.
@@ -57,11 +58,12 @@ public class TurnToBallsCommand extends CommandBase {
   public boolean isFinished() {
     CameraData data = m_frontCamera.createData();
 
-    if (data.canSeeMulti(2)) {
+    if (data.ballFilter().size() >= 2) {
       double offset = data.ballCenterDiff(data.centerLine(), data.ballSelector(BallSide.RIGHT));
+      System.out.println(offset);
       return offset < k_deadZone;
     }
 
-    return true;
+    return false;
   }
 }

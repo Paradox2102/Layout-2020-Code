@@ -1,6 +1,6 @@
 # Joystick layout
 
-![joystick image](Joystick.png)
+<img align="right" src="Joystick.png">
 
 ## Joystick 0: stick
 
@@ -65,4 +65,6 @@
 * __Button 5__: snootSetRotation: _whenPressed_: ```new FixedRotationCommand(m_snootSubsystem, 0.25, 3.2)```
 
 * __Button 6__: trackBalls: _whileHeld_: ```new BallDriveCommand(m_driveSubsystem, m_backCamera, -0.25)```
+
+```commit 374d820cd91213fb8c3427fe3e2f748e212a7472 Author: Ryder Casazza <rydercasazza@me.com> Date:   Wed Feb 26 18:14:21 2020 -0800 Final Commit before LA ```
 

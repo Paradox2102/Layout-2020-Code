@@ -3,6 +3,7 @@
 import re;
 from collections import defaultdict
 import io
+import subprocess
 
 FILE = "../src/main/java/frc/robot/RobotContainer.java"
 
@@ -45,11 +46,21 @@ def wrap_code(java):
     return '```' + java + '```'
     
 
+def get_file_last_commit(file):
+    out = subprocess.Popen(['git', 'log', '-n', '1', file],
+           stdout=subprocess.PIPE, 
+           stderr=subprocess.STDOUT)
+    stdout,stderr = out.communicate()
+    result = stdout.decode()
+    result = re.sub(r'\n\s*', " ", result)
+    return result
+
+
 def md_joysticks(data):
     output = io.StringIO()
     joysticks = sorted(data.values(), key=lambda d: d['port'])
     print("# Joystick layout", file=output)
-    print("\n![joystick image](Joystick.png)", file=output)
+    print("\n<img align=\"right\" src=\"Joystick.png\">", file=output)
     for j in joysticks:
         print("\n## Joystick %d: %s" % (j['port'], clean_name(j['name'])), file=output)
         buttonlists = sorted(j['buttons'].items())
@@ -77,6 +88,8 @@ def md_joysticks(data):
                     print("\n* __Button %d__: %s: _%s_: %s" % (num, clean_name(b['name']), a['method'], wrap_code(a['command'])), file=output)
                 else:     
                     print("\n* __Button %d__: %s:" % (num, clean_name(b['name'])), file=output)
+    last_commit = get_file_last_commit(FILE)
+    print("\n```" + last_commit + "```", file=output)
                     
     return output.getvalue()
     

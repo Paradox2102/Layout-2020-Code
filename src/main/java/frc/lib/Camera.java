@@ -9,7 +9,7 @@ import frc.PiCamera.PiCamera.PiCameraRegion;
 import frc.PiCamera.PiCamera.PiCameraRegions;
 
 public class Camera {
-    public static PiCamera m_piCamera;
+    public PiCamera m_piCamera;
 
     public void connect(String ipAddress) {
         m_piCamera = new PiCamera();
@@ -19,6 +19,9 @@ public class Camera {
 
     public void DumpFrames(int count) {
         m_piCamera.DumpFrames(count);
+    }
+
+    public void setImageProcessing(boolean set) {
     }
 
     public void StartPiLog() {
@@ -154,6 +157,7 @@ public class Camera {
 
                 returnRegions.add(regions.get(0));
                 returnRegions.add(regions.get(1));
+
             }
 
             return returnRegions;
@@ -168,7 +172,7 @@ public class Camera {
                     double height = rect.m_bottom - rect.m_top;
                     double width = rect.m_right - rect.m_left;
 
-                    if (width / height > 0.6 && width / height < 1.4) {
+                    if (width / height > 0.7 && width / height < 1.3) {
                         regionsList.add(m_regions.GetRegion(i));
                     }
                 }

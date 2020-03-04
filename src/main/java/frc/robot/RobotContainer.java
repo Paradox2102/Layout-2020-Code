@@ -30,6 +30,7 @@ import frc.robot.Triggers.IncreaseTrimTrigger;
 import frc.robot.commands.Auto.AlignWithVisionCommand;
 import frc.robot.commands.Auto.CreatePathCommand;
 import frc.robot.commands.Auto.DoNothingCommand;
+import frc.robot.commands.Auto.TurnToBallsCommand;
 import frc.robot.commands.Auto.FiveBallCenter.FiveBallCenter;
 import frc.robot.commands.Auto.FiveBallCenter.FrontBallsRun;
 import frc.robot.commands.Auto.RightBallRun.RightBallRun;
@@ -192,8 +193,12 @@ public class RobotContainer {
     m_chooser.addOption("Trench Forward Backward", new TrenchForwardBack(m_driveSubsystem));
     m_chooser.addOption("5 Ball Center", new FiveBallCenter(m_driveSubsystem, m_intakeSubsystem, m_turretCamera, 0.4,
         m_turretSubsystem, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed, m_throatSubsystem));
-    m_chooser.addOption("Tiny Turn", new TinyTurnCommand(m_driveSubsystem));
-    m_chooser.addOption("RobotAlign", new AlignWithVisionCommand(m_driveSubsystem, m_turretCamera, 0.4));
+    // m_chooser.addOption("Test Turn",
+    // new SequentialCommandGroup(new TurnToBallsCommand(m_driveSubsystem,
+    // m_backCamera, 0.4),
+    // new BallDriveCommand(m_driveSubsystem, m_backCamera, -0.25)));
+    // m_chooser.addOption("RobotAlign", new
+    // AlignWithVisionCommand(m_driveSubsystem, m_turretCamera, 0.4));
     m_chooser.addOption("Right 2 Ball Run", new RightBallRun(m_driveSubsystem, m_intakeSubsystem, 0.4,
         m_turretSubsystem, m_turretCamera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed, m_throatSubsystem));
     m_chooser.addOption("Turn To Angle", new SequentialCommandGroup(new ToggleLightsCommand(m_backCamera, true), new TurnToAngleCommand(m_driveSubsystem, -132, Direction.RIGHT, 0.5),
