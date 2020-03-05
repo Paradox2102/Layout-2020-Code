@@ -16,9 +16,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.lib.Camera;
 import frc.lib.Camera.BallSide;
@@ -201,8 +203,8 @@ public class RobotContainer {
     // AlignWithVisionCommand(m_driveSubsystem, m_turretCamera, 0.4));
     m_chooser.addOption("Right 2 Ball Run", new RightBallRun(m_driveSubsystem, m_intakeSubsystem, 0.4,
         m_turretSubsystem, m_turretCamera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed, m_throatSubsystem));
-    m_chooser.addOption("Turn To Angle", new SequentialCommandGroup(new ToggleLightsCommand(m_backCamera, true), new TurnToAngleCommand(m_driveSubsystem, -132, Direction.RIGHT, 0.5),
-    new BallDriveCommand(m_driveSubsystem, m_backCamera, 0.5, BallSide.LEFT, true)));
+    m_chooser.addOption("Turn To Angle", new SequentialCommandGroup(new ToggleLightsCommand(m_backCamera, true), new TurnToAngleCommand(m_driveSubsystem, -152, Direction.RIGHT, 0.25), 
+    new WaitCommand(1), new ParallelCommandGroup(new IntakeCommand(m_intakeSubsystem, 0.8), new BallDriveCommand(m_driveSubsystem, m_backCamera, 0.25, BallSide.LEFT, true, 40))));
     // m_chooser.addOption("Print 10 ft", new PrintPathCommand(m_driveSubsystem,
     // drive10Ft, PurePursuit.PathConfigs.fast));
     SmartDashboard.putData("Auto mode", m_chooser);
@@ -260,9 +262,9 @@ public class RobotContainer {
     m_snootTesting.whileHeld(new SnootTesting(m_snootSubsystem, 0.25));
     m_snootSetRotation.whenPressed(new FixedRotationCommand(m_snootSubsystem, 0.25, 3.2));
 
-    m_toggleIntake.whenPressed(new ActuateIntakeCommand(m_intakeSubsystem));
+    m_toggleIntake.toggleWhenPressed(new IntakeCommand(m_intakeSubsystem, 0.75));
 
-    m_trackBalls.whileHeld(new BallDriveCommand(m_driveSubsystem, m_backCamera, 0.25, BallSide.LEFT, true));
+    m_trackBalls.whileHeld(new BallDriveCommand(m_driveSubsystem, m_backCamera, 0.25, BallSide.LEFT, true, 20));
 
     m_turretTrackCalib.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_turretCamera));
   }
@@ -362,5 +364,9 @@ public class RobotContainer {
 
   public void setTrim(double amount) {
     m_shooterSubsystem.setTrim(amount);
+  }
+
+  public void setLightsBackCamera(boolean lights){
+    m_backCamera.toggleLights(lights);
   }
 }

@@ -36,7 +36,7 @@ public class FrontTrenchRunCommand extends ParallelDeadlineGroup {
   /**
    * Creates a new FrontTrenchRunCommand.
    */
-  final static Waypoint[] k_forwardsTrench = { new Waypoint(-11, 25, Math.toRadians(-90), 7),
+  final static Waypoint[] k_forwardsTrench = { new Waypoint(-11, 25, Math.toRadians(-90), 5),
       new Waypoint(-11, 17, Math.toRadians(-90)) };
 
   public FrontTrenchRunCommand(DriveSubsystem driveSubsystem, TurretSubsystem turretSubsystem,

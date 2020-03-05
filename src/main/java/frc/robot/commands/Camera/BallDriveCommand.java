@@ -22,13 +22,17 @@ public class BallDriveCommand extends CommandBase {
   double k_p = 0.0005;
   BallSide k_ballSide;
   boolean m_reversed;
+  boolean m_finalDrive = false;
+  double m_encoderAmount;
+  double m_initEncoderPos;
 
-  public BallDriveCommand(DriveSubsystem subsystem, Camera camera, double power, BallSide ballSide, boolean reversed) {
+  public BallDriveCommand(DriveSubsystem subsystem, Camera camera, double power, BallSide ballSide, boolean reversed, double encoderAmount) {
     m_subsystem = subsystem;
     m_camera = camera;
     m_power = power;
     k_ballSide = ballSide;
     m_reversed = reversed;
+    m_encoderAmount = encoderAmount;
 
     addRequirements(m_subsystem);
   }
@@ -38,54 +42,43 @@ public class BallDriveCommand extends CommandBase {
   public void initialize() {
     m_camera.toggleLights(true);
     m_seenBalls = false;
+    m_finalDrive = false;
+    m_initEncoderPos = m_subsystem.getLeftPos();
     Logger.Log("BallDriveCommand", 1, "Init");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    CameraData data = m_camera.createData();
-    int numBalls = data.ballFilter().size();
-    double powerDiff;
-
-    System.out.println(numBalls);
-    if (numBalls >= 2) {
-      double diff = data.ballCenterDiff(data.centerLine(), data.ballSelector(k_ballSide));
-      powerDiff = Math.abs(diff) * k_p;
-
-      
-    } else if (numBalls >= 1) {
-      double diff = data.centerDiff(data.centerLine(), 0, data.ballFilter().get(0));
-      powerDiff = Math.abs(diff) * k_p;
-
+    if(!m_finalDrive){
+      CameraData data = m_camera.createData();
+      int numBalls = data.ballFilter().size();
+      double powerDiff;
+  
+      System.out.println(numBalls);
+      if (numBalls >= 2) {
+        double diff = data.ballCenterDiff(data.centerLine(), data.ballSelector(k_ballSide));
+        powerDiff = diff * k_p;
+  
+        
+      } else if (numBalls >= 1) {
+        double diff = data.centerDiff(data.centerLine(), 0, data.ballFilter().get(0));
+        powerDiff = diff * k_p;
+      }else{
+        powerDiff = 0;
+      }
+  
       // turn left
       if(!m_reversed){
-        if (diff > 0) {
-          m_subsystem.setPower(m_power - powerDiff, m_power + powerDiff);
-        } else {
-          m_subsystem.setPower(m_power + powerDiff, m_power - powerDiff);
-        }
-      }else{
-        if (diff < 0) {
-          m_subsystem.setPower(-m_power - powerDiff, -m_power + powerDiff);
-        } else {
-          m_subsystem.setPower(-m_power + powerDiff, -m_power - powerDiff);
-        }
-      }
-    }
-
-    // turn left
-    if(!m_reversed){
-      if (diff > 0) {
         m_subsystem.setPower(m_power - powerDiff, m_power + powerDiff);
-      } else {
-        m_subsystem.setPower(m_power + powerDiff, m_power - powerDiff);
+      }else{
+        m_subsystem.setPower(-m_power - powerDiff, -m_power + powerDiff);
       }
     }else{
-      if (diff < 0) {
-        m_subsystem.setPower(-m_power - powerDiff, -m_power + powerDiff);
-      } else {
-        m_subsystem.setPower(-m_power + powerDiff, -m_power - powerDiff);
+      if(!m_reversed){
+        m_subsystem.setPower(m_power, m_power);
+      }else{
+        m_subsystem.setPower(-m_power, -m_power);
       }
     }
   }
@@ -102,15 +95,27 @@ public class BallDriveCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     CameraData data = m_camera.createData();
-    boolean canSeeMulti = data.ballFilter().size() >= 1;
+    boolean canSeeMulti = data.ballFilter().size() >= 0;
 
     if (!m_seenBalls && canSeeMulti) {
       m_seenBalls = true;
     }
 
-    if (m_seenBalls) {
-      return !canSeeMulti;
+    if(!m_finalDrive){
+      if (m_seenBalls && !canSeeMulti) {
+        return true;
+      }
+      m_finalDrive = data.ballBelowHeight(450, data.ballFilter(), BallSide.LEFT);
     }
+    
+    if(m_finalDrive){
+      if(!m_reversed){
+        return (m_subsystem.getLeftPos() - m_initEncoderPos) > m_encoderAmount;
+      }else{
+        return (m_subsystem.getLeftPos() - m_initEncoderPos) < -m_encoderAmount;
+      }
+    }
+
     return false;
   }
 }

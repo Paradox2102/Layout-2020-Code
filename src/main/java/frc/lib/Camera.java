@@ -119,6 +119,18 @@ public class Camera {
             }
         }
 
+        public boolean ballBelowHeight(double verticalLine, ArrayList<PiCameraRegion> regions, BallSide ballSide) {
+            PiCameraRegion region;
+
+            if(ballSide.equals(BallSide.RIGHT)){
+                region = m_regions.GetRegion(m_regions.GetRegionCount() - 1);
+            }else{
+                region = m_regions.GetRegion(0);
+            }
+            
+            return region.m_bounds.m_bottom > verticalLine;
+        }
+
         public List<PiCameraRegion> sortRegions() {
             List<PiCameraRegion> regions = m_regions.m_regions;
             regions = ballFilter();
@@ -135,9 +147,7 @@ public class Camera {
                     }
                     sortedTargets.add(idx, regions.get(i));
                 }
-                for(PiCameraRegion region : sortedTargets){
-                    System.out.println(region.m_bounds.m_left);
-                }
+
                 return sortedTargets;
             } else {
                 return null;
@@ -157,7 +167,6 @@ public class Camera {
 
                 returnRegions.add(regions.get(0));
                 returnRegions.add(regions.get(1));
-
             }
 
             return returnRegions;

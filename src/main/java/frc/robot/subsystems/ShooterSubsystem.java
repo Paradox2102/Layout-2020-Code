@@ -83,7 +83,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setSpeed(double speed){
     speed += m_trim;
-    speed -= 1000;
+    speed -= 1000; //needs to be retuned
 
     speed = speed > 40000 ? 40000 : speed;
 

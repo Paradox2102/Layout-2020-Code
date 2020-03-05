@@ -49,7 +49,7 @@ import frc.robot.subsystems.TurretSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class TrenchRun extends SequentialCommandGroup {
+public class TrenchRun extends ParallelCommandGroup {
   /**
    * Creates a new DriveToTrenchConmand.
    */
@@ -61,18 +61,18 @@ public class TrenchRun extends SequentialCommandGroup {
       TurretSubsystem turretSubsystem, ThroatSubsystem throatSubsystem, IndexerSubsystem indexerSubsystem,
       SerializerSubsystem serializerSubsystem, Camera turretCamera, double shooterSpeed, DoubleSupplier getPosX,
       DoubleSupplier getPosY, Camera backCamera) {
-    addCommands(new ParallelCommandGroup(
+    addCommands(
         new SpinUpCommand(turretSubsystem, turretCamera, shooterSubsystem, indexerSubsystem, shooterSpeed),
         new TurretTrackingCommand(turretSubsystem, turretCamera), new IntakeCommand(intakeSubsystem, 0.9),
         new PowerSerializeCommand(serializerSubsystem, 0.75), new ToggleLightsCommand(backCamera, true),
         new SequentialCommandGroup(
             new BackTrenchRunCommand(driveSubsystem, intakeSubsystem, shooterSubsystem, turretSubsystem,
                 throatSubsystem, getPosX, getPosY, turretCamera),
-                new SetOffsetCommand(turretSubsystem, 0),
+            new SetOffsetCommand(turretSubsystem, 0),
             new FrontTrenchRunCommand(driveSubsystem, turretSubsystem, throatSubsystem, shooterSubsystem,
                 intakeSubsystem, turretCamera),
-            new TurnToAngleCommand(driveSubsystem, -152, Direction.RIGHT, 0.5),
-            new BallDriveCommand(driveSubsystem, backCamera, 0.5, BallSide.LEFT, true))));
+            new ToggleLightsCommand(backCamera, true), new TurnToAngleCommand(driveSubsystem, -152, Direction.RIGHT, 0.25), 
+            new WaitCommand(0.25), new BallDriveCommand(driveSubsystem, backCamera, 0.25, BallSide.LEFT, true, 38.5), new WaitCommand(1), new TurnToAngleCommand(driveSubsystem, -90, Direction.LEFT, 0.25)));
     // // new ToggleLightsCommand(frontCamera, true),
     // new ParallelDeadlineGroup(new WaitForBallCommand(frontCamera), new
     // CreatePathCommand(driveSubsystem, k_2balls, PathConfigs.fast, true, false,
