@@ -83,10 +83,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setSpeed(double speed){
     speed += m_trim;
-    speed -= 1000; //needs to be retuned
-
-    speed = speed > 40000 ? 40000 : speed;
-
+   
     m_curSpeed = speed;
     m_shooter.set(ControlMode.Velocity, speed);
     m_revved = true;
@@ -113,7 +110,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public double calculatedSpeed(double height){
     double speed = (Constants.m_robotConstants.k_squareConst *height*height) - (Constants.m_robotConstants.k_linearConst * height) + (Constants.m_robotConstants.k_const);
 
-    
+    System.out.println(speed);
     if(speed > 40000){
       return 40000;
     }else if(speed < 30000){

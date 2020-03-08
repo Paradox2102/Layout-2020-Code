@@ -262,7 +262,7 @@ public class RobotContainer {
     m_snootTesting.whileHeld(new SnootTesting(m_snootSubsystem, 0.25));
     m_snootSetRotation.whenPressed(new FixedRotationCommand(m_snootSubsystem, 0.25, 3.2));
 
-    m_toggleIntake.toggleWhenPressed(new IntakeCommand(m_intakeSubsystem, 0.75));
+    m_toggleIntake.toggleWhenPressed(new ActuateIntakeCommand(m_intakeSubsystem));
 
     m_trackBalls.whileHeld(new BallDriveCommand(m_driveSubsystem, m_backCamera, 0.25, BallSide.LEFT, true, 20));
 
@@ -356,6 +356,10 @@ public class RobotContainer {
 
   public double getTargetHeight() {
     return m_turretCamera.createData().getTargetHeight();
+  }
+
+  public double getTargetWidth() {
+    return m_turretCamera.createData().getTargetWidth();
   }
 
   public boolean canSee() {

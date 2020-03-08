@@ -26,8 +26,9 @@ public class ThroatPowerCommand extends CommandBase {
   double k_deadZoneX = 0;
   Camera m_turretCamera = null;
   DoubleSupplier m_offset;
+  boolean m_burst = false;
 
-  public ThroatPowerCommand(ThroatSubsystem subsystem, DoubleSupplier getVel, DoubleSupplier rpmSpeed, double power) {
+  public ThroatPowerCommand(ThroatSubsystem subsystem, DoubleSupplier getVel, DoubleSupplier rpmSpeed, double power, boolean burst) {
     m_subsystem = subsystem;
     m_power = power;
     m_getVel = getVel;
@@ -35,12 +36,13 @@ public class ThroatPowerCommand extends CommandBase {
     k_deadZoneX = 0;
     m_offset = () -> 0;
     m_turretCamera = null;
+    m_burst = burst;
 
     addRequirements(m_subsystem);
   }
 
   public ThroatPowerCommand(ThroatSubsystem subsystem, DoubleSupplier getVel, DoubleSupplier rpmSpeed, double power,
-      double deadzone, Camera turretCamera, DoubleSupplier offset) {
+      double deadzone, Camera turretCamera, DoubleSupplier offset, boolean burst) {
     m_subsystem = subsystem;
     m_power = power;
     m_getVel = getVel;
@@ -48,6 +50,7 @@ public class ThroatPowerCommand extends CommandBase {
     k_deadZoneX = deadzone;
     m_turretCamera = turretCamera;
     m_offset = offset;
+    m_burst = burst;
 
     addRequirements(m_subsystem);
   }
@@ -61,7 +64,7 @@ public class ThroatPowerCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_getVel.getAsDouble() - k_deadZoneSpeed > m_rpmSpeed.getAsDouble() && m_rpmSpeed.getAsDouble() > 0) {
+    if (m_getVel.getAsDouble() - k_deadZoneSpeed > (m_burst ? 0 : m_rpmSpeed.getAsDouble()) && m_rpmSpeed.getAsDouble() > 0) {
       // turret position
       if (k_deadZoneX != 0) {
         CameraData data = m_turretCamera.createData();

@@ -39,8 +39,7 @@ public class CaseShootingCommand extends CommandBase {
     CameraData data = m_camera.createData();
 
     if (data.canSee() && data.getTargetWidth() > 50) {
-      double speed = m_subsystem.calculatedSpeed(data.getTargetHeight());
-
+      double speed = m_subsystem.calculatedSpeed(data.getTargetWidth());
       m_speed = speed;
     }
     SmartDashboard.putNumber("Calculated Speed", m_speed);

@@ -54,6 +54,7 @@ public class Robot extends TimedRobot {
     // System.out.println("Periodic Running");
     if(m_robotContainer.canSee()){
       SmartDashboard.putNumber("Target Height", m_robotContainer.getTargetHeight());
+      SmartDashboard.putNumber("Target Width", m_robotContainer.getTargetWidth());
     }
 
     m_robotContainer.periodic();

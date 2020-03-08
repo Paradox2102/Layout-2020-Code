@@ -13,7 +13,7 @@ public class FinalType {
 
     public final double k_driveIRange = 150;
 
-    public final double k_shooterF = 0.02680;
+    public final double k_shooterF = 0.025500;
     public final double k_shooterP = 0.4;
     public final double k_shooterI = 0.032;
     public final double k_shooterD = 0;
@@ -24,8 +24,8 @@ public class FinalType {
     public final String k_ipAddressBack = "10.21.2.13";
 
     //Shooter Equation Coefficients
-    public final double k_squareConst = 4.606;
-    public final double k_linearConst = 693.94;
-    public final double k_const = 56610.027;
+    public final double k_squareConst = .6519;
+    public final double k_linearConst = 214.63;
+    public final double k_const = 50019;
 
 }

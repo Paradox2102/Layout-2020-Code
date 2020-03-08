@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.lib.Camera;
 import frc.pathfinder.Pathfinder.Waypoint;
 import frc.robot.PurePursuit.PathConfigs;
@@ -44,6 +45,7 @@ public class FrontTrenchRunCommand extends ParallelDeadlineGroup {
       Camera turretCamera) {
 
     super(new CreatePathCommand(driveSubsystem, k_forwardsTrench, PathConfigs.fast),
-        new FireCommandAuto(throatSubsystem, turretSubsystem, shooterSubsystem, turretCamera, 50));
+          new SequentialCommandGroup(new WaitCommand(2), 
+          new FireCommandAuto(throatSubsystem, turretSubsystem, shooterSubsystem, turretCamera, 50)));
   }
 }

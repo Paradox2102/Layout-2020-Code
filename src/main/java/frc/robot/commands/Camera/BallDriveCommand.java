@@ -43,7 +43,7 @@ public class BallDriveCommand extends CommandBase {
     m_camera.toggleLights(true);
     m_seenBalls = false;
     m_finalDrive = false;
-    m_initEncoderPos = m_subsystem.getLeftPos();
+    
     Logger.Log("BallDriveCommand", 1, "Init");
   }
 
@@ -106,6 +106,10 @@ public class BallDriveCommand extends CommandBase {
         return true;
       }
       m_finalDrive = data.ballBelowHeight(450, data.ballFilter(), BallSide.LEFT);
+
+      if(m_finalDrive){
+        m_initEncoderPos = m_subsystem.getLeftPos();
+      }
     }
     
     if(m_finalDrive){
