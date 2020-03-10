@@ -5,29 +5,27 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.Auto;
-
-import java.util.function.DoubleSupplier;
+package frc.robot.commands.Auto.RightBallRunCameraAlign;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.lib.Camera;
-import frc.robot.commands.Throat.ThroatPowerCommand;
-import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.ThroatSubsystem;
-import frc.robot.subsystems.TurretSubsystem;
+import frc.pathfinder.Pathfinder.Waypoint;
+import frc.robot.PurePursuit.PathConfigs;
+import frc.robot.commands.Auto.CreatePathCommand;
+import frc.robot.subsystems.DriveSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class FireCommandAuto extends SequentialCommandGroup {
+public class DriveToCenter extends SequentialCommandGroup {
   /**
-   * Creates a new FireCommandAuto.
+   * Creates a new DriveToCenter.
    */
-  public FireCommandAuto(ThroatSubsystem throatSubsystem, TurretSubsystem turretSubsystem, ShooterSubsystem shooterSubsystem, Camera turretCamera,
-      double deadzone) {
+  static final Waypoint[] k_centerDrive = { new Waypoint(10.75, 20.5, Math.toRadians(-90), 5),
+      new Waypoint(2.5, 13.8, Math.toRadians(230)) };
+
+  public DriveToCenter(DriveSubsystem driveSubsystem) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new ThroatPowerCommand(throatSubsystem, () -> shooterSubsystem.getSpeed(),
-        () -> shooterSubsystem.getSetpoint() - 4000, 0.85, deadzone, turretCamera, () -> turretSubsystem.getOffset(), false));
+    super(new CreatePathCommand(driveSubsystem, k_centerDrive, PathConfigs.fast, false, false, true));
   }
 }

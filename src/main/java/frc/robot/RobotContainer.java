@@ -35,7 +35,8 @@ import frc.robot.commands.Auto.DoNothingCommand;
 import frc.robot.commands.Auto.TurnToBallsCommand;
 import frc.robot.commands.Auto.FiveBallCenter.FiveBallCenter;
 import frc.robot.commands.Auto.FiveBallCenter.FrontBallsRun;
-import frc.robot.commands.Auto.RightBallRun.RightBallRun;
+import frc.robot.commands.Auto.InnerPortRun.InnerPortRunCommand;
+import frc.robot.commands.Auto.RightBallRunCameraAlign.RightBallRun;
 import frc.robot.commands.Auto.TrenchRun.TrenchForwardBack;
 import frc.robot.commands.Auto.TrenchRun.TrenchRun;
 import frc.robot.commands.Auto.TrenchRunWait.TrenchRunWait;
@@ -182,29 +183,32 @@ public class RobotContainer {
     // m_intakeSubsystem.setDefaultCommand(new
     // AmbientIntakePowerCommand(m_intakeSubsystem, 0.25));
 
-    Waypoint[] k_10ft = { new Waypoint(0, 0, Math.toRadians(90), 5), new Waypoint(0, 10, Math.toRadians(90)) };
+    // Waypoint[] k_10ft = { new Waypoint(0, 0, Math.toRadians(90), 5), new Waypoint(0, 10, Math.toRadians(90)) };
 
     m_chooser.setDefaultOption("Do Nothing", new DoNothingCommand());
-    m_chooser.addOption("Trench Run",
+    m_chooser.addOption("Trench Run 8 ball",
         new TrenchRun(m_driveSubsystem, m_intakeSubsystem, m_shooterSubsystem, m_turretSubsystem, m_throatSubsystem,
             m_indexerSubsystem, m_serializerSubsystem, m_turretCamera, 35000, () -> getPos().x, () -> getPos().y, m_backCamera));
-    m_chooser.addOption("New Trench Run",
+    m_chooser.addOption("Trench Run Pause and Shoot",
         new TrenchRunWait(m_driveSubsystem, m_intakeSubsystem, m_shooterSubsystem, m_turretSubsystem, m_throatSubsystem,
             m_indexerSubsystem, m_serializerSubsystem, m_turretCamera, 35000, () -> getPos().x, () -> getPos().y));
-    m_chooser.addOption("10 ft", new CreatePathCommand(m_driveSubsystem, k_10ft, PathConfigs.fast));
-    m_chooser.addOption("Trench Forward Backward", new TrenchForwardBack(m_driveSubsystem));
     m_chooser.addOption("5 Ball Center", new FiveBallCenter(m_driveSubsystem, m_intakeSubsystem, m_turretCamera, 0.4,
         m_turretSubsystem, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed, m_throatSubsystem));
-    // m_chooser.addOption("Test Turn",
+    m_chooser.addOption("Right 7 Ball Run", new RightBallRun(m_driveSubsystem, m_intakeSubsystem,
+        m_turretSubsystem, m_turretCamera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed, m_throatSubsystem, m_backCamera));
+    m_chooser.addOption("Exhaust Port Run", new InnerPortRunCommand(m_driveSubsystem, m_intakeSubsystem, m_shooterSubsystem,
+        m_indexerSubsystem, m_turretSubsystem, m_throatSubsystem, m_turretCamera, m_backCamera, m_shooterSpeed));
+    // m_chooser.addOption("10 ft", new CreatePathCommand(m_driveSubsystem, k_10ft, PathConfigs.fast));
+    // m_chooser.addOption("Trench Forward Backward", new TrenchForwardBack(m_driveSubsystem));
+        // m_chooser.addOption("Test Turn",
     // new SequentialCommandGroup(new TurnToBallsCommand(m_driveSubsystem,
     // m_backCamera, 0.4),
     // new BallDriveCommand(m_driveSubsystem, m_backCamera, -0.25)));
     // m_chooser.addOption("RobotAlign", new
     // AlignWithVisionCommand(m_driveSubsystem, m_turretCamera, 0.4));
-    m_chooser.addOption("Right 2 Ball Run", new RightBallRun(m_driveSubsystem, m_intakeSubsystem, 0.4,
-        m_turretSubsystem, m_turretCamera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed, m_throatSubsystem));
-    m_chooser.addOption("Turn To Angle", new SequentialCommandGroup(new ToggleLightsCommand(m_backCamera, true), new TurnToAngleCommand(m_driveSubsystem, -152, Direction.RIGHT, 0.25), 
-    new WaitCommand(1), new ParallelCommandGroup(new IntakeCommand(m_intakeSubsystem, 0.8), new BallDriveCommand(m_driveSubsystem, m_backCamera, 0.25, BallSide.LEFT, true, 40))));
+
+    // m_chooser.addOption("Turn To Angle", new SequentialCommandGroup(new TurnToAngleCommand(m_driveSubsystem, -70, Direction.LEFT, 0.3), new WaitCommand(0.5),
+    // new BallDriveCommand(m_driveSubsystem, m_backCamera, 0.25, BallSide.RIGHT, true, 5)));
     // m_chooser.addOption("Print 10 ft", new PrintPathCommand(m_driveSubsystem,
     // drive10Ft, PurePursuit.PathConfigs.fast));
     SmartDashboard.putData("Auto mode", m_chooser);

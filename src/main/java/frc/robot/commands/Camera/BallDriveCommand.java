@@ -95,7 +95,7 @@ public class BallDriveCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     CameraData data = m_camera.createData();
-    boolean canSeeMulti = data.ballFilter().size() >= 0;
+    boolean canSeeMulti = data.ballFilter().size() > 0;
 
     if (!m_seenBalls && canSeeMulti) {
       m_seenBalls = true;
@@ -105,7 +105,8 @@ public class BallDriveCommand extends CommandBase {
       if (m_seenBalls && !canSeeMulti) {
         return true;
       }
-      m_finalDrive = data.ballBelowHeight(450, data.ballFilter(), BallSide.LEFT);
+
+      m_finalDrive = data.ballBelowHeight(450, data.ballFilter(), k_ballSide);
 
       if(m_finalDrive){
         m_initEncoderPos = m_subsystem.getLeftPos();

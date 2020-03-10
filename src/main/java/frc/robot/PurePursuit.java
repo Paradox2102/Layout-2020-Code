@@ -36,9 +36,10 @@ public class PurePursuit {
 	private boolean finished = false;
 	
 	public final PathConfig m_pathConfigFast = new PathConfig(k_points, k_maxVelFast, k_maxAcc, k_maxDeccel, k_maxJerk, k_dt, k_width);
+	public final PathConfig m_pathConfigFastAccel = new PathConfig(k_points, k_maxVelFast, 5, 5, k_maxJerk, k_dt, k_width);
 
 	public enum PathConfigs{
-		fast
+		fast, fastAccel
 	}
 
 	private Field[] k_fields = {
@@ -302,6 +303,8 @@ public class PurePursuit {
 		switch(config){
 			case fast:
 				return m_pathConfigFast;
+			case fastAccel:
+				return m_pathConfigFastAccel;
 		}
 		return null;
 	}

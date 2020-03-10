@@ -121,14 +121,17 @@ public class Camera {
 
         public boolean ballBelowHeight(double verticalLine, ArrayList<PiCameraRegion> regions, BallSide ballSide) {
             PiCameraRegion region;
+            if(regions.size() > 0){
+                if(ballSide.equals(BallSide.RIGHT)){
+                    System.out.println(regions.size() - 1);
+                    region = regions.get(regions.size() - 1);
+                }else{
+                    region = regions.get(0);
+                }
 
-            if(ballSide.equals(BallSide.RIGHT)){
-                region = m_regions.GetRegion(m_regions.GetRegionCount() - 1);
-            }else{
-                region = m_regions.GetRegion(0);
+                return region.m_bounds.m_bottom > verticalLine;
             }
-            
-            return region.m_bounds.m_bottom > verticalLine;
+            return true;
         }
 
         public List<PiCameraRegion> sortRegions() {
@@ -162,8 +165,8 @@ public class Camera {
                 returnRegions.add(regions.get(regions.size() - 1));
                 returnRegions.add(regions.get(regions.size() - 2));
             } else if (side.equals(BallSide.LEFT)) {
-                System.out.println(regions.get(0).m_bounds.m_left);
-                System.out.println(regions.get(1).m_bounds.m_left);
+                // System.out.println(regions.get(0).m_bounds.m_left);
+                // System.out.println(regions.get(1).m_bounds.m_left);
 
                 returnRegions.add(regions.get(0));
                 returnRegions.add(regions.get(1));

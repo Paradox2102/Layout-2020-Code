@@ -73,9 +73,9 @@ public class TrenchRun extends ParallelCommandGroup {
             new SetOffsetCommand(turretSubsystem, -25),
             new FrontTrenchRunCommand(driveSubsystem, turretSubsystem, throatSubsystem, shooterSubsystem,
                 intakeSubsystem, turretCamera),
-            new ToggleLightsCommand(backCamera, true), new TurnToAngleCommand(driveSubsystem, -152, Direction.RIGHT, 0.45), 
-            new WaitCommand(0.25), new BallDriveCommand(driveSubsystem, backCamera, 0.35, BallSide.LEFT, true, 7),
-            new WaitCommand(0.5), new TurnToAngleCommand(driveSubsystem, -90, Direction.LEFT, 0.45), new WaitCommand(0.5),
+            new ToggleLightsCommand(backCamera, true), new TurnToAngleCommand(driveSubsystem, -152, Direction.RIGHT, 0.35), 
+            new WaitCommand(0.25), new BallDriveCommand(driveSubsystem, backCamera, 0.25, BallSide.LEFT, true, 7),
+            new WaitCommand(0.5), new TurnToAngleCommand(driveSubsystem, -90, Direction.LEFT, 0.25), new WaitCommand(0.5),
             new FireCommandAuto(throatSubsystem, turretSubsystem, shooterSubsystem, turretCamera, 50)));
     // // new ToggleLightsCommand(frontCamera, true),
     // new ParallelDeadlineGroup(new WaitForBallCommand(frontCamera), new

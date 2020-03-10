@@ -9,6 +9,8 @@ package frc.robot.commands.Auto;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.Camera;
+import frc.lib.Camera.BallSide;
+import frc.lib.Camera.CameraData;
 
 public class WaitForBallCommand extends CommandBase {
   /**
@@ -37,6 +39,8 @@ public class WaitForBallCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_camera.createData().ballFilter().size() >= 1;
+    CameraData data = m_camera.createData();
+    int size = data.ballFilter().size();
+    return size >= 1 && data.ballBelowHeight(200, data.ballFilter(), BallSide.RIGHT);
   }
 }

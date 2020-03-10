@@ -5,12 +5,13 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.Auto;
+package frc.robot.commands.Auto.RightBallRunCameraAlign;
 
-import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.lib.Camera;
+import frc.robot.commands.Auto.FireCommandAuto;
+import frc.robot.commands.Teleop.FireCommand;
 import frc.robot.commands.Throat.ThroatPowerCommand;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.ThroatSubsystem;
@@ -19,15 +20,13 @@ import frc.robot.subsystems.TurretSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class FireCommandAuto extends SequentialCommandGroup {
+public class FireFromCenter extends ParallelDeadlineGroup {
   /**
-   * Creates a new FireCommandAuto.
+   * Creates a new FireFromCenter.
    */
-  public FireCommandAuto(ThroatSubsystem throatSubsystem, TurretSubsystem turretSubsystem, ShooterSubsystem shooterSubsystem, Camera turretCamera,
-      double deadzone) {
-    // Add your commands in the super() call, e.g.
-    // super(new FooCommand(), new BarCommand());
-    super(new ThroatPowerCommand(throatSubsystem, () -> shooterSubsystem.getSpeed(),
-        () -> shooterSubsystem.getSetpoint() - 4000, 0.85, deadzone, turretCamera, () -> turretSubsystem.getOffset(), false));
+  public FireFromCenter(ThroatSubsystem throatSubsystem, TurretSubsystem turretSubsystem, ShooterSubsystem shooterSubsystem, double deadzone,
+      Camera turretCamera) {
+    // Add your commands in the super() call. Add the deadline first.
+    super(new FireCommandAuto(throatSubsystem, turretSubsystem, shooterSubsystem, turretCamera, deadzone));
   }
 }
