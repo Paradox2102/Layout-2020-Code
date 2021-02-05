@@ -51,37 +51,37 @@ import frc.robot.subsystems.TurretSubsystem;
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 public class TrenchRun extends ParallelCommandGroup {
-  /**
-   * Creates a new DriveToTrenchConmand.
-   */
+    /**
+     * Creates a new DriveToTrenchConmand.
+     */
 
-  final Waypoint[] k_2balls = { new Waypoint(-11, 15, Math.toRadians(90), 1, 2, 3, 2, 6),
-      new Waypoint(-5, 17, Math.toRadians(40)) };
+    final Waypoint[] k_2balls = { new Waypoint(-11, 15, Math.toRadians(90), 1, 2, 3, 2, 6),
+            new Waypoint(-5, 17, Math.toRadians(40)) };
 
-  public TrenchRun(DriveSubsystem driveSubsystem, IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem,
-      TurretSubsystem turretSubsystem, ThroatSubsystem throatSubsystem, IndexerSubsystem indexerSubsystem,
-      SerializerSubsystem serializerSubsystem, Camera turretCamera, double shooterSpeed, DoubleSupplier getPosX,
-      DoubleSupplier getPosY, Camera backCamera) {
-    addCommands(
-        new SpinUpCommand(turretSubsystem, turretCamera, shooterSubsystem, indexerSubsystem, shooterSpeed),
-        new TurretTrackingCommand(turretSubsystem, turretCamera), new IntakeCommand(intakeSubsystem, 0.9),
-        new PowerSerializeCommand(serializerSubsystem, 0.75),
-        new SequentialCommandGroup(
-            new SetOffsetCommand(turretSubsystem, 35),
-            new BackTrenchRunCommand(driveSubsystem, intakeSubsystem, shooterSubsystem, turretSubsystem,
-                throatSubsystem, getPosX, getPosY, turretCamera),
-            new SetOffsetCommand(turretSubsystem, -25),
-            new FrontTrenchRunCommand(driveSubsystem, turretSubsystem, throatSubsystem, shooterSubsystem,
-                intakeSubsystem, turretCamera),
-            new ToggleLightsCommand(backCamera, true), new TurnToAngleCommand(driveSubsystem, -152, Direction.RIGHT, 0.35), 
-            new WaitCommand(0.25), new BallDriveCommand(driveSubsystem, backCamera, 0.25, BallSide.LEFT, true, 7),
-            new WaitCommand(0.5), new TurnToAngleCommand(driveSubsystem, -90, Direction.LEFT, 0.25), new WaitCommand(0.5),
-            new FireCommandAuto(throatSubsystem, turretSubsystem, shooterSubsystem, turretCamera, 50)));
-    // // new ToggleLightsCommand(frontCamera, true),
-    // new ParallelDeadlineGroup(new WaitForBallCommand(frontCamera), new
-    // CreatePathCommand(driveSubsystem, k_2balls, PathConfigs.fast, true, false,
-    // true)),
-    // new BallDriveCommand(driveSubsystem, frontCamera, -0.25)
+    public TrenchRun(DriveSubsystem driveSubsystem, IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem,
+            TurretSubsystem turretSubsystem, ThroatSubsystem throatSubsystem, IndexerSubsystem indexerSubsystem,
+            SerializerSubsystem serializerSubsystem, Camera turretCamera, double shooterSpeed, DoubleSupplier getPosX,
+            DoubleSupplier getPosY, Camera backCamera) {
+        addCommands(new SpinUpCommand(turretSubsystem, turretCamera, shooterSubsystem, indexerSubsystem, shooterSpeed),
+                new TurretTrackingCommand(turretSubsystem, turretCamera), new IntakeCommand(intakeSubsystem, 0.9),
+                new PowerSerializeCommand(serializerSubsystem, 0.75),
+                new SequentialCommandGroup(new SetOffsetCommand(turretSubsystem, 35),
+                        new BackTrenchRunCommand(driveSubsystem, intakeSubsystem, shooterSubsystem, turretSubsystem,
+                                throatSubsystem, getPosX, getPosY, turretCamera),
+                        new SetOffsetCommand(turretSubsystem, -25),
+                        new FrontTrenchRunCommand(driveSubsystem, turretSubsystem, throatSubsystem, shooterSubsystem,
+                                intakeSubsystem, turretCamera),
+                        new ToggleLightsCommand(backCamera, true),
+                        new TurnToAngleCommand(driveSubsystem, -152, Direction.RIGHT, 0.35), new WaitCommand(0.25),
+                        new BallDriveCommand(driveSubsystem, backCamera, 0.25, BallSide.LEFT, true, 7),
+                        new WaitCommand(0.5), new TurnToAngleCommand(driveSubsystem, -90, Direction.LEFT, 0.25),
+                        new WaitCommand(0.5),
+                        new FireCommandAuto(throatSubsystem, turretSubsystem, shooterSubsystem, turretCamera, 50)));
+        // // new ToggleLightsCommand(frontCamera, true),
+        // new ParallelDeadlineGroup(new WaitForBallCommand(frontCamera), new
+        // CreatePathCommand(driveSubsystem, k_2balls, PathConfigs.fast, true, false,
+        // true)),
+        // new BallDriveCommand(driveSubsystem, frontCamera, -0.25)
 
-  }
+    }
 }

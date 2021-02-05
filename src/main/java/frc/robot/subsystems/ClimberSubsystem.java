@@ -12,6 +12,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANDigitalInput.LimitSwitch;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Solenoid;
@@ -36,6 +37,9 @@ public class ClimberSubsystem extends SubsystemBase {
     m_encoder = m_climber.getEncoder();
 
     m_fwdLimit.enableLimitSwitch(true);
+
+    m_climber.setIdleMode(IdleMode.kBrake);
+    m_follower.setIdleMode(IdleMode.kBrake);
   }
 
   @Override

@@ -71,7 +71,7 @@ public class Camera {
             PiCameraRect bounds = region.m_bounds;
             return (bounds.m_right + bounds.m_left) / 2.0;
         }
-        
+
         public double centerX(PiCameraRegion region) {
             PiCameraRect bounds = region.m_bounds;
             return (bounds.m_right + bounds.m_left) / 2.0;
@@ -121,17 +121,30 @@ public class Camera {
 
         public boolean ballBelowHeight(double verticalLine, ArrayList<PiCameraRegion> regions, BallSide ballSide) {
             PiCameraRegion region;
-            if(regions.size() > 0){
-                if(ballSide.equals(BallSide.RIGHT)){
+            if (regions.size() > 0) {
+                if (ballSide.equals(BallSide.RIGHT)) {
                     System.out.println(regions.size() - 1);
                     region = regions.get(regions.size() - 1);
-                }else{
+                } else {
                     region = regions.get(0);
                 }
 
                 return region.m_bounds.m_bottom > verticalLine;
             }
             return true;
+        }
+
+        public PiCameraRegion findClosestRegion() {
+            List<PiCameraRegion> regions = m_regions.m_regions;
+            PiCameraRegion lowestRegion = regions.get(0);
+
+            for (int i = 1; i < regions.size(); i++) {
+                if (regions.get(i).m_bounds.m_top > lowestRegion.m_bounds.m_top) {
+                    lowestRegion = regions.get(i);
+                }
+            }
+
+            return lowestRegion;
         }
 
         public List<PiCameraRegion> sortRegions() {
@@ -213,14 +226,15 @@ public class Camera {
     public CameraData createData() {
         return new CameraData();
     }
-    
+
     boolean m_lightsState = false;
+
     public void toggleLights(boolean on) {
         m_lightsState = on;
         m_piCamera.SetLight(on ? 3 : 0);
     }
 
-    public boolean getLightsState(){
+    public boolean getLightsState() {
         return m_lightsState;
     }
 

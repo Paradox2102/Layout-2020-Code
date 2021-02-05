@@ -40,6 +40,9 @@ import frc.robot.commands.Auto.RightBallRunCameraAlign.RightBallRun;
 import frc.robot.commands.Auto.TrenchRun.TrenchForwardBack;
 import frc.robot.commands.Auto.TrenchRun.TrenchRun;
 import frc.robot.commands.Auto.TrenchRunWait.TrenchRunWait;
+import frc.robot.commands.BallChase.PathChooserCommand;
+import frc.robot.commands.BallChase.closePathAuto;
+import frc.robot.commands.BallChase.driveToBallCommand;
 import frc.robot.commands.Camera.BallDriveCommand;
 import frc.robot.commands.Camera.ToggleLightsCommand;
 import frc.robot.commands.Climber.MoveClimberCommand;
@@ -103,9 +106,9 @@ public class RobotContainer {
   Camera m_turretCamera = new Camera();
   Camera m_backCamera = new Camera();
 
-  Joystick m_stick = new Joystick(0);
-  Joystick m_climbStick = new Joystick(1);
-  Joystick m_calibStick = new Joystick(2);
+  Joystick m_stick = new Joystick(1);
+  Joystick m_climbStick = new Joystick(2);
+  Joystick m_calibStick = new Joystick(3);
 
   // JoystickButton m_calibrateBtn = new JoystickButton(m_calibStick, 1);
   // JoystickButton m_trackBalls = new JoystickButton(m_stick, 2);
@@ -115,7 +118,7 @@ public class RobotContainer {
   // JoystickButton m_throat = new JoystickButton(m_stick, 6);
 
   JoystickButton m_spinUp = new JoystickButton(m_stick, 2);
-  JoystickButton m_spinUpTrack = new JoystickButton(m_stick, 2);
+  // JoystickButton m_spinUpTrack = new JoystickButton(m_stick, 2);
 
   JoystickButton m_fire = new JoystickButton(m_stick, 1);
 
@@ -156,6 +159,7 @@ public class RobotContainer {
   JoystickButton m_trackBalls = new JoystickButton(m_calibStick, 6);
   JoystickButton m_toggleIntake = new JoystickButton(m_calibStick, 8);
 
+  JoystickButton m_driveToBall = new JoystickButton(m_stick, 11);
 
   IncreaseTrimTrigger m_increaseTrim = new IncreaseTrimTrigger(m_climbStick);
   DecreaseTrimTrigger m_decreaseTrim = new DecreaseTrimTrigger(m_climbStick);
@@ -183,32 +187,40 @@ public class RobotContainer {
     // m_intakeSubsystem.setDefaultCommand(new
     // AmbientIntakePowerCommand(m_intakeSubsystem, 0.25));
 
-    // Waypoint[] k_10ft = { new Waypoint(0, 0, Math.toRadians(90), 5), new Waypoint(0, 10, Math.toRadians(90)) };
+    // Waypoint[] k_10ft = { new Waypoint(0, 0, Math.toRadians(90), 5), new
+    // Waypoint(0, 10, Math.toRadians(90)) };
 
     m_chooser.setDefaultOption("Do Nothing", new DoNothingCommand());
     m_chooser.addOption("Trench Run 8 ball",
         new TrenchRun(m_driveSubsystem, m_intakeSubsystem, m_shooterSubsystem, m_turretSubsystem, m_throatSubsystem,
-            m_indexerSubsystem, m_serializerSubsystem, m_turretCamera, 35000, () -> getPos().x, () -> getPos().y, m_backCamera));
+            m_indexerSubsystem, m_serializerSubsystem, m_turretCamera, 35000, () -> getPos().x, () -> getPos().y,
+            m_backCamera));
     m_chooser.addOption("Trench Run Pause and Shoot",
         new TrenchRunWait(m_driveSubsystem, m_intakeSubsystem, m_shooterSubsystem, m_turretSubsystem, m_throatSubsystem,
             m_indexerSubsystem, m_serializerSubsystem, m_turretCamera, 35000, () -> getPos().x, () -> getPos().y));
     m_chooser.addOption("5 Ball Center", new FiveBallCenter(m_driveSubsystem, m_intakeSubsystem, m_turretCamera, 0.4,
         m_turretSubsystem, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed, m_throatSubsystem));
-    m_chooser.addOption("Right 7 Ball Run", new RightBallRun(m_driveSubsystem, m_intakeSubsystem,
-        m_turretSubsystem, m_turretCamera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed, m_throatSubsystem, m_backCamera));
-    m_chooser.addOption("Exhaust Port Run", new InnerPortRunCommand(m_driveSubsystem, m_intakeSubsystem, m_shooterSubsystem,
-        m_indexerSubsystem, m_turretSubsystem, m_throatSubsystem, m_turretCamera, m_backCamera, m_shooterSpeed));
-    // m_chooser.addOption("10 ft", new CreatePathCommand(m_driveSubsystem, k_10ft, PathConfigs.fast));
-    // m_chooser.addOption("Trench Forward Backward", new TrenchForwardBack(m_driveSubsystem));
-        // m_chooser.addOption("Test Turn",
+    m_chooser.addOption("Right 7 Ball Run", new RightBallRun(m_driveSubsystem, m_intakeSubsystem, m_turretSubsystem,
+        m_turretCamera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed, m_throatSubsystem, m_backCamera));
+    m_chooser.addOption("Exhaust Port Run",
+        new InnerPortRunCommand(m_driveSubsystem, m_intakeSubsystem, m_shooterSubsystem, m_indexerSubsystem,
+            m_turretSubsystem, m_throatSubsystem, m_turretCamera, m_backCamera, m_shooterSpeed));
+    // m_chooser.addOption("10 ft", new CreatePathCommand(m_driveSubsystem, k_10ft,
+    // PathConfigs.fast));
+    // m_chooser.addOption("Trench Forward Backward", new
+    // TrenchForwardBack(m_driveSubsystem));
+    // m_chooser.addOption("Test Turn",
     // new SequentialCommandGroup(new TurnToBallsCommand(m_driveSubsystem,
     // m_backCamera, 0.4),
     // new BallDriveCommand(m_driveSubsystem, m_backCamera, -0.25)));
     // m_chooser.addOption("RobotAlign", new
     // AlignWithVisionCommand(m_driveSubsystem, m_turretCamera, 0.4));
 
-    // m_chooser.addOption("Turn To Angle", new SequentialCommandGroup(new TurnToAngleCommand(m_driveSubsystem, -70, Direction.LEFT, 0.3), new WaitCommand(0.5),
-    // new BallDriveCommand(m_driveSubsystem, m_backCamera, 0.25, BallSide.RIGHT, true, 5)));
+    // m_chooser.addOption("Turn To Angle", new SequentialCommandGroup(new
+    // TurnToAngleCommand(m_driveSubsystem, -70, Direction.LEFT, 0.3), new
+    // WaitCommand(0.5),
+    // new BallDriveCommand(m_driveSubsystem, m_backCamera, 0.25, BallSide.RIGHT,
+    // true, 5)));
     // m_chooser.addOption("Print 10 ft", new PrintPathCommand(m_driveSubsystem,
     // drive10Ft, PurePursuit.PathConfigs.fast));
     SmartDashboard.putData("Auto mode", m_chooser);
@@ -227,13 +239,14 @@ public class RobotContainer {
     // m_shoot.toggleWhenPressed(new ShootAllCommand(m_throatSubsystem,
     // m_shooterSubsystem, m_serializerSubsystem, m_indexerSubsystem,
     // m_intakeSubsystem, () -> getThrottle()));
-    m_intake.toggleWhenPressed(new IntakeCommand(m_intakeSubsystem, 0.8));
-    m_intakeClimb.whileHeld(new IntakeCommand(m_intakeSubsystem, 0.8));
+    m_intake.toggleWhenPressed(new IntakeCommand(m_intakeSubsystem, 0.9));
+    m_intakeClimb.whileHeld(new IntakeCommand(m_intakeSubsystem, 0.9));
     m_outtake.toggleWhenPressed(new IntakeCommand(m_intakeSubsystem, -0.75));
     m_outtakeClimb.whileHeld(new IntakeCommand(m_intakeSubsystem, -0.75));
     m_spinUp.toggleWhenPressed(
         new SpinUpCommand(m_turretSubsystem, m_turretCamera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed));
-    m_spinUpTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_turretCamera));
+    // m_spinUpTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem,
+    // m_turretCamera));
     m_spinUpClimb.toggleWhenPressed(
         new SpinUpCommand(m_turretSubsystem, m_turretCamera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed));
     m_spinUpTrackClimb.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_turretCamera));
@@ -271,29 +284,31 @@ public class RobotContainer {
     m_trackBalls.whileHeld(new BallDriveCommand(m_driveSubsystem, m_backCamera, 0.25, BallSide.LEFT, true, 20));
 
     m_turretTrackCalib.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem, m_turretCamera));
+
+    m_driveToBall.toggleWhenPressed(new PathChooserCommand(m_backCamera, m_driveSubsystem));
   }
 
   public void periodic() {
     String color = DriverStation.getInstance().getGameSpecificMessage();
     String pColor = "None";
-      if(color.length() > 0){
-        switch (color.charAt(0)){
-          case 'B':
-          pColor = "Red";
-          break;
-          case 'R':
-          pColor = "Blue";
-          break;
-          case 'G':
-          pColor = "Yellow";
-          break;
-          case 'Y':
-          pColor = "Green";
-          break;
-        }
-      } else {
-        pColor = "None";
+    if (color.length() > 0) {
+      switch (color.charAt(0)) {
+      case 'B':
+        pColor = "Red";
+        break;
+      case 'R':
+        pColor = "Blue";
+        break;
+      case 'G':
+        pColor = "Yellow";
+        break;
+      case 'Y':
+        pColor = "Green";
+        break;
       }
+    } else {
+      pColor = "None";
+    }
     SmartDashboard.putString("Control Panel Color:", pColor);
     SmartDashboard.putNumber("Trim", m_shooterSubsystem.getTrim());
     SmartDashboard.putNumber("Time Left", DriverStation.getInstance().getMatchTime());
@@ -374,7 +389,7 @@ public class RobotContainer {
     m_shooterSubsystem.setTrim(amount);
   }
 
-  public void setLightsBackCamera(boolean lights){
+  public void setLightsBackCamera(boolean lights) {
     m_backCamera.toggleLights(lights);
   }
 }
