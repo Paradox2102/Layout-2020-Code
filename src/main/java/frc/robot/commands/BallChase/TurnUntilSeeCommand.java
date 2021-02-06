@@ -58,7 +58,7 @@ public class TurnUntilSeeCommand extends CommandBase {
     CameraData cameraData = m_camera.createData();
     ArrayList<PiCameraRegion> regions = cameraData.ballFilter();
 
-    if (regions.get(0) != null) {
+    if (regions.size() > 0) {
       finished = true;
     }
 

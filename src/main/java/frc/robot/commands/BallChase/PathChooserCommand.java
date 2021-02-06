@@ -36,10 +36,10 @@ public class PathChooserCommand extends InstantCommand {
       int positionY = cameraData.m_regions.GetRegion(0).m_bounds.m_top;
       Logger.Log("PositionY:", 1, "" + positionY);
       if (positionY > 120) {
-        Logger.Log("Path Chooser", 1, "Choosing path 1");
+        Logger.Log("Path Chooser", 1, "Choosing close path");
         new closePathAuto(m_camera, m_subsystem).schedule();
       } else {
-        Logger.Log("Path Chooser", 1, "Choosing Path 2");
+        Logger.Log("Path Chooser", 1, "Choosing far path");
         new farPathAuto(m_camera, m_subsystem).schedule();
       }
     }
