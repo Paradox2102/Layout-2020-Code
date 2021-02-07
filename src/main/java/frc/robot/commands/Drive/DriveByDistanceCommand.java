@@ -5,75 +5,59 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.BallChase;
-
-import java.util.ArrayList;
+package frc.robot.commands.Drive;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.PiCamera.PiCamera.PiCameraRegion;
-import frc.lib.Camera;
 import frc.lib.Logger;
-import frc.lib.Camera.CameraData;
+import frc.robot.PositionTracker;
+import frc.robot.PositionTracker.PositionContainer;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class TurnUntilSeeCommand extends CommandBase {
-  Camera m_camera;
+public class DriveByDistanceCommand extends CommandBase {
   DriveSubsystem m_subsystem;
+  PositionContainer m_pos;
+  double m_distance;
   double m_power;
-  Direction k_dir;
-
-  boolean finished = false;;
 
   /**
-   * Creates a new TurnUntilSeeCommand.
+   * Creates a new DriveByDistanceCommand.
    */
-  public static enum Direction {
-    LEFT, RIGHT
-  }
-
-  public TurnUntilSeeCommand(Camera camera, DriveSubsystem subsystem, Direction direction, double power) {
+  public DriveByDistanceCommand(DriveSubsystem subsystem, double distance, double power) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_camera = camera;
     m_subsystem = subsystem;
     m_power = power;
-    k_dir = direction;
+    m_distance = distance;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Logger.Log("TurnUntilSeeCommand", 1, "initialize");
+    Logger.Log("DriveByDistanceCommand", 1, "initialize");
 
-    if (k_dir.equals(Direction.RIGHT)) {
-      m_subsystem.setPower(m_power, -m_power);
-    } else if (k_dir.equals(Direction.LEFT)) {
-      m_subsystem.setPower(-m_power, m_power);
-    }
+    m_pos = m_subsystem.getPos();
+    m_subsystem.setPower(m_power, m_power);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Logger.Log("TurnUntilSeeCommand", -1, "execute");
-    CameraData cameraData = m_camera.createData();
-    ArrayList<PiCameraRegion> regions = cameraData.ballFilter();
-
-    if (regions.size() > 0) {
-      finished = true;
-    }
-
+    Logger.Log("DriveByDistanceCommand", -1, "execute");
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Logger.Log("TurnUntilSeeCommand", 1, "end");
+    Logger.Log("DriveByDistanceCommand", 1, "end");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    Logger.Log("TurnUntilSeeCommand", -1, "isFinished");
-    return finished;
+    Logger.Log("DriveByDistanceCommand", -1, "isFinished");
+    return (posDistance(m_pos, m_subsystem.getPos()) > m_distance);
+  }
+
+  private double posDistance(PositionContainer pos1, PositionContainer pos2) {
+    return Math.sqrt((pos1.x - pos2.x) * (pos1.x - pos2.x) + (pos1.y - pos2.y) * (pos1.y - pos2.y));
   }
 }

@@ -146,8 +146,8 @@ public class DriveSubsystem extends SubsystemBase {
     // m_rightDrive.setOpenLoopRampRate(0.75);
     // m_leftFollower.setOpenLoopRampRate(0.75);
     // m_rightFollower.setOpenLoopRampRate(0.75);
-    
-    //Tracking and Pure Pursuit Setup
+
+    // Tracking and Pure Pursuit Setup
     m_sensors = new Sensor(m_leftSparkEncoder, m_rightSparkEncoder, m_gyro, k_ticksFootSpark);
 
     m_posTracker = new PositionTracker(0, 0, false, m_sensors);

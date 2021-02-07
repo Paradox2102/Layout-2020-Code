@@ -5,26 +5,32 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.BallChase;
+package frc.robot.commands.GalacticSearch;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.lib.Camera;
+import frc.robot.commands.Camera.ToggleLightsCommand;
+import frc.robot.commands.Drive.SmoothTurnCommand;
 import frc.robot.commands.Drive.TurnByAngleCommand;
 import frc.robot.subsystems.DriveSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class farPathAuto extends SequentialCommandGroup {
+public class farPathAutoGroupA extends SequentialCommandGroup {
   /**
    * Creates a new farPathAuto.
    */
-  public farPathAuto(Camera camera, DriveSubsystem driveSubsystem) {
+  public farPathAutoGroupA(Camera camera, DriveSubsystem driveSubsystem, double searchPower, double turnPower) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    addCommands(new driveToBallCommand(camera), new WaitCommand(3), new TurnByAngleCommand(driveSubsystem, -60, 0.3),
-        new driveToBallCommand(camera), new WaitCommand(3), new TurnByAngleCommand(driveSubsystem, 60, 0.3),
-        new driveToBallCommand(camera));
+    addCommands(new ToggleLightsCommand(camera, true), new driveToBallCommand(camera, driveSubsystem, searchPower),
+        // new TurnByAngleCommand(driveSubsystem, -60, turnPower),
+        new SmoothTurnCommand(driveSubsystem, -60, -searchPower, 0.15),
+        new driveToBallCommand(camera, driveSubsystem, searchPower),
+        new TurnByAngleCommand(driveSubsystem, 30, turnPower),
+        new driveToBallCommand(camera, driveSubsystem, searchPower),
+        new driveToBallCommand(camera, driveSubsystem, searchPower));
   }
 }
