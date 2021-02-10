@@ -27,9 +27,10 @@ public class farPathAutoGroupA extends SequentialCommandGroup {
     // super(new FooCommand(), new BarCommand());
     addCommands(new ToggleLightsCommand(camera, true), new driveToBallCommand(camera, driveSubsystem, searchPower),
         // new TurnByAngleCommand(driveSubsystem, -60, turnPower),
-        new SmoothTurnCommand(driveSubsystem, -60, -searchPower, 0.15),
+        new SmoothTurnCommand(driveSubsystem, -60, -turnPower, 0.25),
         new driveToBallCommand(camera, driveSubsystem, searchPower),
-        new TurnByAngleCommand(driveSubsystem, 30, turnPower),
+        // new TurnByAngleCommand(driveSubsystem, 30, turnPower),
+        new SmoothTurnCommand(driveSubsystem, 75, -turnPower, 0.28),
         new driveToBallCommand(camera, driveSubsystem, searchPower),
         new driveToBallCommand(camera, driveSubsystem, searchPower));
   }

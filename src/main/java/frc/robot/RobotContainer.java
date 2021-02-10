@@ -44,6 +44,7 @@ import frc.robot.commands.GalacticSearch.PathChooserCommandGroupA;
 import frc.robot.commands.GalacticSearch.PathChooserCommandGroupB;
 import frc.robot.commands.GalacticSearch.closePathAutoGroupA;
 import frc.robot.commands.GalacticSearch.driveToBallCommand;
+import frc.robot.commands.GalacticSearch.pathAuto;
 import frc.robot.commands.Camera.BallDriveCommand;
 import frc.robot.commands.Camera.ToggleLightsCommand;
 import frc.robot.commands.Climber.MoveClimberCommand;
@@ -161,7 +162,8 @@ public class RobotContainer {
   JoystickButton m_toggleIntake = new JoystickButton(m_calibStick, 8);
 
   JoystickButton m_galacticSearchA = new JoystickButton(m_stick, 11);
-  JoystickButton m_galacticSearchB = new JoystickButton(m_stick, 12);
+  // JoystickButton m_galacticSearchB = new JoystickButton(m_stick, 12);
+  JoystickButton m_pathAuto = new JoystickButton(m_stick, 12);
 
   IncreaseTrimTrigger m_increaseTrim = new IncreaseTrimTrigger(m_climbStick);
   DecreaseTrimTrigger m_decreaseTrim = new DecreaseTrimTrigger(m_climbStick);
@@ -290,8 +292,10 @@ public class RobotContainer {
     m_galacticSearchA.toggleWhenPressed(new PathChooserCommandGroupA(m_backCamera, m_driveSubsystem, m_intakeSubsystem,
         Constants.k_searchPower, Constants.k_turnPower));
 
-    m_galacticSearchB.toggleWhenPressed(new PathChooserCommandGroupB(m_backCamera, m_driveSubsystem, m_intakeSubsystem,
-        Constants.k_searchPower, Constants.k_turnPower));
+    // m_galacticSearchB.toggleWhenPressed(new
+    // PathChooserCommandGroupB(m_backCamera, m_driveSubsystem, m_intakeSubsystem,
+    // Constants.k_searchPower, Constants.k_turnPower));
+    m_pathAuto.toggleWhenPressed(new pathAuto(m_driveSubsystem));
   }
 
   public void periodic() {
