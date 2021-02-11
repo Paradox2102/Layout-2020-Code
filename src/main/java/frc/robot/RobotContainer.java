@@ -44,7 +44,7 @@ import frc.robot.commands.GalacticSearch.PathChooserCommandGroupA;
 import frc.robot.commands.GalacticSearch.PathChooserCommandGroupB;
 import frc.robot.commands.GalacticSearch.closePathAutoGroupA;
 import frc.robot.commands.GalacticSearch.driveToBallCommand;
-import frc.robot.commands.GalacticSearch.pathAuto;
+import frc.robot.commands.GalacticSearch.BouncePath;
 import frc.robot.commands.Camera.BallDriveCommand;
 import frc.robot.commands.Camera.ToggleLightsCommand;
 import frc.robot.commands.Climber.MoveClimberCommand;
@@ -119,7 +119,7 @@ public class RobotContainer {
   // JoystickButton m_shoot = new JoystickButton(m_stick, 5);
   // JoystickButton m_throat = new JoystickButton(m_stick, 6);
 
-  JoystickButton m_spinUp = new JoystickButton(m_stick, 2);
+  //JoystickButton m_spinUp = new JoystickButton(m_stick, 2);
   // JoystickButton m_spinUpTrack = new JoystickButton(m_stick, 2);
 
   JoystickButton m_fire = new JoystickButton(m_stick, 1);
@@ -163,7 +163,7 @@ public class RobotContainer {
 
   JoystickButton m_galacticSearchA = new JoystickButton(m_stick, 11);
   // JoystickButton m_galacticSearchB = new JoystickButton(m_stick, 12);
-  JoystickButton m_pathAuto = new JoystickButton(m_stick, 12);
+  JoystickButton m_pathAuto = new JoystickButton(m_stick, 2);
 
   IncreaseTrimTrigger m_increaseTrim = new IncreaseTrimTrigger(m_climbStick);
   DecreaseTrimTrigger m_decreaseTrim = new DecreaseTrimTrigger(m_climbStick);
@@ -247,8 +247,8 @@ public class RobotContainer {
     m_intakeClimb.whileHeld(new IntakeCommand(m_intakeSubsystem, 0.9));
     m_outtake.toggleWhenPressed(new IntakeCommand(m_intakeSubsystem, -0.75));
     m_outtakeClimb.whileHeld(new IntakeCommand(m_intakeSubsystem, -0.75));
-    m_spinUp.toggleWhenPressed(
-        new SpinUpCommand(m_turretSubsystem, m_turretCamera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed));
+   // m_spinUp.toggleWhenPressed(
+   //     new SpinUpCommand(m_turretSubsystem, m_turretCamera, m_shooterSubsystem, m_indexerSubsystem, m_shooterSpeed));
     // m_spinUpTrack.toggleWhenPressed(new TurretTrackingCommand(m_turretSubsystem,
     // m_turretCamera));
     m_spinUpClimb.toggleWhenPressed(
@@ -295,7 +295,7 @@ public class RobotContainer {
     // m_galacticSearchB.toggleWhenPressed(new
     // PathChooserCommandGroupB(m_backCamera, m_driveSubsystem, m_intakeSubsystem,
     // Constants.k_searchPower, Constants.k_turnPower));
-    m_pathAuto.toggleWhenPressed(new pathAuto(m_driveSubsystem));
+    m_pathAuto.toggleWhenPressed(new BouncePath(m_driveSubsystem));
   }
 
   public void periodic() {
