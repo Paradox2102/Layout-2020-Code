@@ -163,7 +163,7 @@ public class RobotContainer {
 
   JoystickButton m_galacticSearchA = new JoystickButton(m_stick, 11);
   // JoystickButton m_galacticSearchB = new JoystickButton(m_stick, 12);
-  JoystickButton m_pathAuto = new JoystickButton(m_stick, 2);
+  JoystickButton m_pathAuto = new JoystickButton(m_stick, 12);
 
   IncreaseTrimTrigger m_increaseTrim = new IncreaseTrimTrigger(m_climbStick);
   DecreaseTrimTrigger m_decreaseTrim = new DecreaseTrimTrigger(m_climbStick);
