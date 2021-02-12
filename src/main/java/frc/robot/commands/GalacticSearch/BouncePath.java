@@ -28,8 +28,18 @@ public class BouncePath extends ParallelCommandGroup {
       new Waypoint(-3.5, 7.5, Math.toRadians(180)),
      };
      static final Waypoint[] k_legTwo = { 
-      new Waypoint(-3.5, 7.5, Math.toRadians(0), 8, 8, 0),
-      new Waypoint(-3.5, 16, Math.toRadians(180)),
+      new Waypoint(-3.5, 7.5, Math.toRadians(0), 1, 1, 0),
+      new Waypoint(5, 12.5, Math.toRadians(90), 2, 6, 0),
+      new Waypoint(-3.5, 15, Math.toRadians(180)),
+     };
+     static final Waypoint[] k_legThree = { 
+      new Waypoint(-3.5, 15, Math.toRadians(0)),
+      new Waypoint(5.5, 18.25, Math.toRadians(90)),
+      new Waypoint(-3.5, 22.5, Math.toRadians(180)),
+     };
+     static final Waypoint[] k_legFour = { 
+      new Waypoint(-3.5, 22.5, Math.toRadians(0)),
+      new Waypoint(0, 27.5, Math.toRadians(90)),
      };
   DriveSubsystem m_driveSubsystem;
 
@@ -39,7 +49,9 @@ public class BouncePath extends ParallelCommandGroup {
     m_driveSubsystem = driveSubsystem;
     addCommands(new SequentialCommandGroup(
       new CreatePathCommand(driveSubsystem, k_legOne, PathConfigs.fastAccel),
-      new CreatePathCommand(driveSubsystem, k_legTwo, PathConfigs.fastAccel, true, false, false)
+      new CreatePathCommand(driveSubsystem, k_legTwo, PathConfigs.fastAccel, true, true, true),
+      new CreatePathCommand(driveSubsystem, k_legThree, PathConfigs.fastAccel),
+      new CreatePathCommand(driveSubsystem, k_legFour, PathConfigs.fastAccel, true, true, true)
       ));
   }
 
